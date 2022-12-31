@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.dashboard;
+package com.keeprecipes.android.ui.collections;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.keeprecipes.android.databinding.FragmentDashboardBinding;
+import com.keeprecipes.android.databinding.FragmentCollectionsBinding;
 
-public class DashboardFragment extends Fragment {
+public class CollectionsFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentCollectionsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        CollectionsViewModel collectionsViewModel =
+                new ViewModelProvider(this).get(CollectionsViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentCollectionsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        collectionsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
