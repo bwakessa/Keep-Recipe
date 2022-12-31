@@ -1,40 +1,24 @@
 package com.keeprecipes.android.ui.AddRecipe;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuHost;
-import androidx.core.view.MenuProvider;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 public class AddRecipeFragment extends Fragment {
 
-    private AddRecipeViewModel mViewModel;
-
     private FragmentAddRecipeBinding binding;
 
-    public static AddRecipeFragment newInstance() {
-        return new AddRecipeFragment();
-    }
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddRecipeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         // AddRecipeFragment has it's toolbar,
@@ -48,7 +32,7 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+        AddRecipeViewModel mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
         // To go back to previous fragment
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         // menu item click listener
