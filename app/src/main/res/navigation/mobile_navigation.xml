@@ -16,4 +16,9 @@
         android:name="com.keeprecipes.android.ui.collections.CollectionsFragment"
         android:label="@string/title_collections"
         tools:layout="@layout/fragment_collections" />
+    <fragment
+        android:id="@+id/addRecipeFragment"
+        android:name="com.keeprecipes.android.ui.AddRecipe.AddRecipeFragment"
+        android:label="fragment_add_recipe"
+        tools:layout="@layout/fragment_add_recipe" />
 </navigation>
