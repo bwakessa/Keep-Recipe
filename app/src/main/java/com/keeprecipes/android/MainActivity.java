@@ -42,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        // Floating Action Button
-        FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(view -> navController.navigate(R.id.addRecipeFragment));
-
         // Toolbar Menu
         addMenuProvider(new MenuProvider() {
             @Override

@@ -51,4 +51,10 @@ public class AddRecipeFragment extends Fragment {
             return false;
         });
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
