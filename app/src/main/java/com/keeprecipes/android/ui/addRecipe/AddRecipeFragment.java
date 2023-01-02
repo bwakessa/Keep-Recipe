@@ -1,9 +1,10 @@
-package com.keeprecipes.android.ui.AddRecipe;
+package com.keeprecipes.android.ui.addRecipe;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,10 +40,21 @@ public class AddRecipeFragment extends Fragment {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_save) {// Navigate to settings screen
                 // Go back to previous fragment after saving
+                Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
+                requireActivity().onBackPressed();
+                return true;
+            } else if (item.getItemId() == R.id.action_delete) {
+                Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
             }
             return false;
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

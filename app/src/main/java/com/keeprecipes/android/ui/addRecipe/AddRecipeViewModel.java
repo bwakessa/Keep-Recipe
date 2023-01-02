@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.AddRecipe;
+package com.keeprecipes.android.ui.addRecipe;
 
 import androidx.lifecycle.ViewModel;
 

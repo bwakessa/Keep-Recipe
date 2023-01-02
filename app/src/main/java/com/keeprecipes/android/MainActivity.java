@@ -2,7 +2,9 @@ package com.keeprecipes.android;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,11 +19,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "MainActivity";
     private NavController navController;
 
     @Override
@@ -42,9 +44,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        // Floating Action Button
-        FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(view -> navController.navigate(R.id.addRecipeFragment));
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i(TAG, "onCreateMenu: " + query);
+            navController.navigate(R.id.searchFragment);
+        }
 
         // Toolbar Menu
         addMenuProvider(new MenuProvider() {
@@ -61,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
                 if (searchView != null) {
                     searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
                 }
+                assert searchView != null;
+//                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                    @Override
+//                    public boolean onQueryTextSubmit(String query) {
+//                        Log.i(TAG, "onQueryTextSubmit: " + query);
+//                        getCurrentFocus().clearFocus();
+//                        navController.navigate(R.id.blankFragment);
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onQueryTextChange(String newText) {
+//                        Log.i(TAG, "onQueryTextChange: " + newText);
+//                        return false;
+//                    }
+//                });
             }
 
             @Override
