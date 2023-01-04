@@ -10,24 +10,20 @@ import java.util.Date;
 @Entity(tableName = "recipes")
 public class Recipe {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-//  comment: why public instead of private?
+    public int id;
 
     @ColumnInfo(name = "title")
-    private String title;
+    public String title;
 
     @ColumnInfo(name = "cuisine")
-    private String cuisine;
+    public String cuisine;
 
     @ColumnInfo(name = "instructions")
-    private List<String> instructions;
+    public List<String> instructions;
 
     @ColumnInfo(name = "ingredients")
-    private List<String> ingredients;
-//  comment: How to deal with storing & retrieving arraylists in SQLite
+    public List<String> ingredients;
 
-
-//    @ColumnInfo(name = "data_created")
-//    private Date dateCreated;
-//  comment: should or should not include date created?
+    @ColumnInfo(name = "data_created")
+    private Date dateCreated;
 }

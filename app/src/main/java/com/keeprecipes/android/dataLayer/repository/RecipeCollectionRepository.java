@@ -18,16 +18,15 @@ public class RecipeCollectionRepository {
     private LiveData<List<RecipeCollection>> allCollections;
 
     public RecipeCollectionRepository(Application application) {
-        mCollectionDao = AppDatabase.getCollectionDatabase(application).recipeCollectionDao();
+        mCollectionDao = AppDatabase.getDatabase(application).recipeCollectionDao();
         allCollections = mCollectionDao.getAll();
     }
 
     public LiveData<List<RecipeCollection>> getAllCollections() {return allCollections;}
 
-//    public LiveData<RecipeCollection> fetchByName(String title) {
-//        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.fetchByName(title));
-//    }
-//  HOW TO WRITE THIS METHOD
+    public LiveData<RecipeCollection> fetchByName(String title) {
+        return mCollectionDao.fetchByName(title);
+    }
 
     public void insert(RecipeCollection collection) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.insert(collection));
