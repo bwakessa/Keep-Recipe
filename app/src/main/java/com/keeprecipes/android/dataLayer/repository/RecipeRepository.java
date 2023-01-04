@@ -17,16 +17,15 @@ public class RecipeRepository {
     private LiveData<List<Recipe>> allRecipes;
 
     public RecipeRepository(Application application) {
-        mRecipeDao = AppDatabase.getRecipeDatabase(application).recipeDao();
+        mRecipeDao = AppDatabase.getDatabase(application).recipeDao();
         allRecipes = mRecipeDao.getAll();
     }
 
     public LiveData<List<Recipe>> getAllRecipes() {return allRecipes;}
 
-//    public LiveData<Recipe> fetchByTitle(/*Recipe recipe*/String title) {
-//        Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.fetchByTitle(title));
-//    }
-//  HOW TO WRITE THIS METHOD??
+    public LiveData<Recipe> fetchByTitle(String title) {
+        return mRecipeDao.fetchByTitle(title);
+    }
 
     public void insert(Recipe recipe) {
         Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.insert(recipe));

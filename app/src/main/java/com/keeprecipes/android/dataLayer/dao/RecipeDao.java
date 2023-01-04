@@ -19,9 +19,8 @@ public interface RecipeDao {
     @Delete
     void delete(Recipe recipe);
 
-    @Query("SELECT * FROM recipes WHERE title = :recipeName")
+    @Query("SELECT * FROM recipes WHERE title LIKE :recipeName")
     LiveData<Recipe> fetchByTitle(String recipeName);
-//  question: difference between useing "title = :recipeName" and "title LIKE :recipeName"
 
     @Query("SELECT * FROM recipes ORDER BY id DESC")
     LiveData<List<Recipe>> getAll();
