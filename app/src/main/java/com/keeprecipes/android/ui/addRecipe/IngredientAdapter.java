@@ -19,10 +19,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     public ArrayList<Ingredient> ingredients;
 
-    public ArrayList<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
