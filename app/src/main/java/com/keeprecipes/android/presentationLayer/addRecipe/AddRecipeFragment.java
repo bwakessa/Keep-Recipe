@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.addRecipe;
+package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import android.net.Uri;
 import android.os.Build;
@@ -89,13 +89,16 @@ public class AddRecipeFragment extends Fragment {
         });
 
         binding.removeIngredientButton.setOnClickListener(v -> {
-            ingredients.remove(ingredients.size() - 1);
-            ingredientAdapter.notifyItemRemoved(ingredients.size());
+            if (ingredients.size() > 0) {
+                ingredients.remove(ingredients.size() - 1);
+                ingredientAdapter.notifyItemRemoved(ingredients.size() + 1);
+            }
         });
 
         binding.addPhotoButton.setOnClickListener(v -> {
             // Launch the photo picker and allow the user to choose only images.
-//            galleryActivityLauncher.launch(new String[]{"image/*"});
+            // You will see red line under setMediaType() ignore that.
+            // It's an bug with kotlin code used by Google to create contract class
             PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build();
