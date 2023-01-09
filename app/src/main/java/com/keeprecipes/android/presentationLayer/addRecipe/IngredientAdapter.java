@@ -1,10 +1,9 @@
-package com.keeprecipes.android.ui.addRecipe;
+package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
             super(binding.getRoot());
             // Define click listener for the ViewHolder's View
             ingredientInputTextView = binding.ingredientTextInputEditText;
-            quantityInputTextView = binding.qtyTextInputEditText;
+//            quantityInputTextView = binding.qtyTextInputEditText;
         }
     }
 
@@ -62,7 +61,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         TextInputEditText qtyInputEditText = holder.quantityInputTextView;
         ingredientInputEditText.setText(ingredients.get(position).name);
         Log.d("Ingedient Adapter", "onBindViewHolder: " + ingredients.get(position).size);
-        qtyInputEditText.setText("");
+//        qtyInputEditText.setText("");
         ingredientInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,27 +78,27 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
             }
         });
-        qtyInputEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    int qty = Integer.parseInt(s.toString());
-                    ingredients.get(holder.getAdapterPosition()).size = Integer.parseInt(s.toString());
-                } catch (Exception ignored) {
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        qtyInputEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                try {
+//                    int qty = Integer.parseInt(s.toString());
+//                    ingredients.get(holder.getAdapterPosition()).size = Integer.parseInt(s.toString());
+//                } catch (Exception ignored) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

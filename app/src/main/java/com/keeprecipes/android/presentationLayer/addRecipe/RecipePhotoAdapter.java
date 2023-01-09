@@ -1,8 +1,7 @@
-package com.keeprecipes.android.ui.addRecipe;
+package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,11 +9,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.keeprecipes.android.databinding.IngredientItemBinding;
 import com.keeprecipes.android.databinding.PhotoItemBinding;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 public class RecipePhotoAdapter extends RecyclerView.Adapter<RecipePhotoAdapter.ViewHolder> {

@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.addRecipe;
+package com.keeprecipes.android.presentationLayer.addRecipe;
 
 public class Ingredient {
     public String name;

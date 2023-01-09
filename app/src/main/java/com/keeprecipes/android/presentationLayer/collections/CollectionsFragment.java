@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.collections;
+package com.keeprecipes.android.presentationLayer.collections;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.home;
+package com.keeprecipes.android.presentationLayer.home;
 
 public class Recipe {
     public String title;

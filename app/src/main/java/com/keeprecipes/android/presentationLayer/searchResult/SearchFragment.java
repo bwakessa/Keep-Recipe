@@ -1,4 +1,4 @@
-package com.keeprecipes.android.ui.searchResult;
+package com.keeprecipes.android.presentationLayer.searchResult;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

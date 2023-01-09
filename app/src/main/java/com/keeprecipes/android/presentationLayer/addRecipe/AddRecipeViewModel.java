@@ -1,7 +1,7 @@
-package com.keeprecipes.android.ui.addRecipe;
+package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import androidx.lifecycle.ViewModel;
 
 public class AddRecipeViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
+
 }
