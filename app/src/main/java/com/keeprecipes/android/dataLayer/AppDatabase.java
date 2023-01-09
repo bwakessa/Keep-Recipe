@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
@@ -12,6 +13,7 @@ import com.keeprecipes.android.dataLayer.entities.RecipeCollection;
 import com.keeprecipes.android.dataLayer.dao.RecipeCollectionDao;
 
 @Database(entities = {Recipe.class, RecipeCollection.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract RecipeDao recipeDao();
     public abstract RecipeCollectionDao recipeCollectionDao();
