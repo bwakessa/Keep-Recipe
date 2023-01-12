@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -25,13 +26,13 @@ import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AddRecipeFragment extends Fragment {
 
     private FragmentAddRecipeBinding binding;
     String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
     final String TAG = "AddRecipeFragment";
-    ArrayList<Ingredient> ingredients;
     ArrayList<Uri> recipePhotos;
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
@@ -49,15 +50,11 @@ public class AddRecipeFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisine);
         binding.cusineAutoCompleteTextView.setAdapter(adapter);
-        ingredients = new ArrayList<Ingredient>(List.of(new Ingredient("", 1)));
-        ingredientAdapter = new IngredientAdapter(ingredients);
+        ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
-        binding.ingredientsListView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         recipePhotos = new ArrayList<>();
         recipePhotoAdapter = new RecipePhotoAdapter(recipePhotos);
         binding.photoListView.setAdapter(recipePhotoAdapter);
-//        binding.photoListView.setLayoutManager(new LinearLayoutManager(getContext()));
         return root;
     }
 
@@ -66,6 +63,7 @@ public class AddRecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         AddRecipeViewModel mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+        mViewModel.ingredients.observe(requireActivity(), ingredients -> ingredientAdapter.submitList(ingredients));
         // To go back to previous fragment
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         // menu item click listener
@@ -84,15 +82,11 @@ public class AddRecipeFragment extends Fragment {
         });
 
         binding.addIngredientButton.setOnClickListener(v -> {
-            ingredients.add(new Ingredient("", 1));
-            ingredientAdapter.notifyItemInserted(ingredients.size());
+            mViewModel.addIngredient();
         });
 
         binding.removeIngredientButton.setOnClickListener(v -> {
-            if (ingredients.size() > 0) {
-                ingredients.remove(ingredients.size() - 1);
-                ingredientAdapter.notifyItemRemoved(ingredients.size() + 1);
-            }
+            mViewModel.removeIngredient();
         });
 
         binding.addPhotoButton.setOnClickListener(v -> {
