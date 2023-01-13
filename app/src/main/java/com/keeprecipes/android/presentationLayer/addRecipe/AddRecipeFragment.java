@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,10 +38,15 @@ public class AddRecipeFragment extends Fragment {
     ArrayList<Uri> recipePhotos;
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
+    AddRecipeViewModel mViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentAddRecipeBinding.inflate(inflater, container, false);
+        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+//        binding = FragmentAddRecipeBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_add_recipe, container, false);
+        binding.setViewModel(mViewModel);
         View root = binding.getRoot();
         // AddRecipeFragment has it's toolbar,
         // here we are setting title, back arrow and the menu for toolbar
@@ -62,7 +68,6 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AddRecipeViewModel mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
         mViewModel.ingredients.observe(requireActivity(), ingredients -> ingredientAdapter.submitList(ingredients));
         // To go back to previous fragment
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
@@ -93,7 +98,6 @@ public class AddRecipeFragment extends Fragment {
             // Launch the photo picker and allow the user to choose only images.
             // You will see red line under setMediaType() ignore that.
             // It's an bug with kotlin code used by Google to create contract class
-            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
                 PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)

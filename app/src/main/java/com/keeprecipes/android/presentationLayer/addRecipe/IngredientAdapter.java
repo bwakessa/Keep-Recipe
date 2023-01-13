@@ -5,17 +5,16 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.keeprecipes.android.databinding.IngredientItemBinding;
 
-public class IngredientAdapter extends ListAdapter<Ingredient, com.keeprecipes.android.presentationLayer.addRecipe.IngredientAdapter.ViewHolder> {
+public class IngredientAdapter extends ListAdapter<IngredientDTO, com.keeprecipes.android.presentationLayer.addRecipe.IngredientAdapter.ViewHolder> {
 
     public IngredientAdapter() {
-        super(Ingredient.DIFF_CALLBACK);
+        super(IngredientDTO.DIFF_CALLBACK);
     }
 
     /**
@@ -33,7 +32,7 @@ public class IngredientAdapter extends ListAdapter<Ingredient, com.keeprecipes.a
             quantityInputTextView = binding.qtyTextInputEditText;
         }
 
-        public void bind(Ingredient ingredient) {
+        public void bind(IngredientDTO ingredient) {
             ingredientInputTextView.setText(ingredient.name);
             quantityInputTextView.setText(String.valueOf(ingredient.size));
         }
@@ -53,7 +52,7 @@ public class IngredientAdapter extends ListAdapter<Ingredient, com.keeprecipes.a
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        Ingredient ingredient = getItem(position);
+        IngredientDTO ingredient = getItem(position);
         holder.bind(ingredient);
         Log.d("Ingedient Adapter", "onBindViewHolder: " + getItemCount());
 //        qtyInputEditText.setText("");
