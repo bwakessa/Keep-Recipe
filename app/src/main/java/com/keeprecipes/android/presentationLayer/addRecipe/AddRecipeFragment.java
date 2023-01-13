@@ -3,6 +3,7 @@ package com.keeprecipes.android.presentationLayer.addRecipe;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ext.SdkExtensions;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,6 @@ public class AddRecipeFragment extends Fragment {
         return root;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,10 +93,14 @@ public class AddRecipeFragment extends Fragment {
             // Launch the photo picker and allow the user to choose only images.
             // You will see red line under setMediaType() ignore that.
             // It's an bug with kotlin code used by Google to create contract class
-            PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build();
-            pickMedia.launch(request);
+            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
+                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build();
+                pickMedia.launch(request);
+            }
+
         });
     }
 

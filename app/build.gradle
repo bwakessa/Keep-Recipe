@@ -5,6 +5,7 @@ plugins {
 android {
     namespace 'com.keeprecipes.android'
     compileSdk 33
+    compileSdkExtension 4
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
@@ -38,8 +39,6 @@ dependencies {
     def room_version = "2.5.0"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation "androidx.activity:activity:1.6.1"
-    implementation "androidx.fragment:fragment:1.5.5"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
