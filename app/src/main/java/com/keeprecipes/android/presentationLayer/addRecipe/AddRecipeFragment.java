@@ -47,6 +47,7 @@ public class AddRecipeFragment extends Fragment {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_add_recipe, container, false);
         binding.setViewModel(mViewModel);
+        binding.setLifecycleOwner(this);
         View root = binding.getRoot();
         // AddRecipeFragment has it's toolbar,
         // here we are setting title, back arrow and the menu for toolbar
@@ -75,6 +76,7 @@ public class AddRecipeFragment extends Fragment {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_save) {// Navigate to settings screen
                 // Go back to previous fragment after saving
+                Log.d(TAG, "onViewCreated: "+mViewModel.recipe.getValue().toString());
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
@@ -104,7 +106,6 @@ public class AddRecipeFragment extends Fragment {
                         .build();
                 pickMedia.launch(request);
             }
-
         });
     }
 
