@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.keeprecipes.android.databinding.IngredientItemBinding;
 
-public class IngredientAdapter extends ListAdapter<IngredientDTO, com.keeprecipes.android.presentationLayer.addRecipe.IngredientAdapter.ViewHolder> {
+public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdapter.ViewHolder> {
 
     public IngredientAdapter() {
         super(IngredientDTO.DIFF_CALLBACK);
@@ -55,43 +55,5 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, com.keeprecipe
         IngredientDTO ingredient = getItem(position);
         holder.bind(ingredient);
         Log.d("Ingedient Adapter", "onBindViewHolder: " + getItemCount());
-//        qtyInputEditText.setText("");
-//        ingredientInputEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                ingredients.get(holder.getAdapterPosition()).name = s.toString();
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//        qtyInputEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                try {
-//                    int qty = Integer.parseInt(s.toString());
-//                    ingredients.get(holder.getAdapterPosition()).size = Integer.parseInt(s.toString());
-//                } catch (Exception ignored) {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
     }
 }

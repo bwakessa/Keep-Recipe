@@ -4,11 +4,21 @@ import java.util.ArrayList;
 
 public class RecipeDTO {
     public String title;
-    public ArrayList<String> instructions;
+    public String instructions;
     public String cuisine;
     public String collection;
-    public float portionSize;
-
-    public ArrayList<String> ingredients;
+    public String portionSize;
     public ArrayList<String> photoURI;
+
+    @Override
+    public String toString() {
+        return "RecipeDTO{" +
+                "title='" + title + '\'' +
+                ", instructions=" + instructions +
+                ", cuisine='" + cuisine + '\'' +
+                ", collection='" + collection + '\'' +
+                ", portionSize=" + portionSize +
+                ", photoURI=" + photoURI +
+                '}';
+    }
 }

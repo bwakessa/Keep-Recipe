@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Recipe Title"
                         android:inputType="textMultiLine"
-                        android:text="@{String.valueOf(viewModel.recipe.title)}" />
+                        android:text="@={viewModel.recipe.title}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -85,7 +85,7 @@
                         android:lines="10"
                         android:minLines="4"
                         android:scrollbars="vertical"
-                        android:text="@{String.valueOf(viewModel.recipe.instructions)}" />
+                        android:text="@={viewModel.recipe.instructions}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -108,7 +108,7 @@
                         android:layout_weight="1"
                         android:dropDownHeight="wrap_content"
                         android:hint="Cuisine"
-                        android:text="@{String.valueOf(viewModel.recipe.cuisine)}" />
+                        android:text="@={viewModel.recipe.cuisine}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -131,7 +131,7 @@
                         android:layout_weight="1"
                         android:dropDownHeight="wrap_content"
                         android:hint="Collection"
-                        android:text="@{String.valueOf(viewModel.recipe.cuisine)}" />
+                        android:text="@={viewModel.recipe.collection}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -154,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Portion Size"
                         android:inputType="numberDecimal"
-                        android:text="@{String.valueOf(viewModel.recipe.portionSize)}" />
+                        android:text="@={viewModel.recipe.portionSize}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

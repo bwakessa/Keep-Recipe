@@ -16,21 +16,16 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-public class AddRecipeFragment extends Fragment {
+public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
     private FragmentAddRecipeBinding binding;
     String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
@@ -61,7 +56,7 @@ public class AddRecipeFragment extends Fragment {
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
         recipePhotos = new ArrayList<>();
-        recipePhotoAdapter = new RecipePhotoAdapter(recipePhotos);
+        recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
         return root;
     }
@@ -70,13 +65,16 @@ public class AddRecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.ingredients.observe(requireActivity(), ingredients -> ingredientAdapter.submitList(ingredients));
+        mViewModel.photos.observe(requireActivity(), photo -> recipePhotoAdapter.submitList(photo));
         // To go back to previous fragment
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         // menu item click listener
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_save) {// Navigate to settings screen
                 // Go back to previous fragment after saving
-                Log.d(TAG, "onViewCreated: "+mViewModel.recipe.getValue().toString());
+                Log.d(TAG, "onViewCreated: recipe - " + mViewModel.recipe.getValue().toString());
+                Log.d(TAG, "onViewCreated: ingredients - " + mViewModel.ingredients.getValue().size());
+                Log.d(TAG, "onViewCreated: photos - " + mViewModel.photos.getValue().size());
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
@@ -133,10 +131,15 @@ public class AddRecipeFragment extends Fragment {
                 // photo picker.
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: " + uri);
-                    recipePhotos.add(uri);
-                    recipePhotoAdapter.notifyItemInserted(recipePhotos.size());
+                    mViewModel.addPhotos(uri);
                 } else {
                     Log.d("PhotoPicker", "No media selected");
                 }
             });
+
+    @Override
+    public void removeItem(int position) {
+        Log.d(TAG, "removeItem: " + position);
+        mViewModel.removePhotos(position);
+    }
 }

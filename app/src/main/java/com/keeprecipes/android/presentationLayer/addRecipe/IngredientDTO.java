@@ -15,6 +15,15 @@ public class IngredientDTO {
     }
 
     @Override
+    public String toString() {
+        return "IngredientDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", size=" + size +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
