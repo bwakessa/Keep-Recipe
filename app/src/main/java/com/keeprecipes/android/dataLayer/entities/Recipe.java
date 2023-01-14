@@ -20,10 +20,13 @@ public class Recipe {
     public String cuisine;
 
     @ColumnInfo(name = "instructions")
-    public ArrayList<String> instructions;
+    public String instructions;
 
     @ColumnInfo(name = "ingredients")
-    public ArrayList<String> ingredients;
+    public List<String> ingredients;
+
+    @ColumnInfo(name = "photos")
+    public List<String> photos;
 
     @ColumnInfo(name = "data_created")
     public Date dateCreated;
@@ -52,19 +55,19 @@ public class Recipe {
         this.cuisine = cuisine;
     }
 
-    public ArrayList<String> getInstructions() {
+    public String getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(ArrayList<String> instructions) {
+    public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 
-    public ArrayList<String> getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 

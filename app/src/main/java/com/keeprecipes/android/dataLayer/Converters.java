@@ -22,28 +22,28 @@ public class Converters {
         return date == null ? null : date.getTime();
     }
 
-    @TypeConverter
-    public static String instructionsToString(List<String> instructions) {
-        if (instructions == null) {return null;}
-        else {
-            StringBuilder s = new StringBuilder(instructions.get(0));
-            for (int i = 1; i < instructions.size(); i ++){
-                s.append(String.format(",%s", instructions.get(i)));
-            }
-            return s.toString();
-        }
-    }
-
-    @TypeConverter
-    public static ArrayList<String> stringToInstructions(String s) {
-        // Assume that string is comma seperated
-        if (s == null) {return null;}
-        else {
-            String[] inst = s.split(",");
-            List<String> instr = Arrays.asList(inst);
-            return new ArrayList<String>(instr);
-        }
-    }
+//    @TypeConverter
+//    public static String instructionsToString(List<String> instructions) {
+//        if (instructions == null) {return null;}
+//        else {
+//            StringBuilder s = new StringBuilder(instructions.get(0));
+//            for (int i = 1; i < instructions.size(); i ++){
+//                s.append(String.format(",%s", instructions.get(i)));
+//            }
+//            return s.toString();
+//        }
+//    }
+//
+//    @TypeConverter
+//    public static ArrayList<String> stringToInstructions(String s) {
+//        // Assume that string is comma seperated
+//        if (s == null) {return null;}
+//        else {
+//            String[] inst = s.split(",");
+//            List<String> instr = Arrays.asList(inst);
+//            return new ArrayList<String>(instr);
+//        }
+//    }
 //Need type converters for Collections: ArrayList<Recipe> to String (fields separated by commas, recipes separated by |)
 //Need type converter to convert from String (following above format) to ArrayList<Recipe>
     //PROBLEM: how to instantiate new Recipe objects? (lack of constructor; create a getNewInstance method?)
@@ -59,9 +59,9 @@ public class Converters {
             s.append(",");
             s.append(String.valueOf(recipe.getCuisine()));
             s.append(",");
-            s.append((instructionsToString(recipe.getInstructions())));
+            s.append(String.valueOf(recipe.getInstructions()));
             s.append(",");
-            s.append((instructionsToString(recipe.getIngredients())));
+            s.append((ingredientsToString(recipe.getIngredients())));
             s.append(",");
             s.append(String.valueOf(dateToTimestamp((recipe.getDateCreated()))));
 
@@ -79,8 +79,8 @@ public class Converters {
             r.setId(Integer.parseInt(data[0]));
             r.setTitle(data[1]);
             r.setCuisine(data[2]);
-            r.setInstructions(stringToInstructions(data[3]));
-            r.setIngredients(stringToInstructions(data[4]));
+            r.setInstructions(data[3]);
+            r.setIngredients(stringToIngredients(data[4]));
             r.setDateCreated(new Date(Long.parseLong(data[5])));
 
             return r;
@@ -117,26 +117,26 @@ public class Converters {
 
 
 
-//    @TypeConverter
-//    public static String ingredientsToString(List<String> ingredients) {
-//        if (ingredients == null) {return null;}
-//        else {
-//            StringBuilder s = new StringBuilder(ingredients.get(0));
-//            for (int i = 1; i < ingredients.size(); i ++){
-//                s.append(String.format("|%s", ingredients.get(i)));
-//            }
-//            return s.toString();
-//        }
-//    }
-//
-//    @TypeConverter
-//    public static List<String> stringToIngredients(String s) {
-//        // Assume string is | seperated
-//        if (s == null) {return null;}
-//        else {
-//            String[] ing = s.split("");
-//            List<String> ingr = Arrays.asList(ing);
-//            return new ArrayList<String>(ingr);
-//        }
-//    }
+    @TypeConverter
+    public static String ingredientsToString(List<String> ingredients) {
+        if (ingredients == null) {return null;}
+        else {
+            StringBuilder s = new StringBuilder(ingredients.get(0));
+            for (int i = 1; i < ingredients.size(); i ++){
+                s.append(String.format("|%s", ingredients.get(i)));
+            }
+            return s.toString();
+        }
+    }
+
+    @TypeConverter
+    public static List<String> stringToIngredients(String s) {
+        // Assume string is | seperated
+        if (s == null) {return null;}
+        else {
+            String[] ing = s.split("");
+            List<String> ingr = Arrays.asList(ing);
+            return new ArrayList<String>(ingr);
+        }
+    }
 }
