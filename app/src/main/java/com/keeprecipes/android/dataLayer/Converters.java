@@ -7,6 +7,7 @@ import androidx.room.TypeConverter;
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,14 +15,14 @@ import java.util.List;
 public class Converters {
 
     @TypeConverter
-    public static Date timeStampToDate(Long value) {
-        return value == null ? null : new Date(value);
+    public static Instant timeStampToDate(Long value) {
+        return value == null ? null : Instant.ofEpochSecond(value);
         // {whatever operation} BOOLEAN statement ? TRUE result : FALSE result
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
+    public static Long dateToTimestamp(Instant date) {
+        return date == null ? null : date.getEpochSecond();
     }
 
 //    @TypeConverter
@@ -94,7 +95,7 @@ public class Converters {
             r.setPortionSize(data[5]);
             r.setIngredients(stringToIngredients(data[6]));
             r.setPhotos(stringToPhotos(data[7]));
-            r.setDateCreated(new Date(Long.parseLong(data[5])));
+            r.setDateCreated(Instant.parse(data[8]));
             return r;
         }
     }

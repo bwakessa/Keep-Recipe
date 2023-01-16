@@ -8,10 +8,13 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AddRecipeViewModel extends AndroidViewModel {
@@ -60,6 +63,13 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void saveRecipe() {
         Recipe recipeToSave = new Recipe();
-//        recipeRepository.insert(recipe.getValue());
+        recipeToSave.setTitle(recipe.getValue().title);
+        recipeToSave.setInstructions(recipe.getValue().instructions);
+        recipeToSave.setCuisine(recipe.getValue().cuisine);
+        recipeToSave.setCollection(recipe.getValue().collection);
+        recipeToSave.setPortionSize(recipe.getValue().portionSize);
+        recipeToSave.setDateCreated(Instant.now());
+//        recipeToSave.setIngredients(new Ingredient(ing));
+        recipeRepository.insert(recipeToSave);
     }
 }

@@ -74,6 +74,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Log.d(TAG, "onViewCreated: recipe - " + mViewModel.recipe.getValue().toString());
                 Log.d(TAG, "onViewCreated: ingredients - " + mViewModel.ingredients.getValue().size());
                 Log.d(TAG, "onViewCreated: photos - " + mViewModel.photos.getValue().size());
+                mViewModel.saveRecipe();
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;

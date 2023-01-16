@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Date;
 
@@ -36,7 +37,7 @@ public class Recipe {
     public List<Uri> photos;
 
     @ColumnInfo(name = "data_created")
-    public Date dateCreated;
+    public Instant dateCreated;
 
     public int getId() {
         return id;
@@ -86,11 +87,11 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public Date getDateCreated() {
+    public Instant getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(Instant dateCreated) {
         this.dateCreated = dateCreated;
     }
 
