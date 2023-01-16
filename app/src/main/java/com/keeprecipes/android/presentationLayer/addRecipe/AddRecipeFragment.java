@@ -38,7 +38,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
-//        binding = FragmentAddRecipeBinding.inflate(inflater, container, false);
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_add_recipe, container, false);
         binding.setViewModel(mViewModel);
