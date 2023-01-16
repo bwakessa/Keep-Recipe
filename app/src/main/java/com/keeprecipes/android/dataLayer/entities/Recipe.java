@@ -1,10 +1,11 @@
 package com.keeprecipes.android.dataLayer.entities;
 
+import android.net.Uri;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -16,17 +17,23 @@ public class Recipe {
     @ColumnInfo(name = "title")
     public String title;
 
-    @ColumnInfo(name = "cuisine")
-    public String cuisine;
-
     @ColumnInfo(name = "instructions")
     public String instructions;
 
+    @ColumnInfo(name = "cuisine")
+    public String cuisine;
+
+    @ColumnInfo(name = "collection")
+    public String collection;
+
+    @ColumnInfo(name = "portion-size")
+    public String portionSize;
+
     @ColumnInfo(name = "ingredients")
-    public List<String> ingredients;
+    public List<Ingredient> ingredients;
 
     @ColumnInfo(name = "photos")
-    public List<String> photos;
+    public List<Uri> photos;
 
     @ColumnInfo(name = "data_created")
     public Date dateCreated;
@@ -55,6 +62,14 @@ public class Recipe {
         this.cuisine = cuisine;
     }
 
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
     public String getInstructions() {
         return instructions;
     }
@@ -63,11 +78,11 @@ public class Recipe {
         this.instructions = instructions;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -77,5 +92,21 @@ public class Recipe {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public String getPortionSize() {
+        return portionSize;
+    }
+
+    public void setPortionSize(String portionSize) {
+        this.portionSize = portionSize;
+    }
+
+    public List<Uri> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Uri> photos) {
+        this.photos = photos;
     }
 }

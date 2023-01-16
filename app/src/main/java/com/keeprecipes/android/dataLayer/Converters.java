@@ -1,11 +1,13 @@
 package com.keeprecipes.android.dataLayer;
 
+import android.net.Uri;
+
 import androidx.room.TypeConverter;
 
+import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -50,20 +52,27 @@ public class Converters {
 
     @TypeConverter
     public static String recipeToString(Recipe recipe) {
-        if (recipe == null) {return null;}
-        else {
+        if (recipe == null) {
+            return null;
+        } else {
             StringBuilder s = new StringBuilder();
-            s.append(String.valueOf(recipe.getId()));
+            s.append(recipe.getId());
             s.append(",");
-            s.append(String.valueOf(recipe.getTitle()));
+            s.append(recipe.getTitle());
             s.append(",");
-            s.append(String.valueOf(recipe.getCuisine()));
+            s.append(recipe.getInstructions());
             s.append(",");
-            s.append(String.valueOf(recipe.getInstructions()));
+            s.append(recipe.getCuisine());
             s.append(",");
-            s.append((ingredientsToString(recipe.getIngredients())));
+            s.append(recipe.getCollection());
             s.append(",");
-            s.append(String.valueOf(dateToTimestamp((recipe.getDateCreated()))));
+            s.append(recipe.getPortionSize());
+            s.append(",");
+            s.append(ingredientsToString(recipe.getIngredients()));
+            s.append(",");
+            s.append(photosToString(recipe.getPhotos()));
+            s.append(",");
+            s.append(dateToTimestamp((recipe.getDateCreated())));
 
             return s.toString();
         }
@@ -71,29 +80,33 @@ public class Converters {
 
     @TypeConverter
     public static Recipe stringToRecipe(String s) {
-    // Precondition: <s> follows format specified in the above function
-        if (s == null) {return null;}
-        else {
+        // Precondition: <s> follows format specified in the above function
+        if (s == null) {
+            return null;
+        } else {
             Recipe r = new Recipe();
             String[] data = s.split(",");
             r.setId(Integer.parseInt(data[0]));
             r.setTitle(data[1]);
-            r.setCuisine(data[2]);
-            r.setInstructions(data[3]);
-            r.setIngredients(stringToIngredients(data[4]));
+            r.setInstructions(data[2]);
+            r.setCuisine(data[3]);
+            r.setCollection(data[4]);
+            r.setPortionSize(data[5]);
+            r.setIngredients(stringToIngredients(data[6]));
+            r.setPhotos(stringToPhotos(data[7]));
             r.setDateCreated(new Date(Long.parseLong(data[5])));
-
             return r;
         }
     }
 
     @TypeConverter
     public static String collectionToString(ArrayList<Recipe> recipes) {
-        if (recipes == null) {return null;}
-        else {
+        if (recipes == null) {
+            return null;
+        } else {
             StringBuilder s = new StringBuilder();
             s.append(recipeToString(recipes.get(0)));
-            for (int i = 1; i < recipes.size(); i ++) {
+            for (int i = 1; i < recipes.size(); i++) {
                 s.append("|");
                 s.append(recipeToString(recipes.get(i)));
             }
@@ -103,10 +116,11 @@ public class Converters {
 
     @TypeConverter
     public static ArrayList<Recipe> stringToCollection(String s) {
-    //precondition: <s> follows same format as specified in above function
-        if (s == null) {return null;}
-        else {
-            ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        //precondition: <s> follows same format as specified in above function
+        if (s == null) {
+            return null;
+        } else {
+            ArrayList<Recipe> recipes = new ArrayList<>();
             String[] data = s.split("\\|");
             for (String recipeData : data) {
                 recipes.add(stringToRecipe(recipeData));
@@ -115,28 +129,60 @@ public class Converters {
         }
     }
 
-
-
     @TypeConverter
-    public static String ingredientsToString(List<String> ingredients) {
-        if (ingredients == null) {return null;}
-        else {
-            StringBuilder s = new StringBuilder(ingredients.get(0));
-            for (int i = 1; i < ingredients.size(); i ++){
-                s.append(String.format("|%s", ingredients.get(i)));
+    public static String ingredientsToString(List<Ingredient> ingredients) {
+        if (ingredients == null) {
+            return null;
+        } else {
+            StringBuilder s = new StringBuilder(ingredients.get(0).name + "`" + ingredients.get(0).size);
+            for (int i = 1; i < ingredients.size(); i++) {
+                s.append(String.format("|%s`%s", ingredients.get(i).name, ingredients.get(i).size));
             }
             return s.toString();
         }
     }
 
     @TypeConverter
-    public static List<String> stringToIngredients(String s) {
-        // Assume string is | seperated
-        if (s == null) {return null;}
-        else {
-            String[] ing = s.split("");
-            List<String> ingr = Arrays.asList(ing);
-            return new ArrayList<String>(ingr);
+    public static List<Ingredient> stringToIngredients(String s) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        if (s == null) {
+            return null;
+        } else {
+            String[] i = s.split("");
+            for (String x : i) {
+                String[] y = x.split("`");
+                Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]));
+                ingredients.add(ingredient);
+            }
+            return ingredients;
+        }
+    }
+
+    @TypeConverter
+    public static String photosToString(List<Uri> photos) {
+        if (photos == null) {
+            return null;
+        } else {
+            StringBuilder s = new StringBuilder(photos.get(0).toString());
+            for (int i = 1; i < photos.size(); i++) {
+                s.append("|");
+                s.append(photos.get(i).toString());
+            }
+            return s.toString();
+        }
+    }
+
+    @TypeConverter
+    public static List<Uri> stringToPhotos(String s) {
+        if (s == null) {
+            return null;
+        } else {
+            String[] i = s.split("\\|");
+            List<Uri> photos = new ArrayList<>();
+            for (String x : i) {
+                photos.add(Uri.parse(x));
+            }
+            return photos;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeDTO {
     public String title;
@@ -8,7 +9,7 @@ public class RecipeDTO {
     public String cuisine;
     public String collection;
     public String portionSize;
-    public ArrayList<String> photoURI;
+    public List photoURI;
 
     @Override
     public String toString() {
