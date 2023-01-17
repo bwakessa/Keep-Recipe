@@ -151,7 +151,7 @@ public class Converters {
         } else {
             String[] i = s.split("");
             for (String x : i) {
-                String[] y = x.split("`");
+                String[] y = x.split("\\|");
                 Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]));
                 ingredients.add(ingredient);
             }
