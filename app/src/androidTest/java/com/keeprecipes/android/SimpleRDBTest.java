@@ -49,7 +49,6 @@ public class SimpleRDBTest {
 
     @AfterClass
     public static void closeDb() throws IOException {
-        //In the dao, do delete all values from database
         recipeDao.drop();
         db.close();
     }
@@ -69,16 +68,11 @@ public class SimpleRDBTest {
 
         alfredo.setTitle("Chicken");
         alfredo.setCuisine("Italian");
-//        alfredo.setId(1);
 
         recipeDao.insert(alfredo);
 
-        LiveData<Recipe> gotten_alfredo = recipeDao.fetchByTitle("Chicken");
-//        LiveData<List<Recipe>> gotten_alfredo = recipeDao.getAll();
-//        List<Recipe> values = gotten_alfredo.getValue();
-        Recipe value = getOrAwaitValue(gotten_alfredo);
-
-        assert (value.getTitle() == "Chicken");
+        Recipe gotten_alfredo = getOrAwaitValue(recipeDao.fetchByTitle("Chicken"));
+        assert (gotten_alfredo.getTitle().equals("Chicken"));
     }
 
     public static <T> T getOrAwaitValue(final LiveData<T> liveData) throws InterruptedException {
