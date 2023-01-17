@@ -50,7 +50,7 @@ public class SimpleRDBTest {
     @AfterClass
     public static void closeDb() throws IOException {
         //In the dao, do delete all values from database
-        recipeDao.
+        recipeDao.drop();
         db.close();
     }
 
@@ -101,3 +101,5 @@ public class SimpleRDBTest {
         return (T) data[0];
     }
 }
+
+
