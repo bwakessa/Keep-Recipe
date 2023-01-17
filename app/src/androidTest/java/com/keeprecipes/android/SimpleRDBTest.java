@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @RunWith(AndroidJUnit4.class)
 public class SimpleRDBTest {
@@ -40,6 +42,7 @@ public class SimpleRDBTest {
     @AfterClass
     public static void closeDb() throws IOException {
         //In the dao, do delete all values from database
+        recipeDao.drop();
         db.close();
     }
 
@@ -54,18 +57,17 @@ public class SimpleRDBTest {
         ingredients.add(new Ingredient("cheese", 1));
         alfredo.setIngredients(ingredients);
 
-        alfredo.setInstructions( "Cook the damn food");
+        alfredo.setInstructions("Cook the damn food");
 
         alfredo.setTitle("Chicken");
         alfredo.setCuisine("Italian");
-//        alfredo.setId(1);
 
         recipeDao.insert(alfredo);
 
-        LiveData<Recipe> gotten_alfredo = recipeDao.fetchByTitle("Chicken");
+        Recipe gotten_alfredo = recipeDao.fetchByTitle("Chicken").getValue();
 
-        Recipe value = gotten_alfredo.getValue();
-        assert (value.getTitle() == "Chicken Alfredo");
+        List<Recipe> recipe = recipeDao.getAll().getValue();
+        assert (Objects.equals(gotten_alfredo.title, "Chicken"));
     }
 
 }

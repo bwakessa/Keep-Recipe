@@ -149,7 +149,7 @@ public class Converters {
         if (s == null) {
             return null;
         } else {
-            String[] i = s.split("");
+            String[] i = s.split("\\|");
             for (String x : i) {
                 String[] y = x.split("`");
                 Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]));
