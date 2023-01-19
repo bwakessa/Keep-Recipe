@@ -63,8 +63,8 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel.ingredients.observe(requireActivity(), ingredients -> ingredientAdapter.submitList(ingredients));
-        mViewModel.photos.observe(requireActivity(), photo -> recipePhotoAdapter.submitList(photo));
+        mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
+        mViewModel.photos.observe(getViewLifecycleOwner(), recipePhotoAdapter::submitList);
         // To go back to previous fragment
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         // menu item click listener

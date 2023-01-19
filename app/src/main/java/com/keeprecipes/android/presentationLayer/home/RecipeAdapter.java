@@ -5,15 +5,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.RecipeItemBinding;
 
-import java.util.ArrayList;
+public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder> {
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
-
-    public ArrayList<Recipe> recipes;
+    protected RecipeAdapter() {
+        super(Recipe.DIFF_CALLBACK);
+    }
 
     /**
      * Provide a reference to the type of views that you are using
@@ -27,16 +29,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             // Define click listener for the ViewHolder's View
             recipeTitle = binding.recipeTitle;
         }
-    }
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     *                by RecyclerView.
-     */
-    public RecipeAdapter(ArrayList<Recipe> dataSet) {
-        recipes = dataSet;
+        public void bind(Recipe recipe) {
+            recipeTitle.setText(recipe.title);
+        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -49,12 +45,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int position) {
-        TextView recipeTitle = holder.recipeTitle;
-        recipeTitle.setText(recipes.get(position).title);
-    }
-
-    @Override
-    public int getItemCount() {
-        return recipes.size();
+        Recipe recipe = getItem(position);
+        holder.bind(recipe);
     }
 }

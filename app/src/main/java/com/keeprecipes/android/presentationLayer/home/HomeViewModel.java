@@ -1,19 +1,29 @@
 package com.keeprecipes.android.presentationLayer.home;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+import com.keeprecipes.android.dataLayer.entities.Recipe;
+import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
-    private final MutableLiveData<String> mText;
+import java.util.List;
 
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+public class HomeViewModel extends AndroidViewModel {
+
+    private LiveData<List<Recipe>> recipe;
+
+    private RecipeRepository recipeRepository;
+
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
+        recipeRepository = new RecipeRepository(application);
+        recipe = recipeRepository.getAllRecipes();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<Recipe>> getRecipe() {
+        return recipe;
     }
 }

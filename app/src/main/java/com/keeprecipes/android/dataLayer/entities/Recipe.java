@@ -2,13 +2,17 @@ package com.keeprecipes.android.dataLayer.entities;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.keeprecipes.android.presentationLayer.home.RecipeDiff;
+
 import java.time.Instant;
 import java.util.List;
-import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "recipes")
 public class Recipe {
@@ -110,4 +114,29 @@ public class Recipe {
     public void setPhotos(List<Uri> photos) {
         this.photos = photos;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return id == recipe.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public static final DiffUtil.ItemCallback<Recipe> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }
