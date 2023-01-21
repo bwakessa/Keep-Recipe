@@ -1,7 +1,11 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
 import android.app.Application;
+import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.os.FileUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,6 +16,15 @@ import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,8 +39,13 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     private RecipeRepository recipeRepository;
 
+    private Application application;
+
+    private final String TAG = "AddRecipeViewModel";
+
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);
+        this.application = application;
         recipeRepository = new RecipeRepository(application);
     }
 
@@ -61,7 +79,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
     }
 
-    public void saveRecipe() {
+    public void saveRecipe() throws IOException {
         Recipe recipeToSave = new Recipe();
         recipeToSave.setTitle(recipe.getValue().title);
         recipeToSave.setInstructions(recipe.getValue().instructions);
@@ -69,7 +87,22 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.setCollection(recipe.getValue().collection);
         recipeToSave.setPortionSize(recipe.getValue().portionSize);
         recipeToSave.setDateCreated(Instant.now());
-//        recipeToSave.setIngredients(new Ingredient(ing));
+        List<PhotoDTO> photoDTOList = photos.getValue();
+        List<String> photoFiles = new ArrayList<>();
+        for (PhotoDTO photo : photoDTOList) {
+            try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
+                String fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
+                try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
+                    File file = new File(photo.uri.getPath());
+                    Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
+                    Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
+                    FileUtils.copy(inputStream, outputStream);
+                    Log.d(TAG, "saveRecipe: fileName " + fileName);
+                    photoFiles.add(fileName);
+                }
+            }
+        }
+        recipeToSave.setPhotos(photoFiles);
         recipeRepository.insert(recipeToSave);
     }
 }

@@ -38,7 +38,7 @@ public class Recipe {
     public List<Ingredient> ingredients;
 
     @ColumnInfo(name = "photos")
-    public List<Uri> photos;
+    public List<String> photos;
 
     @ColumnInfo(name = "data_created")
     public Instant dateCreated;
@@ -107,11 +107,11 @@ public class Recipe {
         this.portionSize = portionSize;
     }
 
-    public List<Uri> getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Uri> photos) {
+    public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
 

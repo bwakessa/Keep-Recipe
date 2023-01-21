@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
@@ -74,7 +75,11 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Log.d(TAG, "onViewCreated: recipe - " + mViewModel.recipe.getValue().toString());
                 Log.d(TAG, "onViewCreated: ingredients - " + mViewModel.ingredients.getValue().size());
                 Log.d(TAG, "onViewCreated: photos - " + mViewModel.photos.getValue().size());
-                mViewModel.saveRecipe();
+                try {
+                    mViewModel.saveRecipe();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
@@ -131,6 +136,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 // photo picker.
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: " + uri);
+                    Log.d(TAG, "File type: "+getContext().getContentResolver().getType(uri).split("/")[1]);
                     mViewModel.addPhotos(uri);
                 } else {
                     Log.d("PhotoPicker", "No media selected");

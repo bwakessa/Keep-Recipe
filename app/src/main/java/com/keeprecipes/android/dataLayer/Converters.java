@@ -9,6 +9,7 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -160,30 +161,26 @@ public class Converters {
     }
 
     @TypeConverter
-    public static String photosToString(List<Uri> photos) {
+    public static String photosToString(List<String> photos) {
         if (photos == null) {
             return null;
         } else {
-            StringBuilder s = new StringBuilder(photos.get(0).toString());
+            StringBuilder s = new StringBuilder(photos.get(0));
             for (int i = 1; i < photos.size(); i++) {
                 s.append("|");
-                s.append(photos.get(i).toString());
+                s.append(photos.get(i));
             }
             return s.toString();
         }
     }
 
     @TypeConverter
-    public static List<Uri> stringToPhotos(String s) {
+    public static List<String> stringToPhotos(String s) {
         if (s == null) {
             return null;
         } else {
             String[] i = s.split("\\|");
-            List<Uri> photos = new ArrayList<>();
-            for (String x : i) {
-                photos.add(Uri.parse(x));
-            }
-            return photos;
+            return new ArrayList<>(Arrays.asList(i));
         }
     }
 }
