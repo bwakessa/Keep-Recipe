@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_addRecipeFragment"
             app:destination="@id/addRecipeFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
     </fragment>
 
     <fragment
@@ -30,4 +33,9 @@
         android:name="com.keeprecipes.android.presentationLayer.searchResult.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.keeprecipes.android.RecipeDetailFragment"
+        android:label="fragment_recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail" />
 </navigation>
