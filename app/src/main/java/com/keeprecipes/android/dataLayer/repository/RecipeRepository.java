@@ -3,14 +3,13 @@ package com.keeprecipes.android.dataLayer.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import java.util.List;
-import java.util.concurrent.Executors;
 
 import com.keeprecipes.android.dataLayer.AppDatabase;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
+
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class RecipeRepository {
 
@@ -22,7 +21,9 @@ public class RecipeRepository {
         allRecipes = mRecipeDao.getAll();
     }
 
-    public LiveData<List<Recipe>> getAllRecipes() {return allRecipes;}
+    public LiveData<List<Recipe>> getAllRecipes() {
+        return allRecipes;
+    }
 
     public LiveData<Recipe> fetchByTitle(String title) {
         return mRecipeDao.fetchByTitle(title);

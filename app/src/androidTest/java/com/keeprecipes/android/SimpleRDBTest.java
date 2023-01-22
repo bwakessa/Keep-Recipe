@@ -1,14 +1,5 @@
 package com.keeprecipes.android;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import android.content.Context;
 
 import androidx.annotation.Nullable;
@@ -18,17 +9,20 @@ import androidx.lifecycle.Observer;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-
 import com.keeprecipes.android.dataLayer.AppDatabase;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +47,26 @@ public class SimpleRDBTest {
         db.close();
     }
 
+    public static <T> T getOrAwaitValue(final LiveData<T> liveData) throws InterruptedException {
+        final Object[] data = new Object[1];
+        final CountDownLatch latch = new CountDownLatch(1);
+        Observer<T> observer = new Observer<T>() {
+            @Override
+            public void onChanged(@Nullable T o) {
+                data[0] = o;
+                latch.countDown();
+                liveData.removeObserver(this);
+            }
+        };
+        liveData.observeForever(observer);
+        // Don't wait indefinitely if the LiveData is not set.
+        if (!latch.await(2, TimeUnit.SECONDS)) {
+            throw new RuntimeException("LiveData value was never set.");
+        }
+        //noinspection unchecked
+        return (T) data[0];
+    }
+
     @Test
     public void testExistsInDb() throws InterruptedException {
         Recipe alfredo = new Recipe();
@@ -73,26 +87,6 @@ public class SimpleRDBTest {
 
         Recipe gotten_alfredo = getOrAwaitValue(recipeDao.fetchByTitle("Chicken"));
         assert (gotten_alfredo.getTitle().equals("Chicken"));
-    }
-
-    public static <T> T getOrAwaitValue(final LiveData<T> liveData) throws InterruptedException {
-        final Object[] data = new Object[1];
-        final CountDownLatch latch = new CountDownLatch(1);
-        Observer<T> observer = new Observer<T>() {
-            @Override
-            public void onChanged(@Nullable T o) {
-                data[0] = o;
-                latch.countDown();
-                liveData.removeObserver(this);
-            }
-        };
-        liveData.observeForever(observer);
-        // Don't wait indefinitely if the LiveData is not set.
-        if (!latch.await(2, TimeUnit.SECONDS)) {
-            throw new RuntimeException("LiveData value was never set.");
-        }
-        //noinspection unchecked
-        return (T) data[0];
     }
 }
 

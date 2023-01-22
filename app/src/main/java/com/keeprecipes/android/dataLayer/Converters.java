@@ -1,7 +1,5 @@
 package com.keeprecipes.android.dataLayer;
 
-import android.net.Uri;
-
 import androidx.room.TypeConverter;
 
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
@@ -10,7 +8,6 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Converters {

@@ -4,6 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 public class IngredientDTO {
+    public static final DiffUtil.ItemCallback<IngredientDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull IngredientDTO oldItem, @NonNull IngredientDTO newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull IngredientDTO oldItem, @NonNull IngredientDTO newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
     public int id;
     public String name;
     public int size;
@@ -35,16 +46,4 @@ public class IngredientDTO {
     public int hashCode() {
         return this.id;
     }
-
-    public static final DiffUtil.ItemCallback<IngredientDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull IngredientDTO oldItem, @NonNull IngredientDTO newItem) {
-            return oldItem.id == newItem.id;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull IngredientDTO oldItem, @NonNull IngredientDTO newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }

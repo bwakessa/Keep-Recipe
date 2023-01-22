@@ -3,45 +3,32 @@ package com.keeprecipes.android.presentationLayer.addRecipe;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.FileUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AddRecipeViewModel extends AndroidViewModel {
 
+    private final String TAG = "AddRecipeViewModel";
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
-
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-
     private RecipeRepository recipeRepository;
-
     private Application application;
-
-    private final String TAG = "AddRecipeViewModel";
 
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);

@@ -1,6 +1,5 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeDTO {

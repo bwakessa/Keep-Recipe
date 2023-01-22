@@ -28,13 +28,26 @@ import java.util.ArrayList;
 
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
-    private FragmentAddRecipeBinding binding;
-    String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
     final String TAG = "AddRecipeFragment";
+    String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
     ArrayList<Uri> recipePhotos;
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
+    // Registers a photo picker activity launcher in single-select mode.
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                // Callback is invoked after the user selects a media item or closes the
+                // photo picker.
+                if (uri != null) {
+                    Log.d("PhotoPicker", "Selected URI: " + uri);
+                    Log.d(TAG, "File type: " + getContext().getContentResolver().getType(uri).split("/")[1]);
+                    mViewModel.addPhotos(uri);
+                } else {
+                    Log.d("PhotoPicker", "No media selected");
+                }
+            });
+    private FragmentAddRecipeBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -112,12 +125,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
 //    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
 //        public void onActivityResult(Uri result) {
 //            if (result != null) {
@@ -129,19 +136,11 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 //        }
 //    });
 
-    // Registers a photo picker activity launcher in single-select mode.
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                // Callback is invoked after the user selects a media item or closes the
-                // photo picker.
-                if (uri != null) {
-                    Log.d("PhotoPicker", "Selected URI: " + uri);
-                    Log.d(TAG, "File type: "+getContext().getContentResolver().getType(uri).split("/")[1]);
-                    mViewModel.addPhotos(uri);
-                } else {
-                    Log.d("PhotoPicker", "No media selected");
-                }
-            });
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
     @Override
     public void removeItem(int position) {

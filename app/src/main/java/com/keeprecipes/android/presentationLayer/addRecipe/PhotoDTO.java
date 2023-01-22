@@ -8,6 +8,17 @@ import androidx.recyclerview.widget.DiffUtil;
 import java.util.Objects;
 
 public class PhotoDTO {
+    public static final DiffUtil.ItemCallback<PhotoDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull PhotoDTO oldItem, @NonNull PhotoDTO newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull PhotoDTO oldItem, @NonNull PhotoDTO newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
     public int id;
     public Uri uri;
 
@@ -37,16 +48,4 @@ public class PhotoDTO {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public static final DiffUtil.ItemCallback<PhotoDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull PhotoDTO oldItem, @NonNull PhotoDTO newItem) {
-            return oldItem.id == newItem.id;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull PhotoDTO oldItem, @NonNull PhotoDTO newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }
