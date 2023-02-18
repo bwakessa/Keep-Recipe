@@ -19,6 +19,9 @@ public interface RecipeDao {
     @Delete
     void delete(Recipe recipe);
 
+    @Query("SELECT * FROM recipes WHERE id LIKE :recipeId")
+    LiveData<Recipe> fetchById(int recipeId);
+
     @Query("SELECT * FROM recipes WHERE title LIKE :recipeName")
     LiveData<Recipe> fetchByTitle(String recipeName);
 

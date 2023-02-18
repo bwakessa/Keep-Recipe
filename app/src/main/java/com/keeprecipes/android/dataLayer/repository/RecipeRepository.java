@@ -29,6 +29,10 @@ public class RecipeRepository {
         return mRecipeDao.fetchByTitle(title);
     }
 
+    public LiveData<Recipe> fetchById(int id) {
+        return mRecipeDao.fetchById(id);
+    }
+
     public void insert(Recipe recipe) {
         Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.insert(recipe));
     }

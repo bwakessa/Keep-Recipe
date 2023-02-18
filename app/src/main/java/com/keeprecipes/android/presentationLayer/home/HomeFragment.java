@@ -26,14 +26,13 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
         homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
         binding.recipeListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        return root;
+        return binding.getRoot();
     }
 
     @Override

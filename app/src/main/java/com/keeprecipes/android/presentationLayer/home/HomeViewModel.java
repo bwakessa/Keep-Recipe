@@ -26,4 +26,8 @@ public class HomeViewModel extends AndroidViewModel {
     public LiveData<List<Recipe>> getRecipe() {
         return recipe;
     }
+
+    public LiveData<Recipe> getRecipeById(int id){
+        return recipeRepository.fetchById(id);
+    }
 }

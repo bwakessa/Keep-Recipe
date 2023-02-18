@@ -2,7 +2,6 @@ package com.keeprecipes.android.presentationLayer.home;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -15,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.Downsampler;
 import com.bumptech.glide.request.RequestOptions;
-import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.RecipeItemBinding;
+import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections.ActionNavigationHomeToRecipeDetailFragment;
 import com.keeprecipes.android.utils.Util;
 
 public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder> {
@@ -56,7 +55,10 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
             // Define click listener for the ViewHolder's View
             recipeTitle = binding.recipeTitle;
             recipeImage = binding.recipeImage;
-            binding.cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_home_to_recipeDetailFragment));
+
+            ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
+            action.setRecipeId(1);
+            binding.cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(action));
         }
 
         public void bind(Recipe recipe) {
