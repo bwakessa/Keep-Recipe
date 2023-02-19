@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.Downsampler;
+import com.bumptech.glide.request.RequestOptions;
 import com.keeprecipes.android.databinding.PhotoItemBinding;
 
 public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter.ViewHolder> {
@@ -43,6 +46,8 @@ public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        private final RequestOptions options = new RequestOptions().set(Downsampler.ALLOW_HARDWARE_CONFIG, true);
         private final ImageView recipeImageView;
         private final Button deletePhotoButton;
 
@@ -54,7 +59,10 @@ public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter
         }
 
         public void bind(PhotoDTO photo, View.OnClickListener onClickListener) {
-            recipeImageView.setImageURI(photo.uri);
+            Glide.with(recipeImageView.getContext())
+                    .load(photo.uri)
+                    .apply(options)
+                    .into(recipeImageView);
             deletePhotoButton.setOnClickListener(onClickListener);
         }
     }
