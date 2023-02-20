@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/addRecipeFragment"
         android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
-        android:label="fragment_add_recipe"
+        android:label="Add Recipe"
         tools:layout="@layout/fragment_add_recipe" />
     <fragment
         android:id="@+id/searchFragment"
@@ -35,8 +35,8 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/recipeDetailFragment"
-        android:name="com.keeprecipes.android.RecipeDetailFragment"
-        android:label="fragment_recipe_detail"
+        android:name="com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragment"
+        android:label=""
         tools:layout="@layout/fragment_recipe_detail">
         <argument
             android:name="recipeId"

@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +49,8 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView recipeTitle;
         private final AppCompatImageView recipeImage;
+
+        private final CardView cardView;
         private final RequestOptions options = new RequestOptions().set(Downsampler.ALLOW_HARDWARE_CONFIG, true);
 
         public ViewHolder(RecipeItemBinding binding) {
@@ -55,10 +58,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
             // Define click listener for the ViewHolder's View
             recipeTitle = binding.recipeTitle;
             recipeImage = binding.recipeImage;
-
-            ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
-            action.setRecipeId(1);
-            binding.cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(action));
+            cardView = binding.cardView;
         }
 
         public void bind(Recipe recipe) {
@@ -70,6 +70,9 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
                         .apply(options)
                         .into(recipeImage);
             }
+            ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
+            action.setRecipeId(recipe.getId());
+            cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(action));
         }
     }
 }
