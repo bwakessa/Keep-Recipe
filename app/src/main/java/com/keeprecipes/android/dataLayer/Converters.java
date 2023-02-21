@@ -159,7 +159,7 @@ public class Converters {
 
     @TypeConverter
     public static String photosToString(List<String> photos) {
-        if (photos == null) {
+        if (photos == null || photos.size() == 0) {
             return null;
         } else {
             StringBuilder s = new StringBuilder(photos.get(0));

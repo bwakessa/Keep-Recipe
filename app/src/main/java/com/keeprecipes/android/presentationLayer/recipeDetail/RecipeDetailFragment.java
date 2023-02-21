@@ -21,7 +21,6 @@ import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo {
 
@@ -55,11 +54,14 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 binding.setRecipe(recipe);
-                List<PhotoDTO> photoDTOList = new ArrayList<>();
-                for (int a = 0; a < Objects.requireNonNull(recipe).photos.size(); a++) {
-                    photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(String.valueOf(new File(getContext().getFilesDir() + "/" + recipe.photos.get(a)))))));
+                assert recipe != null;
+                if (recipe.photos != null) {
+                    List<PhotoDTO> photoDTOList = new ArrayList<>();
+                    for (int a = 0; a < recipe.photos.size(); a++) {
+                        photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(String.valueOf(new File(getContext().getFilesDir() + "/" + recipe.photos.get(a)))))));
+                    }
+                    photoAdapter.submitList(photoDTOList);
                 }
-                photoAdapter.submitList(photoDTOList);
             }
         });
     }
