@@ -1,5 +1,6 @@
 package com.keeprecipes.android.presentationLayer.home;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,13 +13,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.Downsampler;
-import com.bumptech.glide.request.RequestOptions;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.RecipeItemBinding;
 import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections.ActionNavigationHomeToRecipeDetailFragment;
 import com.keeprecipes.android.utils.Util;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.util.concurrent.Executors;
 
 public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder> {
 
@@ -29,6 +31,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
     public RecipeAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
@@ -51,7 +54,6 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
         private final AppCompatImageView recipeImage;
 
         private final CardView cardView;
-        private final RequestOptions options = new RequestOptions().set(Downsampler.ALLOW_HARDWARE_CONFIG, true);
 
         public ViewHolder(RecipeItemBinding binding) {
             super(binding.getRoot());
@@ -64,15 +66,18 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
         public void bind(Recipe recipe) {
             recipeTitle.setText(recipe.title);
             if (!Util.isEmpty(recipe.photos)) {
-                Log.d(TAG, "bind: image path " + recipeImage.getContext().getFilesDir() + recipe.photos.get(0));
-                Glide.with(recipeImage.getContext())
-                        .load(recipeImage.getContext().getFilesDir() + "/" + recipe.photos.get(0))
-                        .apply(options)
+                File file = new File(recipeImage.getContext().getFilesDir(), recipe.photos.get(0));
+                Picasso.get()
+                        .load(file)
+                        .fit()
+                        .centerCrop()
                         .into(recipeImage);
             }
-            ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
-            action.setRecipeId(recipe.getId());
-            cardView.setOnClickListener(view -> Navigation.findNavController(view).navigate(action));
+            cardView.setOnClickListener(view -> {
+                ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
+                action.setRecipeId(recipe.getId());
+                Navigation.findNavController(view).navigate(action);
+            });
         }
     }
 }

@@ -3,18 +3,15 @@ package com.keeprecipes.android.presentationLayer.recipeDetail;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.Downsampler;
-import com.bumptech.glide.request.RequestOptions;
 import com.keeprecipes.android.databinding.RecipeDetailPhotoItemBinding;
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
+import com.squareup.picasso.Picasso;
 
 public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder> {
 
@@ -48,7 +45,6 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final RequestOptions options = new RequestOptions().set(Downsampler.ALLOW_HARDWARE_CONFIG, true);
         private final ImageView recipeImageView;
 
         public ViewHolder(RecipeDetailPhotoItemBinding binding) {
@@ -58,9 +54,10 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
         }
 
         public void bind(PhotoDTO photo, View.OnClickListener onClickListener) {
-            Glide.with(recipeImageView.getContext())
+            Picasso.get()
                     .load(photo.uri)
-                    .apply(options)
+                    .fit()
+                    .centerCrop()
                     .into(recipeImageView);
         }
     }

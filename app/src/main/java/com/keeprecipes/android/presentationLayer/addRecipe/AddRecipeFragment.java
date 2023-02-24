@@ -51,17 +51,25 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_add_recipe, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
-        View root = binding.getRoot();
         // AddRecipeFragment has it's toolbar,
         // here we are setting title, back arrow and the menu for toolbar
         binding.toolbar.setTitle("Add Recipe");
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
         binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
+
+        assert getArguments() != null;
+        int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisine);
@@ -71,12 +79,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         recipePhotos = new ArrayList<>();
         recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
-        return root;
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
         mViewModel.photos.observe(getViewLifecycleOwner(), recipePhotoAdapter::submitList);
         // To go back to previous fragment

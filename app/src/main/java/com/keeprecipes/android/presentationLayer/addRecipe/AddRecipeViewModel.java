@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AddRecipeViewModel extends AndroidViewModel {
 
@@ -27,8 +28,8 @@ public class AddRecipeViewModel extends AndroidViewModel {
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-    private RecipeRepository recipeRepository;
-    private Application application;
+    private final RecipeRepository recipeRepository;
+    private final Application application;
 
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);
@@ -40,6 +41,10 @@ public class AddRecipeViewModel extends AndroidViewModel {
         List<IngredientDTO> ingredientList = ingredients.getValue() == null ? new ArrayList<>() : new ArrayList<>(ingredients.getValue());
         IngredientDTO ingredient = new IngredientDTO(ingredientList.size(), "", 1);
         ingredientList.add(ingredient);
+        ingredients.postValue(ingredientList);
+    }
+
+    public void addIngredientList(List<IngredientDTO> ingredientList) {
         ingredients.postValue(ingredientList);
     }
 
@@ -68,7 +73,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void saveRecipe() throws IOException {
         Recipe recipeToSave = new Recipe();
-        recipeToSave.setTitle(recipe.getValue().title);
+        recipeToSave.setTitle(Objects.requireNonNull(recipe.getValue()).title);
         recipeToSave.setInstructions(recipe.getValue().instructions);
         recipeToSave.setCuisine(recipe.getValue().cuisine);
         recipeToSave.setCollection(recipe.getValue().collection);
@@ -76,6 +81,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.setDateCreated(Instant.now());
         List<PhotoDTO> photoDTOList = photos.getValue();
         List<String> photoFiles = new ArrayList<>();
+        assert photoDTOList != null;
         for (PhotoDTO photo : photoDTOList) {
             try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
                 String fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
@@ -91,5 +97,9 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
         recipeToSave.setPhotos(photoFiles);
         recipeRepository.insert(recipeToSave);
+    }
+
+    public void setRecipe(Recipe recipe) {
+        Log.d(TAG, "setRecipe: " + recipe);
     }
 }

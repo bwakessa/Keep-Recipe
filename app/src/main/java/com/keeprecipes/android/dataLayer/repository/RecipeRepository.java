@@ -16,6 +16,9 @@ public class RecipeRepository {
     private RecipeDao mRecipeDao;
     private LiveData<List<Recipe>> allRecipes;
 
+    public RecipeRepository() {
+    }
+
     public RecipeRepository(Application application) {
         mRecipeDao = AppDatabase.getDatabase(application).recipeDao();
         allRecipes = mRecipeDao.getAll();

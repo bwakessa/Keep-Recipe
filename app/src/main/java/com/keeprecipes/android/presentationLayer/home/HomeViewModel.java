@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
@@ -13,21 +15,25 @@ import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
 
-    private LiveData<List<Recipe>> recipe;
+    private final LiveData<List<Recipe>> recipe;
 
     private RecipeRepository recipeRepository;
 
+    private final MutableLiveData<Integer> recipeId = new MutableLiveData();
+
+    public final LiveData<Recipe> selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
+
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        recipeRepository = new RecipeRepository(application);
-        recipe = recipeRepository.getAllRecipes();
+        this.recipeRepository = new RecipeRepository(application);
+        this.recipe = recipeRepository.getAllRecipes();
     }
 
     public LiveData<List<Recipe>> getRecipe() {
         return recipe;
     }
 
-    public LiveData<Recipe> getRecipeById(int id){
-        return recipeRepository.fetchById(id);
+    public void setRecipeId(int id){
+        recipeId.setValue(id);
     }
 }

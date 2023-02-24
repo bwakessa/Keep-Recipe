@@ -4,17 +4,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
+import com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeViewModel;
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
 import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
@@ -30,14 +36,11 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
 
     PhotoAdapter photoAdapter;
 
-    ArrayList<Uri> recipePhotos;
+    Recipe mRecipe;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentRecipeDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -45,14 +48,36 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        homeViewModel =
+                new ViewModelProvider(this).get(HomeViewModel.class);
+
+        binding.toolbar.inflateMenu(R.menu.recipe_detail_menu);
+        binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
+        binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_edit) {// Navigate to settings screen
+                AddRecipeViewModel addRecipeViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+//                addRecipeViewModel.setRecipe(mRecipe);
+                Navigation.findNavController(view).navigate(R.id.action_recipeDetailFragment_to_addRecipeFragment);
+                return true;
+            } else if (item.getItemId() == R.id.action_delete) {
+                Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
+                requireActivity().onBackPressed();
+                return true;
+            }
+            return false;
+        });
+
         photoAdapter = new PhotoAdapter(this);
         binding.photoListView.setAdapter(photoAdapter);
         assert getArguments() != null;
         int recipeId = RecipeDetailFragmentArgs.fromBundle(getArguments()).getRecipeId();
         Log.d(TAG, "onViewCreated: recipeId " + recipeId);
-        homeViewModel.getRecipeById(recipeId).observe(getViewLifecycleOwner(), new Observer<Recipe>() {
+        homeViewModel.setRecipeId(recipeId);
+        homeViewModel.selectedRecipe.observe(getViewLifecycleOwner(), new Observer<Recipe>() {
             @Override
             public void onChanged(@Nullable Recipe recipe) {
+                mRecipe = recipe;
                 binding.setRecipe(recipe);
                 assert recipe != null;
                 if (recipe.photos != null) {
