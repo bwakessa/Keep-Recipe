@@ -3,6 +3,10 @@ package com.keeprecipes.android.presentationLayer.addRecipe;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.keeprecipes.android.dataLayer.entities.Ingredient;
+
+import java.util.List;
+
 public class IngredientDTO {
     public static final DiffUtil.ItemCallback<IngredientDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override

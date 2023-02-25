@@ -1,6 +1,5 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ext.SdkExtensions;
@@ -18,19 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
     final String TAG = "AddRecipeFragment";
     String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
-    ArrayList<Uri> recipePhotos;
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
@@ -59,7 +57,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+        mViewModel = new ViewModelProvider(getActivity()).get(AddRecipeViewModel.class);
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
         // AddRecipeFragment has it's toolbar,
@@ -68,17 +66,20 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
         binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
 
-        assert getArguments() != null;
-        int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisine);
         binding.cusineAutoCompleteTextView.setAdapter(adapter);
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
-        recipePhotos = new ArrayList<>();
         recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
+
+        mViewModel.recipe.observe(getViewLifecycleOwner(), new Observer<RecipeDTO>() {
+            @Override
+            public void onChanged(RecipeDTO recipeDTO) {
+                Log.d(TAG, "onChanged: recipe" + recipeDTO);
+            }
+        });
 
         mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
         mViewModel.photos.observe(getViewLifecycleOwner(), recipePhotoAdapter::submitList);

@@ -1,5 +1,7 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
+import com.keeprecipes.android.dataLayer.entities.Recipe;
+
 import java.util.List;
 
 public class RecipeDTO {
@@ -9,6 +11,18 @@ public class RecipeDTO {
     public String collection;
     public String portionSize;
     public List photoURI;
+
+    public RecipeDTO() {
+    }
+
+    public RecipeDTO(Recipe recipe) {
+        this.title = recipe.title;
+        this.instructions = recipe.instructions;
+        this.cuisine = recipe.cuisine;
+        this.collection = recipe.collection;
+        this.portionSize = recipe.portionSize;
+        this.photoURI = recipe.photos;
+    }
 
     @Override
     public String toString() {

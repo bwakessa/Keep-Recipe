@@ -35,6 +35,25 @@ public class AddRecipeViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         recipeRepository = new RecipeRepository(application);
+        Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
+    }
+
+    public void setRecipe(Recipe recipe) {
+        RecipeDTO recipeDTO = new RecipeDTO(recipe);
+        this.recipe.setValue(recipeDTO);
+        if (recipe.ingredients != null) {
+            List<IngredientDTO> ingredientList = new ArrayList<>();
+            for (int a = 0; a < recipe.ingredients.size(); a++) {
+                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, recipe.ingredients.get(a).size));
+            }
+        }
+        if (recipe.ingredients != null) {
+            List<PhotoDTO> photoList = new ArrayList<>();
+            for (int a = 0; a < recipe.photos.size(); a++) {
+                photoList.add(new PhotoDTO(a, Uri.fromFile(new File(this.application.getFilesDir() + "/" + recipe.photos.get(a)))));
+            }
+        }
+        Log.d(TAG, "AddRecipeViewModel: setRecipe" + this.recipe.getValue().toString());
     }
 
     public void addIngredient() {
@@ -97,9 +116,5 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
         recipeToSave.setPhotos(photoFiles);
         recipeRepository.insert(recipeToSave);
-    }
-
-    public void setRecipe(Recipe recipe) {
-        Log.d(TAG, "setRecipe: " + recipe);
     }
 }
