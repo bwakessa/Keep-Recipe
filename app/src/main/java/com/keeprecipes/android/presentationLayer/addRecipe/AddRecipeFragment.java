@@ -88,6 +88,14 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             }
         });
 
+        mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> collection) {
+                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>
+                        (binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
+            }
+        });
+
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
         recipePhotoAdapter = new RecipePhotoAdapter(this);

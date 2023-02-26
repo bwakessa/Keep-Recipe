@@ -38,7 +38,11 @@ public class RecipeRepository {
     }
 
     public LiveData<List<String>> getAllCuisine() {
-        return mRecipeDao.getAllCusine();
+        return mRecipeDao.getAllCuisine();
+    }
+
+    public LiveData<List<String>> getAllCollection() {
+        return mRecipeDao.getAllCollection();
     }
 
     public void insert(Recipe recipe) {
