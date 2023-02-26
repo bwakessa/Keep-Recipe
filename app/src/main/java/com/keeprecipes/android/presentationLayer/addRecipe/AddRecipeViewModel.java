@@ -93,6 +93,10 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
     }
 
+    public LiveData<List<String>> getAllCuisine(){
+        return recipeRepository.getAllCuisine();
+    }
+
     public void saveRecipe() throws IOException {
         Recipe recipeToSave = new Recipe();
         recipeToSave.setId(Objects.requireNonNull(recipe.getValue()).id);

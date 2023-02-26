@@ -23,14 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
-import com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragmentArgs;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
     final String TAG = "AddRecipeFragment";
-    String[] cuisine = {"Chinese", "Ethiopian", "French", "Korean", "Italian", "Japanese", "Indian", "Continental"};
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
@@ -62,7 +61,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
         assert getArguments() != null;
         int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
-        if (recipeId!=-1) {
+        if (recipeId != -1) {
             mViewModel.getRecipeById(recipeId).observe(getViewLifecycleOwner(), new Observer<Recipe>() {
                 @Override
                 public void onChanged(Recipe recipe) {
@@ -79,9 +78,16 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
         binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisine);
-        binding.cusineAutoCompleteTextView.setAdapter(adapter);
+        mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> cuisines) {
+                Log.d(TAG, "onChanged: cuisines" + cuisines);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>
+                        (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
+                binding.cusineAutoCompleteTextView.setAdapter(adapter);
+            }
+        });
+
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
         recipePhotoAdapter = new RecipePhotoAdapter(this);

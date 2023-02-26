@@ -30,6 +30,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes ORDER BY id DESC")
     LiveData<List<Recipe>> getAll();
 
+    @Query("SELECT DISTINCT cuisine FROM recipes")
+    LiveData<List<String>> getAllCusine();
+
     @Update
     void updateRecipe(Recipe recipe);
 

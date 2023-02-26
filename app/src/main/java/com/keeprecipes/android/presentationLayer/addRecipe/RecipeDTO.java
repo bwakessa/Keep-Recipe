@@ -1,5 +1,7 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
+import androidx.annotation.NonNull;
+
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class RecipeDTO {
         this.photoURI = recipe.photos;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RecipeDTO{" +
