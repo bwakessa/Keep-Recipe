@@ -21,7 +21,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.keeprecipes.android.R;
+import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
+import com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragmentArgs;
 
 import java.io.IOException;
 
@@ -57,7 +59,18 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(getActivity()).get(AddRecipeViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+        assert getArguments() != null;
+        int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
+        if (recipeId!=-1) {
+            mViewModel.getRecipeById(recipeId).observe(getViewLifecycleOwner(), new Observer<Recipe>() {
+                @Override
+                public void onChanged(Recipe recipe) {
+                    mViewModel.setRecipe(recipe);
+                }
+            });
+        }
+
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
         // AddRecipeFragment has it's toolbar,

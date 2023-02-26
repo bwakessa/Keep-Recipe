@@ -5,6 +5,7 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 import java.util.List;
 
 public class RecipeDTO {
+    public int id;
     public String title;
     public String instructions;
     public String cuisine;
@@ -16,6 +17,7 @@ public class RecipeDTO {
     }
 
     public RecipeDTO(Recipe recipe) {
+        this.id = recipe.id;
         this.title = recipe.title;
         this.instructions = recipe.instructions;
         this.cuisine = recipe.cuisine;

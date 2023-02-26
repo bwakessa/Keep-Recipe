@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keeprecipes.android.dataLayer.entities.Recipe;
@@ -30,6 +31,8 @@ public class AddRecipeViewModel extends AndroidViewModel {
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     private final RecipeRepository recipeRepository;
     private final Application application;
+
+    private boolean updateRecipe = false;
 
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);
@@ -92,6 +95,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void saveRecipe() throws IOException {
         Recipe recipeToSave = new Recipe();
+        recipeToSave.setId(Objects.requireNonNull(recipe.getValue()).id);
         recipeToSave.setTitle(Objects.requireNonNull(recipe.getValue()).title);
         recipeToSave.setInstructions(recipe.getValue().instructions);
         recipeToSave.setCuisine(recipe.getValue().cuisine);
@@ -115,6 +119,15 @@ public class AddRecipeViewModel extends AndroidViewModel {
             }
         }
         recipeToSave.setPhotos(photoFiles);
-        recipeRepository.insert(recipeToSave);
+        if (updateRecipe) {
+            recipeRepository.update(recipeToSave);
+        } else {
+            recipeRepository.insert(recipeToSave);
+        }
+    }
+
+    public LiveData<Recipe> getRecipeById(int recipeId) {
+        updateRecipe = true;
+        return recipeRepository.fetchById(recipeId);
     }
 }
