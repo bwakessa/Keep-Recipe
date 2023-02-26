@@ -5,7 +5,9 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.RawQuery;
 import androidx.room.Update;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
@@ -33,4 +35,9 @@ public interface RecipeDao {
 
     @Query("DELETE FROM recipes")
     void drop();
+
+    // Resets the the primary key after deleting entity
+    // https://www.sqlite.org/lang_vacuum.html
+    @RawQuery
+    int vacuumDb(SupportSQLiteQuery supportSQLiteQuery);
 }

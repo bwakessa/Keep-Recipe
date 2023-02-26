@@ -3,6 +3,7 @@ package com.keeprecipes.android.dataLayer.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.keeprecipes.android.dataLayer.AppDatabase;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
@@ -41,7 +42,11 @@ public class RecipeRepository {
     }
 
     public void delete(Recipe recipe) {
-        Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.delete(recipe));
+        Executors.newSingleThreadExecutor().execute(() -> {
+                    mRecipeDao.delete(recipe);
+                    mRecipeDao.vacuumDb(new SimpleSQLiteQuery("VACUUM"));
+                }
+        );
     }
 
     public void update(Recipe recipe) {
