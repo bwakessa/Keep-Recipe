@@ -56,14 +56,12 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {// Navigate to settings screen
-//                AddRecipeViewModel addRecipeViewModel = new ViewModelProvider(getActivity()).get(AddRecipeViewModel.class);
-//                addRecipeViewModel.setRecipe(mRecipe);
-//                Navigation.findNavController(view).navigate(R.id.action_recipeDetailFragment_to_addRecipeFragment);
                 ActionRecipeDetailFragmentToAddRecipeFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToAddRecipeFragment();
                 action.setRecipeId(mRecipe.getId());
                 Navigation.findNavController(view).navigate(action);
                 return true;
             } else if (item.getItemId() == R.id.action_delete) {
+                homeViewModel.deleteRecipe(mRecipe);
                 Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;

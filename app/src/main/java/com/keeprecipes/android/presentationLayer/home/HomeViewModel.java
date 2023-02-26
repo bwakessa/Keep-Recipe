@@ -33,7 +33,11 @@ public class HomeViewModel extends AndroidViewModel {
         return recipe;
     }
 
-    public void setRecipeId(int id){
+    public void setRecipeId(int id) {
         recipeId.setValue(id);
+    }
+
+    public void deleteRecipe(Recipe recipe){
+        recipeRepository.delete(recipe);
     }
 }
