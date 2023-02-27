@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
-import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
-import com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeViewModel;
 
 public class HomeFragment extends Fragment {
 

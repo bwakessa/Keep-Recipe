@@ -1,7 +1,5 @@
 package com.keeprecipes.android.presentationLayer.home;
 
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,7 +18,6 @@ import com.keeprecipes.android.utils.Util;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 
 public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder> {
 

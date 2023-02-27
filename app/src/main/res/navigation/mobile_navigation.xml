@@ -15,7 +15,7 @@
             app:destination="@id/addRecipeFragment" />
         <action
             android:id="@+id/action_navigation_home_to_recipeDetailFragment"
-            app:destination="@id/recipeDetailFragment"/>
+            app:destination="@id/recipeDetailFragment" />
     </fragment>
 
     <fragment
@@ -27,11 +27,11 @@
         android:id="@+id/addRecipeFragment"
         android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
         android:label="Add Recipe"
-        tools:layout="@layout/fragment_add_recipe" >
+        tools:layout="@layout/fragment_add_recipe">
         <argument
             android:name="recipeId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -45,8 +45,8 @@
         tools:layout="@layout/fragment_recipe_detail">
         <argument
             android:name="recipeId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
         <action
             android:id="@+id/action_recipeDetailFragment_to_addRecipeFragment"
             app:destination="@id/addRecipeFragment" />

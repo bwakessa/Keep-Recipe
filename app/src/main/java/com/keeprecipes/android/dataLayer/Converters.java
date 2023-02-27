@@ -130,7 +130,7 @@ public class Converters {
 
     @TypeConverter
     public static String ingredientsToString(List<Ingredient> ingredients) {
-        if (ingredients == null) {
+        if (ingredients == null || ingredients.isEmpty()) {
             return null;
         } else {
             StringBuilder s = new StringBuilder(ingredients.get(0).name + "`" + ingredients.get(0).size);

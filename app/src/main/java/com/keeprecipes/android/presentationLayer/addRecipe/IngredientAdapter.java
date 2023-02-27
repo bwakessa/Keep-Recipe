@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.keeprecipes.android.databinding.IngredientItemBinding;
 
 public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdapter.ViewHolder> {
@@ -41,19 +40,16 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdap
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextInputEditText ingredientInputTextView;
-        private TextInputEditText quantityInputTextView;
+        private IngredientItemBinding ingredientItemBinding;
 
         public ViewHolder(IngredientItemBinding binding) {
             super(binding.getRoot());
             // Define click listener for the ViewHolder's View
-            ingredientInputTextView = binding.ingredientTextInputEditText;
-            quantityInputTextView = binding.qtyTextInputEditText;
+            ingredientItemBinding = binding;
         }
 
         public void bind(IngredientDTO ingredient) {
-            ingredientInputTextView.setText(ingredient.name);
-            quantityInputTextView.setText(String.valueOf(ingredient.size));
+            ingredientItemBinding.setIngredient(ingredient);
         }
     }
 }

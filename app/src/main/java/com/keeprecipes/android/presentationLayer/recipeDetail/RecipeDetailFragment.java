@@ -18,11 +18,7 @@ import androidx.navigation.Navigation;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
-import com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeViewModel;
-import com.keeprecipes.android.presentationLayer.addRecipe.IngredientDTO;
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
-import com.keeprecipes.android.presentationLayer.addRecipe.RecipeDTO;
-import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections;
 import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 import com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment;
 
@@ -33,11 +29,9 @@ import java.util.List;
 public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo {
 
     private static final String TAG = "RecipeDetailFragment";
-    private FragmentRecipeDetailBinding binding;
-
     PhotoAdapter photoAdapter;
-
     Recipe mRecipe;
+    private FragmentRecipeDetailBinding binding;
 
     @Nullable
     @Override

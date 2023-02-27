@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
@@ -24,14 +25,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class AddRecipeViewModel extends AndroidViewModel {
-
     private final String TAG = "AddRecipeViewModel";
+    private final RecipeRepository recipeRepository;
+    private final Application application;
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-    private final RecipeRepository recipeRepository;
-    private final Application application;
-
     private boolean updateRecipe = false;
 
     public AddRecipeViewModel(@NonNull Application application) {
@@ -47,10 +46,10 @@ public class AddRecipeViewModel extends AndroidViewModel {
         if (recipe.ingredients != null) {
             List<IngredientDTO> ingredientList = new ArrayList<>();
             for (int a = 0; a < recipe.ingredients.size(); a++) {
-                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, recipe.ingredients.get(a).size));
+                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size)));
             }
         }
-        if (recipe.ingredients != null) {
+        if (recipe.photos != null) {
             List<PhotoDTO> photoList = new ArrayList<>();
             for (int a = 0; a < recipe.photos.size(); a++) {
                 photoList.add(new PhotoDTO(a, Uri.fromFile(new File(this.application.getFilesDir() + "/" + recipe.photos.get(a)))));
@@ -61,13 +60,19 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void addIngredient() {
         List<IngredientDTO> ingredientList = ingredients.getValue() == null ? new ArrayList<>() : new ArrayList<>(ingredients.getValue());
-        IngredientDTO ingredient = new IngredientDTO(ingredientList.size(), "", 1);
+        IngredientDTO ingredient = new IngredientDTO(ingredientList.size(), "", "1");
         ingredientList.add(ingredient);
         ingredients.postValue(ingredientList);
     }
 
-    public void addIngredientList(List<IngredientDTO> ingredientList) {
-        ingredients.postValue(ingredientList);
+    public void addIngredientList(List<Ingredient> ingredientList) {
+        if (ingredientList != null) {
+            List<IngredientDTO> ingredientDTOList = new ArrayList<>();
+            for (int i = 0; i < ingredientList.size(); i++) {
+                ingredientDTOList.add(new IngredientDTO(i, ingredientList.get(i).name, String.valueOf(ingredientList.get(i).size)));
+            }
+            ingredients.postValue(ingredientDTOList);
+        }
     }
 
     public void removeIngredient() {
@@ -93,11 +98,11 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<List<String>> getAllCuisine(){
+    public LiveData<List<String>> getAllCuisine() {
         return recipeRepository.getAllCuisine();
     }
 
-    public LiveData<List<String>> getAllCollection(){
+    public LiveData<List<String>> getAllCollection() {
         return recipeRepository.getAllCollection();
     }
 
@@ -127,6 +132,12 @@ public class AddRecipeViewModel extends AndroidViewModel {
             }
         }
         recipeToSave.setPhotos(photoFiles);
+        List<Ingredient> ingredientList = new ArrayList<>();
+        List<IngredientDTO> sdk = ingredients.getValue();
+        for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
+            ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size)));
+        }
+        recipeToSave.setIngredients(ingredientList);
         if (updateRecipe) {
             recipeRepository.update(recipeToSave);
         } else {

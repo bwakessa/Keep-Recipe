@@ -16,11 +16,8 @@ import java.util.List;
 public class HomeViewModel extends AndroidViewModel {
 
     private final LiveData<List<Recipe>> recipe;
-
-    private RecipeRepository recipeRepository;
-
     private final MutableLiveData<Integer> recipeId = new MutableLiveData();
-
+    private RecipeRepository recipeRepository;
     public final LiveData<Recipe> selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
 
     public HomeViewModel(@NonNull Application application) {
@@ -37,7 +34,7 @@ public class HomeViewModel extends AndroidViewModel {
         recipeId.setValue(id);
     }
 
-    public void deleteRecipe(Recipe recipe){
+    public void deleteRecipe(Recipe recipe) {
         recipeRepository.delete(recipe);
     }
 }

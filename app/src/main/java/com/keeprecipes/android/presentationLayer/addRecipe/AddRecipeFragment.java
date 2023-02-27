@@ -66,6 +66,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 @Override
                 public void onChanged(Recipe recipe) {
                     mViewModel.setRecipe(recipe);
+                    mViewModel.addIngredientList(recipe.ingredients);
                 }
             });
         }
@@ -98,6 +99,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
+
+        mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
+
         recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
 
