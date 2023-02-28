@@ -23,7 +23,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
 
     private static final String TAG = "RecipeAdapter";
 
-    protected RecipeAdapter() {
+    public RecipeAdapter() {
         super(Recipe.DIFF_CALLBACK);
     }
 

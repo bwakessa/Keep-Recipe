@@ -2,7 +2,7 @@
     <string name="app_name">Keep Recipes</string>
     <string name="title_home">Home</string>
     <string name="title_collections">Collections</string>
-    <string name="action_search">Search</string>
+    <string name="searchbar_hint">Search</string>
     <string name="search_hint">Recipe name</string>
     <string name="fab_add_content_desc">Add Recipe</string>
     <string name="save_menu_item">Save</string>

@@ -42,51 +42,48 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_collections)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.i(TAG, "onCreateMenu: " + query);
-            navController.navigate(R.id.searchFragment);
-        }
+//        Intent intent = getIntent();
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            Log.i(TAG, "onCreateMenu: " + query);
+//            navController.navigate(R.id.searchFragment);
+//        }
 
         // Toolbar Menu
         addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.top_menu, menu);
-                MenuItem searchItem = menu.findItem(R.id.action_search);
-                SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
-
-                SearchView searchView = null;
-                if (searchItem != null) {
-                    searchView = (SearchView) searchItem.getActionView();
-                }
-                if (searchView != null) {
-                    searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
-                }
-                assert searchView != null;
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        Log.i(TAG, "onQueryTextSubmit: " + query);
-                        getCurrentFocus().clearFocus();
-                        ActionNavigationHomeToSearchFragment action = HomeFragmentDirections.actionNavigationHomeToSearchFragment(query);
-                        navController.navigate(action);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        Log.i(TAG, "onQueryTextChange: " + newText);
-                        return false;
-                    }
-                });
+//                menuInflater.inflate(R.menu.top_menu, menu);
+//                MenuItem searchItem = menu.findItem(R.id.action_search);
+//                SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
+//
+//                SearchView searchView = null;
+//                if (searchItem != null) {
+//                    searchView = (SearchView) searchItem.getActionView();
+//                }
+//                if (searchView != null) {
+//                    searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
+//                }
+//                assert searchView != null;
+//                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                    @Override
+//                    public boolean onQueryTextSubmit(String query) {
+//                        Log.i(TAG, "onQueryTextSubmit: " + query);
+//                        getCurrentFocus().clearFocus();
+//                        ActionNavigationHomeToSearchFragment action = HomeFragmentDirections.actionNavigationHomeToSearchFragment(query);
+//                        navController.navigate(action);
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onQueryTextChange(String newText) {
+//                        Log.i(TAG, "onQueryTextChange: " + newText);
+//                        return false;
+//                    }
+//                });
             }
 
             @Override
