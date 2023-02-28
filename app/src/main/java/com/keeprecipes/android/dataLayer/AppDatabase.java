@@ -11,8 +11,9 @@ import com.keeprecipes.android.dataLayer.dao.RecipeCollectionDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.entities.RecipeCollection;
+import com.keeprecipes.android.dataLayer.entities.RecipeFts;
 
-@Database(entities = {Recipe.class, RecipeCollection.class}, version = 2, exportSchema = false)
+@Database(entities = {Recipe.class, RecipeCollection.class, RecipeFts.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance = null;

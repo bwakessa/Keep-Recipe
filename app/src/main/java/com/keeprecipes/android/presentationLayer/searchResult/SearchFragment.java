@@ -1,6 +1,7 @@
 package com.keeprecipes.android.presentationLayer.searchResult;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.keeprecipes.android.R;
 
 public class SearchFragment extends Fragment {
 
-    private SearchViewModel mViewModel;
+    final String TAG = "SearchFragment";
 
-    public static SearchFragment newInstance() {
-        return new SearchFragment();
-    }
+    private SearchViewModel mViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -27,10 +25,10 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        // TODO: Use the ViewModel
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        assert getArguments() != null;
+        String searchArg = SearchFragmentArgs.fromBundle(getArguments()).getSearchArg();
+        Log.d(TAG, "onViewCreated: " + searchArg);
     }
-
 }

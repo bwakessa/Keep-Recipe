@@ -60,4 +60,8 @@ public class RecipeRepository {
     public void update(Recipe recipe) {
         Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.updateRecipe(recipe));
     }
+
+    public LiveData<List<Recipe>> searchRecipe(String query) {
+        return mRecipeDao.searchRecipe(query);
+    }
 }

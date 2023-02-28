@@ -6,12 +6,15 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
+import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.List;
+
+import javax.sql.DataSource;
 
 @Dao
 public interface RecipeDao {
@@ -35,6 +38,11 @@ public interface RecipeDao {
 
     @Query("SELECT DISTINCT collection FROM recipes WHERE collection IS NOT NULL")
     LiveData<List<String>> getAllCollection();
+
+    @Transaction @Query(
+            "SELECT recipes.id, recipes.title, recipes.instructions, recipes.cuisine, recipes.ingredients FROM recipes "
+                    + "JOIN recipeFts ON (recipes.id = recipeFts.docid) WHERE recipeFts MATCH :query")
+    LiveData<List<Recipe>> searchRecipe(String query);
 
     @Update
     void updateRecipe(Recipe recipe);

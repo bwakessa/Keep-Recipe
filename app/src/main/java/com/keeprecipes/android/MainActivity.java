@@ -21,6 +21,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.keeprecipes.android.databinding.ActivityMainBinding;
+import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections;
+import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections.ActionNavigationHomeToSearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,21 +71,22 @@ public class MainActivity extends AppCompatActivity {
                     searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
                 }
                 assert searchView != null;
-//                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                    @Override
-//                    public boolean onQueryTextSubmit(String query) {
-//                        Log.i(TAG, "onQueryTextSubmit: " + query);
-//                        getCurrentFocus().clearFocus();
-//                        navController.navigate(R.id.blankFragment);
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onQueryTextChange(String newText) {
-//                        Log.i(TAG, "onQueryTextChange: " + newText);
-//                        return false;
-//                    }
-//                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Log.i(TAG, "onQueryTextSubmit: " + query);
+                        getCurrentFocus().clearFocus();
+                        ActionNavigationHomeToSearchFragment action = HomeFragmentDirections.actionNavigationHomeToSearchFragment(query);
+                        navController.navigate(action);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        Log.i(TAG, "onQueryTextChange: " + newText);
+                        return false;
+                    }
+                });
             }
 
             @Override

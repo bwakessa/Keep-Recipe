@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     app:cardBackgroundColor="#ECECEC"
     app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
+    app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
 
