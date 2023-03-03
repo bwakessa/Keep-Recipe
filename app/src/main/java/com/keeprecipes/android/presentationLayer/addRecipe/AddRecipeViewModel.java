@@ -119,7 +119,6 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.setDateCreated(Instant.now());
         List<PhotoDTO> photoDTOList = photos.getValue();
         List<String> photoFiles = new ArrayList<>();
-        assert photoDTOList != null;
         for (PhotoDTO photo : photoDTOList) {
             try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
                 // If we are adding a new image then the scheme will of type content
