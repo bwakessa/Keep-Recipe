@@ -48,12 +48,14 @@ public class AddRecipeViewModel extends AndroidViewModel {
             for (int a = 0; a < recipe.ingredients.size(); a++) {
                 ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size)));
             }
+            this.ingredients.setValue(ingredientList);
         }
         if (recipe.photos != null) {
             List<PhotoDTO> photoList = new ArrayList<>();
             for (int a = 0; a < recipe.photos.size(); a++) {
-                photoList.add(new PhotoDTO(a, Uri.fromFile(new File(this.application.getFilesDir() + "/" + recipe.photos.get(a)))));
+                photoList.add(new PhotoDTO(a, Uri.fromFile(new File(this.application.getFilesDir(), recipe.photos.get(a)))));
             }
+            this.photos.setValue(photoList);
         }
         Log.d(TAG, "AddRecipeViewModel: setRecipe" + this.recipe.getValue().toString());
     }
@@ -120,14 +122,21 @@ public class AddRecipeViewModel extends AndroidViewModel {
         assert photoDTOList != null;
         for (PhotoDTO photo : photoDTOList) {
             try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
-                String fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
-                try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
-                    File file = new File(photo.uri.getPath());
-                    Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
-                    Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
-                    FileUtils.copy(inputStream, outputStream);
-                    Log.d(TAG, "saveRecipe: fileName " + fileName);
-                    photoFiles.add(fileName);
+                // If we are adding a new image then the scheme will of type content
+                if (Objects.equals(photo.uri.getScheme(), "content")) {
+                    String fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
+                    try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
+                        File file = new File(photo.uri.getPath());
+                        Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
+                        Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
+                        FileUtils.copy(inputStream, outputStream);
+                        Log.d(TAG, "saveRecipe: fileName " + fileName);
+                        photoFiles.add(fileName);
+                    }
+                } else {
+                    // When scheme of Uri is file, that means the file has been already copied before,
+                    // in that case we only need to store the file name
+                    photoFiles.add(photo.uri.getLastPathSegment());
                 }
             }
         }

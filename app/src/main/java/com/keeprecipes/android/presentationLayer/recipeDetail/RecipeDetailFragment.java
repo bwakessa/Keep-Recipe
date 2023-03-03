@@ -69,16 +69,15 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         int recipeId = RecipeDetailFragmentArgs.fromBundle(getArguments()).getRecipeId();
         Log.d(TAG, "onViewCreated: recipeId " + recipeId);
         homeViewModel.setRecipeId(recipeId);
-        homeViewModel.selectedRecipe.observe(getViewLifecycleOwner(), new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
+        homeViewModel.selectedRecipe.observe(getViewLifecycleOwner(), recipe -> {
+            if (recipe != null) {
                 mRecipe = recipe;
                 binding.setRecipe(recipe);
-                assert recipe != null;
                 if (recipe.photos != null) {
+                    File appDir = getContext().getFilesDir();
                     List<PhotoDTO> photoDTOList = new ArrayList<>();
                     for (int a = 0; a < recipe.photos.size(); a++) {
-                        photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(getContext().getFilesDir() + "/" + recipe.photos.get(a)))));
+                        photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
                     }
                     photoAdapter.submitList(photoDTOList);
                 }
