@@ -2,14 +2,14 @@ package com.keeprecipes.android.presentationLayer.home;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,38 +43,34 @@ public class HomeFragment extends Fragment {
         homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
-        binding.searchBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Log.d(TAG, "onMenuItemClick: " + item);
-                return false;
-            }
+        binding.searchBar.setOnMenuItemClickListener(item -> {
+            Log.d(TAG, "onMenuItemClick: " + item);
+            return false;
         });
 
         binding.searchView.getEditText().setOnEditorActionListener(
                 (v, actionId, event) -> {
+                    Log.d(TAG, "onViewCreated: actionId " + actionId);
+                    if (actionId == EditorInfo.IME_NULL
+                            && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        binding.searchBar.setText(binding.searchView.getText());
+                        homeViewModel.searchRecipe(String.valueOf(binding.searchView.getText())).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+                        binding.searchView.hide();
+                    }
                     Log.d(TAG, "setOnEditorActionListener: " + binding.searchView.getText());
-                    binding.searchBar.setText(binding.searchView.getText());
-                    homeViewModel.searchRecipe(String.valueOf(binding.searchView.getText())).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-                    binding.searchView.hide();
+//                    binding.searchView.hide();
                     return false;
                 });
 
-
-//        binding.toolbar.setTitle("Recipes");
-//        binding.toolbar.inflateMenu(R.menu.top_menu);
-
-//        MenuItem item = binding.toolbar.getMenu().getItem(R.id.action_search);
-//        SearchView searchView = (SearchView) item.getActionView();
-
-//        binding.toolbar.setOnMenuItemClickListener(item -> {
-//            if (item.getItemId() == R.id.action_search) {
-//                Log.d(TAG, "onViewCreated: search is being called");
-//                homeViewModel.searchRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-//                return true;
-//            }
-//            return false;
-//        });
+        binding.searchView.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: back button is pressed");
+                binding.searchBar.clearText();
+                binding.searchView.hide();
+                homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+            }
+        });
 
         // Floating Action Button to create new recipe
         FloatingActionButton fab = binding.fab;
