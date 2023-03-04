@@ -19,13 +19,16 @@
         <action
             android:id="@+id/action_navigation_home_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_collections"
-        android:name="com.keeprecipes.android.presentationLayer.collections.CollectionsFragment"
+        android:id="@+id/navigation_recipe_groups"
+        android:name="com.keeprecipes.android.presentationLayer.collections.RecipeGroupsFragment"
         android:label="@string/title_collections"
-        tools:layout="@layout/fragment_collections" />
+        tools:layout="@layout/fragment_recipe_groups" />
     <fragment
         android:id="@+id/addRecipeFragment"
         android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
@@ -40,7 +43,7 @@
         android:id="@+id/searchFragment"
         android:name="com.keeprecipes.android.presentationLayer.searchResult.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <argument
             android:name="searchArg"
             app:argType="string" />
@@ -58,4 +61,18 @@
             android:id="@+id/action_recipeDetailFragment_to_addRecipeFragment"
             app:destination="@id/addRecipeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/cuisineFragment"
+        android:name="com.keeprecipes.android.CuisineFragment"
+        android:label="fragment_cuisine"
+        tools:layout="@layout/fragment_cuisine" />
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.keeprecipes.android.CollectionFragment"
+        android:label="fragment_collection"
+        tools:layout="@layout/fragment_collection" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.keeprecipes.android.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

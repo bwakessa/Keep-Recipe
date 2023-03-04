@@ -14,8 +14,6 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 @Dao
 public interface RecipeDao {
     @Insert
@@ -39,10 +37,12 @@ public interface RecipeDao {
     @Query("SELECT DISTINCT collection FROM recipes WHERE collection IS NOT NULL")
     LiveData<List<String>> getAllCollection();
 
-    @Transaction @Query(
+    @Transaction
+    @Query(
             "SELECT recipes.id, recipes.title, recipes.instructions, recipes.cuisine, recipes.ingredients FROM recipes "
                     + "JOIN recipeFts ON (recipes.id = recipeFts.docid) WHERE recipeFts MATCH :query")
-    LiveData<List<Recipe>> searchRecipe(String query);
+    LiveData<List<Recipe>>
+    searchRecipe(String query);
 
     @Update
     void updateRecipe(Recipe recipe);

@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentSearchBinding;
 import com.keeprecipes.android.presentationLayer.home.RecipeAdapter;
-
-import java.util.List;
 
 public class SearchFragment extends Fragment {
 

@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
@@ -21,10 +24,8 @@ import com.keeprecipes.android.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment {
 
     final String TAG = "HomeFragment";
-
-    private FragmentHomeBinding binding;
-
     HomeViewModel homeViewModel;
+    private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +45,8 @@ public class HomeFragment extends Fragment {
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
         binding.searchBar.setOnMenuItemClickListener(item -> {
-            Log.d(TAG, "onMenuItemClick: " + item);
-            return false;
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+            return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
         binding.searchView.getEditText().setOnEditorActionListener(
