@@ -10,11 +10,13 @@ import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +41,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
+
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
         homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
@@ -63,14 +66,11 @@ public class HomeFragment extends Fragment {
                     return false;
                 });
 
-        binding.searchView.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: back button is pressed");
-                binding.searchBar.clearText();
-                binding.searchView.hide();
-                homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-            }
+        binding.searchView.getToolbar().setNavigationOnClickListener(view1 -> {
+            Log.d(TAG, "onClick: back button is pressed");
+            binding.searchBar.clearText();
+            binding.searchView.hide();
+            homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
         });
 
         // Floating Action Button to create new recipe

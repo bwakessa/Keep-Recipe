@@ -10,9 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
@@ -44,9 +48,14 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        NavController navController = Navigation.findNavController(view);
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        NavigationUI.setupWithNavController(
+                toolbar, navController, appBarConfiguration);
+
         binding.toolbar.inflateMenu(R.menu.recipe_detail_menu);
-        binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
-        binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {// Navigate to settings screen
                 ActionRecipeDetailFragmentToAddRecipeFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToAddRecipeFragment();

@@ -22,13 +22,11 @@
         <action
             android:id="@+id/action_navigation_home_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_settingsFragment2"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_recipe_groups"
-        android:name="com.keeprecipes.android.presentationLayer.collections.RecipeGroupsFragment"
-        android:label="@string/title_collections"
-        tools:layout="@layout/fragment_recipe_groups" />
     <fragment
         android:id="@+id/addRecipeFragment"
         android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
@@ -62,17 +60,8 @@
             app:destination="@id/addRecipeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/cuisineFragment"
-        android:name="com.keeprecipes.android.CuisineFragment"
-        android:label="fragment_cuisine"
-        tools:layout="@layout/fragment_cuisine" />
-    <fragment
-        android:id="@+id/collectionFragment"
-        android:name="com.keeprecipes.android.CollectionFragment"
-        android:label="fragment_collection"
-        tools:layout="@layout/fragment_collection" />
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.keeprecipes.android.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

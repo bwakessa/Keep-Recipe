@@ -15,10 +15,15 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
@@ -71,13 +76,19 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             });
         }
 
+        NavController navController = Navigation.findNavController(view);
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        NavigationUI.setupWithNavController(
+                toolbar, navController, appBarConfiguration);
+
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
         // AddRecipeFragment has it's toolbar,
         // here we are setting title, back arrow and the menu for toolbar
         binding.toolbar.setTitle("Add Recipe");
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
-        binding.toolbar.setNavigationIcon(R.drawable.ic_outline_arrow_back_24);
 
         mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
@@ -114,8 +125,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
         mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
         mViewModel.photos.observe(getViewLifecycleOwner(), recipePhotoAdapter::submitList);
-        // To go back to previous fragment
-        binding.toolbar.setNavigationOnClickListener(view1 -> requireActivity().onBackPressed());
         // menu item click listener
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_save) {// Navigate to settings screen
