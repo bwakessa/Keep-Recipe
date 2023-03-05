@@ -38,6 +38,10 @@ public class HomeViewModel extends AndroidViewModel {
         recipeRepository.delete(recipe);
     }
 
+    public void deleteAllRecipes() {
+        recipeRepository.deleteAllRecipes();
+    }
+
     public LiveData<List<Recipe>> searchRecipe(String query) {
         return recipeRepository.searchRecipe(query);
     }

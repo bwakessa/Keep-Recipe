@@ -1,5 +1,6 @@
 package com.keeprecipes.android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +11,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.keeprecipes.android.databinding.FragmentSettingsBinding;
+import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
 public class SettingsFragment extends Fragment {
 
@@ -40,7 +42,20 @@ public class SettingsFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
 
-        binding.deleteTextView.setOnClickListener(view1 -> new MaterialAlertDialogBuilder(view1.getContext()).setTitle("Delete all recipes?").setMessage("This will all delete recipes. There is no turning back.")
+        binding.deleteTextView.setOnClickListener(view1 -> new MaterialAlertDialogBuilder(view1.getContext()).setTitle("Delete all recipes?").setMessage("This will delete all recipes. There is no turning back.")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+                        viewModel.deleteAllRecipes();
+                    }
+                })
                 .show());
 
         binding.privacyTextView.setOnClickListener(view2 -> {

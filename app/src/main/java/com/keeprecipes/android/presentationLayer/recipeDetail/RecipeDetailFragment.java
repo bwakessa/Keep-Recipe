@@ -46,7 +46,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        HomeViewModel homeViewModel = new ViewModelProvider(getActivity()).get(HomeViewModel.class);
 
         NavController navController = Navigation.findNavController(view);
         AppBarConfiguration appBarConfiguration =

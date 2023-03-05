@@ -51,10 +51,16 @@ public class RecipeRepository {
 
     public void delete(Recipe recipe) {
         Executors.newSingleThreadExecutor().execute(() -> {
-                    mRecipeDao.delete(recipe);
-                    mRecipeDao.vacuumDb(new SimpleSQLiteQuery("VACUUM"));
-                }
-        );
+            mRecipeDao.delete(recipe);
+            mRecipeDao.vacuumDb(new SimpleSQLiteQuery("VACUUM"));
+        });
+    }
+
+    public void deleteAllRecipes() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            mRecipeDao.drop();
+            mRecipeDao.vacuumDb(new SimpleSQLiteQuery("VACUUM"));
+        });
     }
 
     public void update(Recipe recipe) {
