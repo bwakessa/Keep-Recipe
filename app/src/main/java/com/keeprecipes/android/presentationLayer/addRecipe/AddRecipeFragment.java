@@ -1,8 +1,10 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
+import static android.os.ext.SdkExtensions.getExtensionVersion;
+
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ext.SdkExtensions;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -140,10 +143,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
-            } else if (item.getItemId() == R.id.action_delete) {
-                Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
-                return true;
             }
             return false;
         });
@@ -160,25 +159,36 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             // Launch the photo picker and allow the user to choose only images.
             // You will see red line under setMediaType() ignore that.
             // It's an bug with kotlin code used by Google to create contract class
-            if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                Log.d(TAG, "onViewCreated: api " + true);
+//            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                Log.d(TAG, "onViewCreated: extension " + getExtensionVersion(Build.VERSION_CODES.R));
+//            } else {
+//                Log.d(TAG, "onViewCreated: " + false);
+//            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
                 PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build();
                 pickMedia.launch(request);
+            } else {
+                galleryActivityLauncher.launch(new String[]{"image/*"});
             }
         });
     }
 
-//    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
-//        public void onActivityResult(Uri result) {
-//            if (result != null) {
-//                // perform desired operations using the result Uri
-//                Log.i(TAG, "onActivityResult: " + result);
-//            } else {
-//                Log.d(TAG, "onActivityResult: the result is null for some reason");
-//            }
-//        }
-//    });
+//    For future use, incase if the app needs to support api<30, as the new photo-picker is not available on those
+    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
+        if (result != null) {
+            // perform desired operations using the result Uri
+            Log.i(TAG, "onActivityResult: " + result);
+            mViewModel.addPhotos(result);
+        } else {
+            Log.d(TAG, "onActivityResult: the result is null for some reason");
+        }
+    });
 
     @Override
     public void onDestroyView() {

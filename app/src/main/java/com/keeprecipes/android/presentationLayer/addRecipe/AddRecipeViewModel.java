@@ -7,6 +7,7 @@ import android.os.FileUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -123,7 +124,14 @@ public class AddRecipeViewModel extends AndroidViewModel {
             try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
                 // If we are adding a new image then the scheme will of type content
                 if (Objects.equals(photo.uri.getScheme(), "content")) {
-                    String fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
+                    Log.d(TAG, "saveRecipe: "+photo.uri.getAuthority());
+                    String fileName;
+                    if (Objects.equals(photo.uri.getAuthority(), "media")){
+                        fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
+                    } else {
+                        fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();;
+                    }
+                    Log.d(TAG, "saveRecipe: filename"+fileName);
                     try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
                         File file = new File(photo.uri.getPath());
                         Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
@@ -141,7 +149,6 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
         recipeToSave.setPhotos(photoFiles);
         List<Ingredient> ingredientList = new ArrayList<>();
-        List<IngredientDTO> sdk = ingredients.getValue();
         for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
             ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size)));
         }
