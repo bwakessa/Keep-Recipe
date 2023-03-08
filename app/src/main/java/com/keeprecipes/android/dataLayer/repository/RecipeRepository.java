@@ -45,6 +45,10 @@ public class RecipeRepository {
         return mRecipeDao.getAllCollection();
     }
 
+    public LiveData<List<String>> getAllCuisineCollection() {
+        return mRecipeDao.getAllCuisineCollection();
+    }
+
     public void insert(Recipe recipe) {
         Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.insert(recipe));
     }

@@ -40,7 +40,7 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdap
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private IngredientItemBinding ingredientItemBinding;
+        private final IngredientItemBinding ingredientItemBinding;
 
         public ViewHolder(IngredientItemBinding binding) {
             super(binding.getRoot());

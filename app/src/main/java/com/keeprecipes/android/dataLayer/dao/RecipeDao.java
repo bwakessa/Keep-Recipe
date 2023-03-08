@@ -47,6 +47,9 @@ public interface RecipeDao {
     @Update
     void updateRecipe(Recipe recipe);
 
+    @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
+    LiveData<List<String>> getAllCuisineCollection();
+
     @Query("DELETE FROM recipes")
     void drop();
 

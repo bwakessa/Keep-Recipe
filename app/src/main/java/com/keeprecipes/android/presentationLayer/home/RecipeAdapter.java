@@ -70,6 +70,8 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
                         .centerCrop()
                         .into(recipeImage);
             }
+            // Rewrite for setOnClickListener
+            // https://www.digitalocean.com/community/tutorials/android-recyclerview-data-binding
             cardView.setOnClickListener(view -> {
                 ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
                 action.setRecipeId(recipe.getId());

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -41,25 +40,12 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
-    // Registers a photo picker activity launcher in single-select mode.
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                // Callback is invoked after the user selects a media item or closes the
-                // photo picker.
-                if (uri != null) {
-                    Log.d("PhotoPicker", "Selected URI: " + uri);
-                    Log.d(TAG, "File type: " + getContext().getContentResolver().getType(uri).split("/")[1]);
-                    mViewModel.addPhotos(uri);
-                } else {
-                    Log.d("PhotoPicker", "No media selected");
-                }
-            });
+
     private FragmentAddRecipeBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_add_recipe, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_recipe, container, false);
         return binding.getRoot();
     }
 
@@ -80,11 +66,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         }
 
         NavController navController = Navigation.findNavController(view);
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        NavigationUI.setupWithNavController(
-                toolbar, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
 
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
@@ -97,8 +81,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             @Override
             public void onChanged(List<String> cuisines) {
                 Log.d(TAG, "onChanged: cuisines" + cuisines);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>
-                        (binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
                 binding.cusineAutoCompleteTextView.setAdapter(adapter);
             }
         });
@@ -106,8 +89,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> collection) {
-                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>
-                        (binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
+                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
             }
         });
 
@@ -169,9 +151,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 //            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
-                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build();
+                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
                 pickMedia.launch(request);
             } else {
                 galleryActivityLauncher.launch(new String[]{"image/*"});
@@ -179,16 +159,26 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         });
     }
 
-//    For future use, incase if the app needs to support api<30, as the new photo-picker is not available on those
-    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
-        if (result != null) {
-            // perform desired operations using the result Uri
-            Log.i(TAG, "onActivityResult: " + result);
-            mViewModel.addPhotos(result);
+    // Callback is invoked after the user selects a media item or closes the
+    // photo picker.
+    // Registers a photo picker activity launcher in single-select mode.
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
+
+    // Callback is invoked after the user selects a media item or closes the
+    // document picker.
+    // Registers a document picker activity launcher in single-select mode.
+    // Used on Build.VERSION.SDK_INT < Build.VERSION_CODES.R || getExtensionVersion(Build.VERSION_CODES.R) < 2
+    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::handleMediaUri);
+
+    private void handleMediaUri(Uri uri) {
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: " + uri);
+            Log.d(TAG, "File type: " + getContext().getContentResolver().getType(uri).split("/")[1]);
+            mViewModel.addPhotos(uri);
         } else {
-            Log.d(TAG, "onActivityResult: the result is null for some reason");
+            Log.d("PhotoPicker", "No media selected");
         }
-    });
+    }
 
     @Override
     public void onDestroyView() {

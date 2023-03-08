@@ -7,27 +7,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     final String TAG = "HomeFragment";
     HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
+
+    private List<String> categories;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +47,41 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel =
                 new ViewModelProvider(getActivity()).get(HomeViewModel.class);
+
+        homeViewModel.getAllCuisineCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> categoriesList) {
+                for (String categories : categoriesList) {
+                    Chip chip = new Chip(getContext());
+                    chip.setText(categories);
+//                    chip.setCloseIconVisible(true);
+                    // necessary to get single selection working
+                    chip.setClickable(true);
+                    chip.setCheckable(true);
+//                    chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                        @Override
+//                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                            chip.setCloseIconVisible(b);
+//                            Log.d(TAG, "onCheckedChanged: " + b);
+//                        }
+//                    });
+                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            chip.setChecked(false);
+                        }
+                    });
+                    binding.categoriesChipGroup.addView(chip);
+                }
+            }
+        });
+
+        binding.categoriesChipGroup.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
+                Log.d(TAG, "onCheckedChanged: ");
+            }
+        });
 
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
@@ -78,6 +119,12 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_addRecipeFragment);
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: HomeFragment is stopped");
     }
 
     @Override
