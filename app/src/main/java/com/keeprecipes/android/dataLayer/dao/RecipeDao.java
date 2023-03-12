@@ -22,13 +22,13 @@ public interface RecipeDao {
     @Delete
     void delete(Recipe recipe);
 
-    @Query("SELECT * FROM recipes WHERE id LIKE :recipeId")
+    @Query("SELECT * FROM recipes WHERE recipeId LIKE :recipeId")
     LiveData<Recipe> fetchById(int recipeId);
 
     @Query("SELECT * FROM recipes WHERE title LIKE :recipeName")
     LiveData<Recipe> fetchByTitle(String recipeName);
 
-    @Query("SELECT * FROM recipes ORDER BY id DESC")
+    @Query("SELECT * FROM recipes ORDER BY recipeId DESC")
     LiveData<List<Recipe>> getAll();
 
     @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
@@ -39,8 +39,8 @@ public interface RecipeDao {
 
     @Transaction
     @Query(
-            "SELECT recipes.id, recipes.title, recipes.instructions, recipes.cuisine, recipes.ingredients FROM recipes "
-                    + "JOIN recipeFts ON (recipes.id = recipeFts.docid) WHERE recipeFts MATCH :query")
+            "SELECT recipes.recipeId, recipes.title, recipes.instructions, recipes.cuisine, recipes.ingredients FROM recipes "
+                    + "JOIN recipeFts ON (recipes.recipeId = recipeFts.docid) WHERE recipeFts MATCH :query")
     LiveData<List<Recipe>>
     searchRecipe(String query);
 

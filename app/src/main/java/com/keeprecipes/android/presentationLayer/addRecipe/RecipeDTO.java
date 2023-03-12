@@ -19,7 +19,7 @@ public class RecipeDTO {
     }
 
     public RecipeDTO(Recipe recipe) {
-        this.id = recipe.id;
+        this.id = recipe.recipeId;
         this.title = recipe.title;
         this.instructions = recipe.instructions;
         this.cuisine = recipe.cuisine;

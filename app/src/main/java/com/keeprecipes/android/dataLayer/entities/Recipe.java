@@ -15,7 +15,7 @@ public class Recipe {
     public static final DiffUtil.ItemCallback<Recipe> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.recipeId == newItem.recipeId;
         }
 
         @Override
@@ -24,7 +24,7 @@ public class Recipe {
         }
     };
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int recipeId;
     @ColumnInfo(name = "title")
     public String title;
     @ColumnInfo(name = "instructions")
@@ -42,88 +42,16 @@ public class Recipe {
     @ColumnInfo(name = "data_created")
     public Instant dateCreated;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCuisine() {
-        return cuisine;
-    }
-
-    public void setCuisine(String cuisine) {
-        this.cuisine = cuisine;
-    }
-
-    public String getCollection() {
-        return collection;
-    }
-
-    public void setCollection(String collection) {
-        this.collection = collection;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public Instant getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getPortionSize() {
-        return portionSize;
-    }
-
-    public void setPortionSize(String portionSize) {
-        this.portionSize = portionSize;
-    }
-
-    public List<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return id == recipe.id;
+        return recipeId == recipe.recipeId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(recipeId);
     }
 }

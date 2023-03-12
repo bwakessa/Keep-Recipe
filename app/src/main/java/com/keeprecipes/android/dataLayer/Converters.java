@@ -55,23 +55,23 @@ public class Converters {
             return null;
         } else {
             StringBuilder s = new StringBuilder();
-            s.append(recipe.getId());
+            s.append(recipe.recipeId);
             s.append(",");
-            s.append(recipe.getTitle());
+            s.append(recipe.title);
             s.append(",");
-            s.append(recipe.getInstructions());
+            s.append(recipe.instructions);
             s.append(",");
-            s.append(recipe.getCuisine());
+            s.append(recipe.cuisine);
             s.append(",");
-            s.append(recipe.getCollection());
+            s.append(recipe.collection);
             s.append(",");
-            s.append(recipe.getPortionSize());
+            s.append(recipe.portionSize);
             s.append(",");
-            s.append(ingredientsToString(recipe.getIngredients()));
+            s.append(ingredientsToString(recipe.ingredients));
             s.append(",");
-            s.append(photosToString(recipe.getPhotos()));
+            s.append(photosToString(recipe.photos));
             s.append(",");
-            s.append(dateToTimestamp((recipe.getDateCreated())));
+            s.append(dateToTimestamp((recipe.dateCreated)));
 
             return s.toString();
         }
@@ -85,15 +85,15 @@ public class Converters {
         } else {
             Recipe r = new Recipe();
             String[] data = s.split(",");
-            r.setId(Integer.parseInt(data[0]));
-            r.setTitle(data[1]);
-            r.setInstructions(data[2]);
-            r.setCuisine(data[3]);
-            r.setCollection(data[4]);
-            r.setPortionSize(data[5]);
-            r.setIngredients(stringToIngredients(data[6]));
-            r.setPhotos(stringToPhotos(data[7]));
-            r.setDateCreated(Instant.parse(data[8]));
+            r.recipeId = Integer.parseInt(data[0]);
+            r.title = data[1];
+            r.instructions = data[2];
+            r.cuisine = data[3];
+            r.collection = data[4];
+            r.portionSize = data[5];
+            r.ingredients = stringToIngredients(data[6]);
+            r.photos = stringToPhotos(data[7]);
+            r.dateCreated = Instant.parse(data[8]);
             return r;
         }
     }

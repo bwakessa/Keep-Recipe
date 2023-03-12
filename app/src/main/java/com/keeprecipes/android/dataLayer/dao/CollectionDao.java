@@ -9,26 +9,26 @@ import androidx.room.RawQuery;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
-import com.keeprecipes.android.dataLayer.entities.RecipeCollection;
+import com.keeprecipes.android.dataLayer.entities.Collection;
 
 import java.util.List;
 
 @Dao
-public interface RecipeCollectionDao {
+public interface CollectionDao {
     @Insert
-    void insert(RecipeCollection collection);
+    void insert(Collection collection);
 
     @Delete
-    void delete(RecipeCollection collection);
+    void delete(Collection collection);
 
     @Update
-    void updateCollection(RecipeCollection collection);
+    void updateCollection(Collection collection);
 
-    @Query("SELECT * FROM collections ORDER BY id DESC")
-    LiveData<List<RecipeCollection>> getAll();
+    @Query("SELECT * FROM collections ORDER BY collectionId DESC")
+    LiveData<List<Collection>> getAll();
 
     @Query("SELECT * FROM collections WHERE name = :collectionName")
-    LiveData<RecipeCollection> fetchByName(String collectionName);
+    LiveData<Collection> fetchByName(String collectionName);
 
     // Resets the the primary key after deleting entity
     @RawQuery

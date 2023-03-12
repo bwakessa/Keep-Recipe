@@ -111,27 +111,28 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void saveRecipe() throws IOException {
         Recipe recipeToSave = new Recipe();
-        recipeToSave.setId(Objects.requireNonNull(recipe.getValue()).id);
-        recipeToSave.setTitle(Objects.requireNonNull(recipe.getValue()).title);
-        recipeToSave.setInstructions(recipe.getValue().instructions);
-        recipeToSave.setCuisine(recipe.getValue().cuisine);
-        recipeToSave.setCollection(recipe.getValue().collection);
-        recipeToSave.setPortionSize(recipe.getValue().portionSize);
-        recipeToSave.setDateCreated(Instant.now());
+        recipeToSave.recipeId = Objects.requireNonNull(recipe.getValue()).id;
+        recipeToSave.title = Objects.requireNonNull(recipe.getValue()).title;
+        recipeToSave.instructions = recipe.getValue().instructions;
+        recipeToSave.cuisine = recipe.getValue().cuisine;
+        recipeToSave.collection = recipe.getValue().collection;
+        recipeToSave.portionSize = recipe.getValue().portionSize;
+        recipeToSave.dateCreated = Instant.now();
         List<PhotoDTO> photoDTOList = photos.getValue();
         List<String> photoFiles = new ArrayList<>();
         for (PhotoDTO photo : photoDTOList) {
             try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
                 // If we are adding a new image then the scheme will of type content
                 if (Objects.equals(photo.uri.getScheme(), "content")) {
-                    Log.d(TAG, "saveRecipe: "+photo.uri.getAuthority());
+                    Log.d(TAG, "saveRecipe: " + photo.uri.getAuthority());
                     String fileName;
-                    if (Objects.equals(photo.uri.getAuthority(), "media")){
+                    if (Objects.equals(photo.uri.getAuthority(), "media")) {
                         fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
                     } else {
-                        fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();;
+                        fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();
+                        ;
                     }
-                    Log.d(TAG, "saveRecipe: filename"+fileName);
+                    Log.d(TAG, "saveRecipe: filename" + fileName);
                     try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
                         File file = new File(photo.uri.getPath());
                         Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
@@ -147,12 +148,12 @@ public class AddRecipeViewModel extends AndroidViewModel {
                 }
             }
         }
-        recipeToSave.setPhotos(photoFiles);
+        recipeToSave.photos = photoFiles;
         List<Ingredient> ingredientList = new ArrayList<>();
         for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
             ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size)));
         }
-        recipeToSave.setIngredients(ingredientList);
+        recipeToSave.ingredients = ingredientList;
         if (updateRecipe) {
             recipeRepository.update(recipeToSave);
         } else {

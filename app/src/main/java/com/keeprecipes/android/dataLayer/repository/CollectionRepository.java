@@ -5,39 +5,39 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.keeprecipes.android.dataLayer.AppDatabase;
-import com.keeprecipes.android.dataLayer.dao.RecipeCollectionDao;
-import com.keeprecipes.android.dataLayer.entities.RecipeCollection;
+import com.keeprecipes.android.dataLayer.dao.CollectionDao;
+import com.keeprecipes.android.dataLayer.entities.Collection;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class RecipeCollectionRepository {
+public class CollectionRepository {
 
-    private RecipeCollectionDao mCollectionDao;
-    private LiveData<List<RecipeCollection>> allCollections;
+    private CollectionDao mCollectionDao;
+    private LiveData<List<Collection>> allCollections;
 
-    public RecipeCollectionRepository(Application application) {
+    public CollectionRepository(Application application) {
         mCollectionDao = AppDatabase.getDatabase(application).recipeCollectionDao();
         allCollections = mCollectionDao.getAll();
     }
 
-    public LiveData<List<RecipeCollection>> getAllCollections() {
+    public LiveData<List<Collection>> getAllCollections() {
         return allCollections;
     }
 
-    public LiveData<RecipeCollection> fetchByName(String title) {
+    public LiveData<Collection> fetchByName(String title) {
         return mCollectionDao.fetchByName(title);
     }
 
-    public void insert(RecipeCollection collection) {
+    public void insert(Collection collection) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.insert(collection));
     }
 
-    public void delete(RecipeCollection collection) {
+    public void delete(Collection collection) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(collection));
     }
 
-    public void update(RecipeCollection collection) {
+    public void update(Collection collection) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.updateCollection(collection));
     }
 }

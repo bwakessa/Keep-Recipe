@@ -7,13 +7,15 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.keeprecipes.android.dataLayer.dao.RecipeCollectionDao;
+import com.keeprecipes.android.dataLayer.dao.CollectionDao;
+import com.keeprecipes.android.dataLayer.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
+import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
-import com.keeprecipes.android.dataLayer.entities.RecipeCollection;
 import com.keeprecipes.android.dataLayer.entities.RecipeFts;
 
-@Database(entities = {Recipe.class, RecipeCollection.class, RecipeFts.class}, version = 1, exportSchema = false)
+@Database(entities = {Recipe.class, Collection.class, RecipeFts.class, CollectionRecipeCrossRef.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance = null;
@@ -33,5 +35,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract RecipeDao recipeDao();
 
-    public abstract RecipeCollectionDao recipeCollectionDao();
+    public abstract CollectionDao recipeCollectionDao();
+
+    public abstract CollectionWithRecipesDao collectionWithRecipesDao();
 }

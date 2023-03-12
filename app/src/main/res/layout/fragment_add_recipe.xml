@@ -96,9 +96,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="16dp"
                     app:boxBackgroundMode="outline"
-                    app:layout_constraintEnd_toStartOf="@+id/collection_text_input_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/instructions_text_input_layout">
 
@@ -108,31 +109,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:dropDownHeight="wrap_content"
-                        android:hint="Cuisine"
+                        android:hint="Cuisine / Collection"
                         android:text="@={viewModel.recipe.cuisine}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/collection_text_input_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    app:boxBackgroundMode="outline"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cusine_text_input_layout"
-                    app:layout_constraintTop_toBottomOf="@+id/instructions_text_input_layout">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/collection_auto_complete_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:dropDownHeight="wrap_content"
-                        android:hint="Collection"
-                        android:text="@={viewModel.recipe.collection}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

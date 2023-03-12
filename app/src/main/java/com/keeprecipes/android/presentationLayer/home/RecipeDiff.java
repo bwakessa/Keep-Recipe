@@ -9,7 +9,7 @@ public class RecipeDiff {
     public static final DiffUtil.ItemCallback<Recipe> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull Recipe oldItem, @NonNull Recipe newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.recipeId == newItem.recipeId;
         }
 
         @Override

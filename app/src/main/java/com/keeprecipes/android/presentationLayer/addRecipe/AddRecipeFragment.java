@@ -5,6 +5,8 @@ import static android.os.ext.SdkExtensions.getExtensionVersion;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.chip.Chip;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
@@ -40,7 +43,15 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
-
+    // Callback is invoked after the user selects a media item or closes the
+    // photo picker.
+    // Registers a photo picker activity launcher in single-select mode.
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
+    // Callback is invoked after the user selects a media item or closes the
+    // document picker.
+    // Registers a document picker activity launcher in single-select mode.
+    // Used on Build.VERSION.SDK_INT < Build.VERSION_CODES.R || getExtensionVersion(Build.VERSION_CODES.R) < 2
+    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::handleMediaUri);
     private FragmentAddRecipeBinding binding;
 
     @Override
@@ -86,12 +97,12 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             }
         });
 
-        mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> collection) {
-                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
-            }
-        });
+//        mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+//            @Override
+//            public void onChanged(List<String> collection) {
+//                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
+//            }
+//        });
 
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
@@ -125,8 +136,38 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
+            } else if (item.getItemId() == R.id.action_delete) {
+                Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
+                requireActivity().onBackPressed();
+                return true;
             }
             return false;
+        });
+
+        binding.cusineAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d(TAG, "cusineAutoCompleteTextView onTextChanged: " + charSequence + i + i1 + i2);
+                // adding a new character and the new character is space
+                if (i1 == 0 && charSequence.charAt(i) == ' ') {
+                    Log.d(TAG, "onTextChanged: " + charSequence.charAt(i));
+                    Chip chip = new Chip(getContext());
+                    chip.setText("roney");
+//                    binding.cusineAutoCompleteTextView.getText().setSpan();
+                } else {
+                    // When deleting the text or backspace
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+//                Log.d(TAG, "cusineAutoCompleteTextView afterTextChanged: "+editable.toString());
+            }
         });
 
         binding.addIngredientButton.setOnClickListener(v -> {
@@ -141,15 +182,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             // Launch the photo picker and allow the user to choose only images.
             // You will see red line under setMediaType() ignore that.
             // It's an bug with kotlin code used by Google to create contract class
-
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                Log.d(TAG, "onViewCreated: api " + true);
-//            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                Log.d(TAG, "onViewCreated: extension " + getExtensionVersion(Build.VERSION_CODES.R));
-//            } else {
-//                Log.d(TAG, "onViewCreated: " + false);
-//            }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
                 PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
                 pickMedia.launch(request);
@@ -158,17 +190,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             }
         });
     }
-
-    // Callback is invoked after the user selects a media item or closes the
-    // photo picker.
-    // Registers a photo picker activity launcher in single-select mode.
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
-
-    // Callback is invoked after the user selects a media item or closes the
-    // document picker.
-    // Registers a document picker activity launcher in single-select mode.
-    // Used on Build.VERSION.SDK_INT < Build.VERSION_CODES.R || getExtensionVersion(Build.VERSION_CODES.R) < 2
-    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::handleMediaUri);
 
     private void handleMediaUri(Uri uri) {
         if (uri != null) {
