@@ -7,7 +7,7 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Converters {
@@ -63,13 +63,13 @@ public class Converters {
             s.append(",");
             s.append(recipe.cuisine);
             s.append(",");
-            s.append(recipe.collection);
+            s.append(listToString(recipe.collection));
             s.append(",");
             s.append(recipe.portionSize);
             s.append(",");
             s.append(ingredientsToString(recipe.ingredients));
             s.append(",");
-            s.append(photosToString(recipe.photos));
+            s.append(listToString(recipe.photos));
             s.append(",");
             s.append(dateToTimestamp((recipe.dateCreated)));
 
@@ -89,42 +89,34 @@ public class Converters {
             r.title = data[1];
             r.instructions = data[2];
             r.cuisine = data[3];
-            r.collection = data[4];
+            r.collection = stringToList(data[4]);
             r.portionSize = data[5];
             r.ingredients = stringToIngredients(data[6]);
-            r.photos = stringToPhotos(data[7]);
+            r.photos = stringToList(data[7]);
             r.dateCreated = Instant.parse(data[8]);
             return r;
         }
     }
 
     @TypeConverter
-    public static String collectionToString(ArrayList<Recipe> recipes) {
-        if (recipes == null) {
+    public static String listToString(List<String> stringList) {
+        if (stringList == null) {
             return null;
         } else {
-            StringBuilder s = new StringBuilder();
-            s.append(recipeToString(recipes.get(0)));
-            for (int i = 1; i < recipes.size(); i++) {
-                s.append("|");
-                s.append(recipeToString(recipes.get(i)));
-            }
-            return s.toString();
+            return stringList.stream().reduce("", (str, s1) -> str + s1 + "|");
         }
     }
 
     @TypeConverter
-    public static ArrayList<Recipe> stringToCollection(String s) {
+    public static List<String> stringToList(String s) {
         //precondition: <s> follows same format as specified in above function
         if (s == null) {
             return null;
         } else {
-            ArrayList<Recipe> recipes = new ArrayList<>();
+            List<String> recipeId = new ArrayList<>();
             String[] data = s.split("\\|");
-            for (String recipeData : data) {
-                recipes.add(stringToRecipe(recipeData));
-            }
-            return recipes;
+            Collections.addAll(recipeId, data);
+            return recipeId;
         }
     }
 
@@ -154,30 +146,6 @@ public class Converters {
                 ingredients.add(ingredient);
             }
             return ingredients;
-        }
-    }
-
-    @TypeConverter
-    public static String photosToString(List<String> photos) {
-        if (photos == null || photos.size() == 0) {
-            return null;
-        } else {
-            StringBuilder s = new StringBuilder(photos.get(0));
-            for (int i = 1; i < photos.size(); i++) {
-                s.append("|");
-                s.append(photos.get(i));
-            }
-            return s.toString();
-        }
-    }
-
-    @TypeConverter
-    public static List<String> stringToPhotos(String s) {
-        if (s == null) {
-            return null;
-        } else {
-            String[] i = s.split("\\|");
-            return new ArrayList<>(Arrays.asList(i));
         }
     }
 }

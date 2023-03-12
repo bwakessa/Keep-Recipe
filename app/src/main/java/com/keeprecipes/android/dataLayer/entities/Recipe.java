@@ -32,7 +32,7 @@ public class Recipe {
     @ColumnInfo(name = "cuisine")
     public String cuisine;
     @ColumnInfo(name = "collection")
-    public String collection;
+    public List<String> collection;
     @ColumnInfo(name = "portion-size")
     public String portionSize;
     @ColumnInfo(name = "ingredients")

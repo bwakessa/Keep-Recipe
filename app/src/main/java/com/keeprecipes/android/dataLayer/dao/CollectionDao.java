@@ -10,7 +10,9 @@ import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao

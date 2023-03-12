@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "collections")
 public class Collection {
@@ -15,5 +15,5 @@ public class Collection {
     public String name;
 
     @ColumnInfo(name = "recipes")
-    public ArrayList<Recipe> recipes;
+    public List<String> recipeId;
 }

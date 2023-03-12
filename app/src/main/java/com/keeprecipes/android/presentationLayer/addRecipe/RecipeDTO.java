@@ -11,9 +11,9 @@ public class RecipeDTO {
     public String title;
     public String instructions;
     public String cuisine;
-    public String collection;
+    public List<String> collection;
     public String portionSize;
-    public List photoURI;
+    public List<String> photoURI;
 
     public RecipeDTO() {
     }
