@@ -15,7 +15,6 @@ public class Converters {
     @TypeConverter
     public static Instant timeStampToDate(Long value) {
         return value == null ? null : Instant.ofEpochSecond(value);
-        // {whatever operation} BOOLEAN statement ? TRUE result : FALSE result
     }
 
     @TypeConverter
@@ -48,52 +47,6 @@ public class Converters {
 //Need type converters for Collections: ArrayList<Recipe> to String (fields separated by commas, recipes separated by |)
 //Need type converter to convert from String (following above format) to ArrayList<Recipe>
     //PROBLEM: how to instantiate new Recipe objects? (lack of constructor; create a getNewInstance method?)
-
-    @TypeConverter
-    public static String recipeToString(Recipe recipe) {
-        if (recipe == null) {
-            return null;
-        } else {
-            return recipe.recipeId +
-                    "," +
-                    recipe.title +
-                    "," +
-                    recipe.instructions +
-                    "," +
-                    recipe.cuisine +
-                    "," +
-                    listToString(recipe.collection) +
-                    "," +
-                    recipe.portionSize +
-                    "," +
-                    ingredientsToString(recipe.ingredients) +
-                    "," +
-                    listToString(recipe.photos) +
-                    "," +
-                    dateToTimestamp((recipe.dateCreated));
-        }
-    }
-
-    @TypeConverter
-    public static Recipe stringToRecipe(String s) {
-        // Precondition: <s> follows format specified in the above function
-        if (s == null) {
-            return null;
-        } else {
-            Recipe r = new Recipe();
-            String[] data = s.split(",");
-            r.recipeId = Integer.parseInt(data[0]);
-            r.title = data[1];
-            r.instructions = data[2];
-            r.cuisine = data[3];
-            r.collection = stringToList(data[4]);
-            r.portionSize = data[5];
-            r.ingredients = stringToIngredients(data[6]);
-            r.photos = stringToList(data[7]);
-            r.dateCreated = Instant.parse(data[8]);
-            return r;
-        }
-    }
 
     @TypeConverter
     public static String listToString(List<String> stringList) {
