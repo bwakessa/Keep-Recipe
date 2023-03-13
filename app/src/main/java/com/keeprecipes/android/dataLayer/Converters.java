@@ -3,7 +3,6 @@ package com.keeprecipes.android.dataLayer;
 import androidx.room.TypeConverter;
 
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
-import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class Converters {
             return null;
         } else {
             return ingredients.stream()
-                    .map(ingredient -> ingredient.name + "`" + ingredient.size)
+                    .map(ingredient -> ingredient.name + "`" + ingredient.size + "`" + ingredient.quantity)
                     .reduce((str, s) -> str + "|" + s)
                     .orElse("");
         }
@@ -91,7 +90,7 @@ public class Converters {
             String[] i = s.split("\\|");
             for (String x : i) {
                 String[] y = x.split("`");
-                Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]));
+                Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]), y[2]);
                 ingredients.add(ingredient);
             }
             return ingredients;
