@@ -11,9 +11,12 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
+import com.keeprecipes.android.dataLayer.entities.Collection;
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
+import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
 import java.io.File;
@@ -22,14 +25,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class AddRecipeViewModel extends AndroidViewModel {
     private final String TAG = "AddRecipeViewModel";
+    private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
+
     private final Application application;
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
+    public MutableLiveData<List<Collection>> collections =new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     private boolean updateRecipe = false;
@@ -38,16 +46,23 @@ public class AddRecipeViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         recipeRepository = new RecipeRepository(application);
+        collectionRepository = new CollectionRepository(application);
         Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
     }
 
     public void setRecipe(Recipe recipe) {
         RecipeDTO recipeDTO = new RecipeDTO(recipe);
         this.recipe.setValue(recipeDTO);
+//        if (recipe.collection != null){
+//            List<Collection> collections = new ArrayList<>();
+//            // TODO: look into using streams and collect
+//            recipe.collection.forEach(s -> collectionRepository.fetchByName(s).observe(getApplication(), collections::add));
+//            this.collections.setValue(collections);
+//        }
         if (recipe.ingredients != null) {
             List<IngredientDTO> ingredientList = new ArrayList<>();
             for (int a = 0; a < recipe.ingredients.size(); a++) {
-                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size)));
+                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
             }
             this.ingredients.setValue(ingredientList);
         }
@@ -63,7 +78,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public void addIngredient() {
         List<IngredientDTO> ingredientList = ingredients.getValue() == null ? new ArrayList<>() : new ArrayList<>(ingredients.getValue());
-        IngredientDTO ingredient = new IngredientDTO(ingredientList.size(), "", "1");
+        IngredientDTO ingredient = new IngredientDTO(ingredientList.size(), "", "1", "g");
         ingredientList.add(ingredient);
         ingredients.postValue(ingredientList);
     }
@@ -72,7 +87,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
         if (ingredientList != null) {
             List<IngredientDTO> ingredientDTOList = new ArrayList<>();
             for (int i = 0; i < ingredientList.size(); i++) {
-                ingredientDTOList.add(new IngredientDTO(i, ingredientList.get(i).name, String.valueOf(ingredientList.get(i).size)));
+                ingredientDTOList.add(new IngredientDTO(i, ingredientList.get(i).name, String.valueOf(ingredientList.get(i).size), ingredientList.get(i).quantity));
             }
             ingredients.postValue(ingredientDTOList);
         }
@@ -151,7 +166,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.photos = photoFiles;
         List<Ingredient> ingredientList = new ArrayList<>();
         for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
-            ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size)));
+            ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
         }
         recipeToSave.ingredients = ingredientList;
         if (updateRecipe) {

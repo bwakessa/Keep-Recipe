@@ -21,6 +21,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
+import com.keeprecipes.android.presentationLayer.addRecipe.IngredientDTO;
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
 import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 import com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment;
@@ -33,6 +34,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
 
     private static final String TAG = "RecipeDetailFragment";
     PhotoAdapter photoAdapter;
+    IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
     private FragmentRecipeDetailBinding binding;
 
@@ -71,8 +73,6 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
             return false;
         });
 
-        photoAdapter = new PhotoAdapter(this);
-        binding.photoListView.setAdapter(photoAdapter);
         assert getArguments() != null;
         int recipeId = RecipeDetailFragmentArgs.fromBundle(getArguments()).getRecipeId();
         Log.d(TAG, "onViewCreated: recipeId " + recipeId);
@@ -81,13 +81,26 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
             if (recipe != null) {
                 mRecipe = recipe;
                 binding.setRecipe(recipe);
+                photoAdapter = new PhotoAdapter(this);
+                binding.photoListView.setAdapter(photoAdapter);
                 if (recipe.photos != null) {
                     File appDir = getContext().getFilesDir();
                     List<PhotoDTO> photoDTOList = new ArrayList<>();
+                    // TODO: Change to streams
                     for (int a = 0; a < recipe.photos.size(); a++) {
                         photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
                     }
                     photoAdapter.submitList(photoDTOList);
+                }
+                ingredientAdapter = new IngredientAdapter();
+                binding.ingredientsListView.setAdapter(ingredientAdapter);
+                if (recipe.ingredients != null) {
+                    List<IngredientDTO> ingredientDTOList = new ArrayList<>();
+                    // TODO: Change to streams
+                    for (int a = 0; a < recipe.ingredients.size(); a++) {
+                        ingredientDTOList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
+                    }
+                    ingredientAdapter.submitList(ingredientDTOList);
                 }
             }
         });

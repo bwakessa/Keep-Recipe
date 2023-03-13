@@ -18,11 +18,13 @@ public class IngredientDTO {
     public int id;
     public String name;
     public String size;
+    public String quantity;
 
-    public IngredientDTO(int id, String name, String size) {
+    public IngredientDTO(int id, String name, String size, String quantity) {
         this.id = id;
         this.name = name;
         this.size = size;
+        this.quantity = quantity;
     }
 
     @Override
@@ -30,7 +32,8 @@ public class IngredientDTO {
         return "IngredientDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", size=" + size +
+                ", size='" + size + '\'' +
+                ", quantity='" + quantity + '\'' +
                 '}';
     }
 

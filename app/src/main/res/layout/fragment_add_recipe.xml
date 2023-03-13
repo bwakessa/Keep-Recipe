@@ -109,8 +109,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:dropDownHeight="wrap_content"
-                        android:hint="Cuisine / Collection"
-                        android:text="@={viewModel.recipe.cuisine}" />
+                        android:hint="Cuisine / Collection" />
+<!--                        android:text="@={viewModel.recipe.collection}" />-->
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

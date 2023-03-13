@@ -71,7 +71,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 @Override
                 public void onChanged(Recipe recipe) {
                     mViewModel.setRecipe(recipe);
-                    mViewModel.addIngredientList(recipe.ingredients);
                 }
             });
         }
@@ -88,14 +87,14 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         binding.toolbar.setTitle("Add Recipe");
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
 
-        mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> cuisines) {
-                Log.d(TAG, "onChanged: cuisines" + cuisines);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
-                binding.cusineAutoCompleteTextView.setAdapter(adapter);
-            }
-        });
+//        mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+//            @Override
+//            public void onChanged(List<String> cuisines) {
+//                Log.d(TAG, "onChanged: cuisines" + cuisines);
+//                ArrayAdapter<String> adapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
+//                binding.cusineAutoCompleteTextView.setAdapter(adapter);
+//            }
+//        });
 
 //        mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
 //            @Override
@@ -106,8 +105,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
-
-        mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
 
         recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
