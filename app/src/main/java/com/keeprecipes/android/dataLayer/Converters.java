@@ -54,26 +54,23 @@ public class Converters {
         if (recipe == null) {
             return null;
         } else {
-            StringBuilder s = new StringBuilder();
-            s.append(recipe.recipeId);
-            s.append(",");
-            s.append(recipe.title);
-            s.append(",");
-            s.append(recipe.instructions);
-            s.append(",");
-            s.append(recipe.cuisine);
-            s.append(",");
-            s.append(listToString(recipe.collection));
-            s.append(",");
-            s.append(recipe.portionSize);
-            s.append(",");
-            s.append(ingredientsToString(recipe.ingredients));
-            s.append(",");
-            s.append(listToString(recipe.photos));
-            s.append(",");
-            s.append(dateToTimestamp((recipe.dateCreated)));
-
-            return s.toString();
+            return recipe.recipeId +
+                    "," +
+                    recipe.title +
+                    "," +
+                    recipe.instructions +
+                    "," +
+                    recipe.cuisine +
+                    "," +
+                    listToString(recipe.collection) +
+                    "," +
+                    recipe.portionSize +
+                    "," +
+                    ingredientsToString(recipe.ingredients) +
+                    "," +
+                    listToString(recipe.photos) +
+                    "," +
+                    dateToTimestamp((recipe.dateCreated));
         }
     }
 
@@ -100,10 +97,10 @@ public class Converters {
 
     @TypeConverter
     public static String listToString(List<String> stringList) {
-        if (stringList == null) {
+        if (stringList == null || stringList.isEmpty()) {
             return null;
         } else {
-            return stringList.stream().reduce("", (str, s1) -> str + s1 + "|");
+            return stringList.stream().reduce((str, s) -> str + "|" + s).orElse("");
         }
     }
 
@@ -125,11 +122,10 @@ public class Converters {
         if (ingredients == null || ingredients.isEmpty()) {
             return null;
         } else {
-            StringBuilder s = new StringBuilder(ingredients.get(0).name + "`" + ingredients.get(0).size);
-            for (int i = 1; i < ingredients.size(); i++) {
-                s.append(String.format("|%s`%s", ingredients.get(i).name, ingredients.get(i).size));
-            }
-            return s.toString();
+            return ingredients.stream()
+                    .map(ingredient -> ingredient.name + "`" + ingredient.size)
+                    .reduce((str, s) -> str + "|" + s)
+                    .orElse("");
         }
     }
 
