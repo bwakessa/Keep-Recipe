@@ -3,6 +3,12 @@ plugins {
     id 'androidx.navigation.safeargs'
 }
 
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}
+
 android {
     namespace 'com.keeprecipes.android'
     compileSdk 33
@@ -10,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
-        minSdk 29
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
