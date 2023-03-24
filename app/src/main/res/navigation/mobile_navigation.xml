@@ -30,7 +30,7 @@
     <fragment
         android:id="@+id/addRecipeFragment"
         android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
-        android:label="Add Recipe"
+        android:label="@string/title_add_recipe"
         tools:layout="@layout/fragment_add_recipe">
         <argument
             android:name="recipeId"
@@ -62,6 +62,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.keeprecipes.android.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

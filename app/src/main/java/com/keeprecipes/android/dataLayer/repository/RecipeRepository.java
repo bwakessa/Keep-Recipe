@@ -10,12 +10,20 @@ import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class RecipeRepository {
 
+    private static final String TAG = "RecipeRepository";
+
     private RecipeDao mRecipeDao;
     private LiveData<List<Recipe>> allRecipes;
+
+    private ExecutorService executorService;
 
     public RecipeRepository() {
     }
@@ -41,16 +49,17 @@ public class RecipeRepository {
         return mRecipeDao.getAllCuisine();
     }
 
-    public LiveData<List<String>> getAllCollection() {
-        return mRecipeDao.getAllCollection();
-    }
-
-    public LiveData<List<String>> getAllCuisineCollection() {
-        return mRecipeDao.getAllCuisineCollection();
-    }
-
-    public void insert(Recipe recipe) {
-        Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.insert(recipe));
+    public long insert(Recipe recipe) {
+        executorService = Executors.newSingleThreadExecutor();
+        Callable<Long> insertCallable = () -> mRecipeDao.insert(recipe);
+        long rowId = 0;
+        Future<Long> future = executorService.submit(insertCallable);
+        try {
+            rowId = future.get();
+        } catch (InterruptedException | ExecutionException e1) {
+            e1.printStackTrace();
+        }
+        return rowId;
     }
 
     public void delete(Recipe recipe) {
@@ -67,8 +76,17 @@ public class RecipeRepository {
         });
     }
 
-    public void update(Recipe recipe) {
-        Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.updateRecipe(recipe));
+    public long update(Recipe recipe) {
+        executorService = Executors.newSingleThreadExecutor();
+        Callable<Long> insertCallable = () -> Long.valueOf(mRecipeDao.updateRecipe(recipe));
+        long rowId = 0;
+        Future<Long> future = executorService.submit(insertCallable);
+        try {
+            rowId = future.get();
+        } catch (InterruptedException | ExecutionException e1) {
+            e1.printStackTrace();
+        }
+        return rowId;
     }
 
     public LiveData<List<Recipe>> searchRecipe(String query) {

@@ -3,20 +3,24 @@ package com.keeprecipes.android.presentationLayer.addRecipe;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.FileUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
+import com.keeprecipes.android.dataLayer.entities.RecipeWithCollections;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
+import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
 import java.io.File;
@@ -25,19 +29,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class AddRecipeViewModel extends AndroidViewModel {
     private final String TAG = "AddRecipeViewModel";
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
+    private final CollectionWithRecipesRepository collectionWithRecipesRepository;
 
     private final Application application;
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
-    public MutableLiveData<List<Collection>> collections =new MutableLiveData<>(new ArrayList<>());
+    public MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     private boolean updateRecipe = false;
@@ -47,18 +50,13 @@ public class AddRecipeViewModel extends AndroidViewModel {
         this.application = application;
         recipeRepository = new RecipeRepository(application);
         collectionRepository = new CollectionRepository(application);
+        collectionWithRecipesRepository = new CollectionWithRecipesRepository(application);
         Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
     }
 
     public void setRecipe(Recipe recipe) {
         RecipeDTO recipeDTO = new RecipeDTO(recipe);
         this.recipe.setValue(recipeDTO);
-//        if (recipe.collection != null){
-//            List<Collection> collections = new ArrayList<>();
-//            // TODO: look into using streams and collect
-//            recipe.collection.forEach(s -> collectionRepository.fetchByName(s).observe(getApplication(), collections::add));
-//            this.collections.setValue(collections);
-//        }
         if (recipe.ingredients != null) {
             List<IngredientDTO> ingredientList = new ArrayList<>();
             for (int a = 0; a < recipe.ingredients.size(); a++) {
@@ -116,12 +114,22 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<List<String>> getAllCuisine() {
-        return recipeRepository.getAllCuisine();
+    public void addCollection(String name) {
+        List<String> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
+        collectionList.add(name);
+        collections.postValue(collectionList);
     }
 
-    public LiveData<List<String>> getAllCollection() {
-        return recipeRepository.getAllCollection();
+    public void removeCollection() {
+        List<String> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
+        if (collectionList.size() >= 1) {
+            collectionList.remove(collectionList.size() - 1);
+            collections.postValue(collectionList);
+        }
+    }
+
+    public LiveData<List<String>> getAllCuisine() {
+        return recipeRepository.getAllCuisine();
     }
 
     public void saveRecipe() throws IOException {
@@ -129,8 +137,17 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.recipeId = Objects.requireNonNull(recipe.getValue()).id;
         recipeToSave.title = Objects.requireNonNull(recipe.getValue()).title;
         recipeToSave.instructions = recipe.getValue().instructions;
-        recipeToSave.cuisine = recipe.getValue().cuisine;
-        recipeToSave.collection = recipe.getValue().collection;
+        ArrayList<Long> collectionId = new ArrayList<>();
+        if (collections.getValue() != null) {
+            for (String c : collections.getValue()) {
+                if (!collectionRepository.isRowExist(c)) {
+                    Collection collection = new Collection(c);
+                    collectionId.add(collectionRepository.insert(collection));
+                } else {
+                    collectionRepository.fetchByName(c).observe((LifecycleOwner) application, collection -> collectionId.add(collection.collectionId));
+                }
+            }
+        }
         recipeToSave.portionSize = recipe.getValue().portionSize;
         recipeToSave.dateCreated = Instant.now();
         List<PhotoDTO> photoDTOList = photos.getValue();
@@ -145,14 +162,21 @@ public class AddRecipeViewModel extends AndroidViewModel {
                         fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
                     } else {
                         fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();
-                        ;
                     }
                     Log.d(TAG, "saveRecipe: filename" + fileName);
                     try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
                         File file = new File(photo.uri.getPath());
                         Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
                         Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
-                        FileUtils.copy(inputStream, outputStream);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            FileUtils.copy(inputStream, outputStream);
+                        } else {
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = inputStream.read(buffer)) > 0) {
+                                outputStream.write(buffer, 0, length);
+                            }
+                        }
                         Log.d(TAG, "saveRecipe: fileName " + fileName);
                         photoFiles.add(fileName);
                     }
@@ -169,15 +193,24 @@ public class AddRecipeViewModel extends AndroidViewModel {
             ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
         }
         recipeToSave.ingredients = ingredientList;
+        long recipeId;
         if (updateRecipe) {
-            recipeRepository.update(recipeToSave);
+            recipeId = recipeRepository.update(recipeToSave);
         } else {
-            recipeRepository.insert(recipeToSave);
+            recipeId = recipeRepository.insert(recipeToSave);
+        }
+        for (Long c : collectionId) {
+            CollectionRecipeCrossRef collectionRecipeCrossRef = new CollectionRecipeCrossRef(c, recipeId);
+            collectionWithRecipesRepository.insert(collectionRecipeCrossRef);
         }
     }
 
     public LiveData<Recipe> getRecipeById(int recipeId) {
         updateRecipe = true;
         return recipeRepository.fetchById(recipeId);
+    }
+
+    public LiveData<List<RecipeWithCollections>> getRecipeCollections(int recipeId) {
+        return collectionWithRecipesRepository.getRecipeWithCollections(recipeId);
     }
 }

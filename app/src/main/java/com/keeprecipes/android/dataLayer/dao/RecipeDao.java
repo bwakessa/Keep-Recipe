@@ -17,7 +17,7 @@ import java.util.List;
 @Dao
 public interface RecipeDao {
     @Insert
-    void insert(Recipe recipe);
+    long insert(Recipe recipe);
 
     @Delete
     void delete(Recipe recipe);
@@ -34,21 +34,15 @@ public interface RecipeDao {
     @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
     LiveData<List<String>> getAllCuisine();
 
-    @Query("SELECT DISTINCT collection FROM recipes WHERE collection IS NOT NULL")
-    LiveData<List<String>> getAllCollection();
-
+    // TODO add ignore unused fields collection, portion-size, photos, data_created
     @Transaction
     @Query(
-            "SELECT recipes.recipeId, recipes.title, recipes.instructions, recipes.cuisine, recipes.ingredients FROM recipes "
+            "SELECT recipes.recipeId, recipes.title, recipes.instructions, recipes.ingredients FROM recipes "
                     + "JOIN recipeFts ON (recipes.recipeId = recipeFts.docid) WHERE recipeFts MATCH :query")
-    LiveData<List<Recipe>>
-    searchRecipe(String query);
+    LiveData<List<Recipe>> searchRecipe(String query);
 
     @Update
-    void updateRecipe(Recipe recipe);
-
-    @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
-    LiveData<List<String>> getAllCuisineCollection();
+    int updateRecipe(Recipe recipe);
 
     @Query("DELETE FROM recipes")
     void drop();

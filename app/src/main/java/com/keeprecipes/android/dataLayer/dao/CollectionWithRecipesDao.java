@@ -2,16 +2,26 @@ package com.keeprecipes.android.dataLayer.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
+import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
 
 import java.util.List;
 
 @Dao
 public interface CollectionWithRecipesDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(CollectionRecipeCrossRef collectionWithRecipes);
+
     @Transaction
     @Query("SELECT * FROM collections")
-    public LiveData<List<CollectionWithRecipes>> getCollectionWithRecipes();
+    LiveData<List<CollectionWithRecipes>> getCollectionWithRecipes();
+
+    @Delete
+    void delete(CollectionRecipeCrossRef collectionWithRecipes);
 }

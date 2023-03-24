@@ -10,6 +10,7 @@ import androidx.room.TypeConverters;
 import com.keeprecipes.android.dataLayer.dao.CollectionDao;
 import com.keeprecipes.android.dataLayer.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
+import com.keeprecipes.android.dataLayer.dao.RecipeWithCollectionsDao;
 import com.keeprecipes.android.dataLayer.entities.Collection;
 import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
@@ -24,9 +25,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (instance == null) {
             synchronized (AppDatabase.class) {
                 if (instance == null) {
-                    instance = Room.databaseBuilder(context, AppDatabase.class, "recipe-db")
-                            .fallbackToDestructiveMigration()
-                            .build();
+                    instance = Room.databaseBuilder(context, AppDatabase.class, "recipe-db").fallbackToDestructiveMigration().build();
                 }
             }
         }
@@ -36,6 +35,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RecipeDao recipeDao();
 
     public abstract CollectionDao recipeCollectionDao();
+
+    public abstract RecipeWithCollectionsDao recipeWithCollectionsDao();
 
     public abstract CollectionWithRecipesDao collectionWithRecipesDao();
 }

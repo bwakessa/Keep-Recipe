@@ -10,15 +10,13 @@ import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.keeprecipes.android.dataLayer.entities.Collection;
-import com.keeprecipes.android.dataLayer.entities.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
 public interface CollectionDao {
     @Insert
-    void insert(Collection collection);
+    long insert(Collection collection);
 
     @Delete
     void delete(Collection collection);
@@ -29,8 +27,14 @@ public interface CollectionDao {
     @Query("SELECT * FROM collections ORDER BY collectionId DESC")
     LiveData<List<Collection>> getAll();
 
+    @Query("SELECT collectionId FROM collections WHERE name = :collectionName")
+    long fetchIdByName(String collectionName);
+
     @Query("SELECT * FROM collections WHERE name = :collectionName")
     LiveData<Collection> fetchByName(String collectionName);
+
+    @Query("SELECT EXISTS(SELECT * FROM collections WHERE name = :name)")
+    Boolean isRowExist(String name);
 
     // Resets the the primary key after deleting entity
     @RawQuery

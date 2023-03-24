@@ -19,14 +19,10 @@ public class RecipeFts {
     @ColumnInfo(name = "cuisine")
     private String cuisine;
 
-    @ColumnInfo(name = "collection")
-    private String collection;
-
-    public RecipeFts(@NonNull String title, String instructions, String cuisine, String collection) {
+    public RecipeFts(@NonNull String title, String instructions, String cuisine) {
         this.title = title;
         this.instructions = instructions;
         this.cuisine = cuisine;
-        this.collection = collection;
     }
 
     @NonNull
@@ -52,13 +48,5 @@ public class RecipeFts {
 
     public void setCuisine(String cuisine) {
         this.cuisine = cuisine;
-    }
-
-    public String getCollection() {
-        return collection;
-    }
-
-    public void setCollection(String collection) {
-        this.collection = collection;
     }
 }

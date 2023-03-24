@@ -61,7 +61,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {// Navigate to settings screen
                 ActionRecipeDetailFragmentToAddRecipeFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToAddRecipeFragment();
-                action.setRecipeId(mRecipe.recipeId);
+                action.setRecipeId((int) mRecipe.recipeId);
                 Navigation.findNavController(view).navigate(action);
                 return true;
             } else if (item.getItemId() == R.id.action_delete) {

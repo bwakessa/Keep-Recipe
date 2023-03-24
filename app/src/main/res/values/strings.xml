@@ -1,26 +1,24 @@
 <resources>
     <string name="app_name">Keep Recipes</string>
+    <!--  fragment labels  -->
     <string name="title_home">Home</string>
-    <string name="title_collections">Collections</string>
+    <string name="title_add_recipe">Add Recipe</string>
+    <string name="title_settings">Settings</string>
+
     <string name="searchbar_hint">Search</string>
+
     <string name="search_hint">Recipe name</string>
+
     <string name="fab_add_content_desc">Add Recipe</string>
+
     <string name="save_menu_item">Save</string>
     <string name="edit_menu_item">Edit Recipe</string>
+    <string name="delete_menu_item">Delete</string>
+
     <string name="add_recipe_toolbar_title">Add Recipe</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!--  SettingsFragment  -->
+    <string name="title_alert_dialog">Delete all recipes?</string>
+    <string name="message_alert_dialog">This will delete all recipes. There is no turning back.</string>
+    <string name="negative_alert_dialog">Cancel</string>
+    <string name="positive_alert_dialog">Delete</string>
 </resources>

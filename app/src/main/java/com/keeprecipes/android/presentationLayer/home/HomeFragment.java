@@ -11,15 +11,12 @@ import android.view.inputmethod.EditorInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
@@ -47,40 +44,31 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(getActivity()).get(HomeViewModel.class);
 
-        homeViewModel.getAllCuisineCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> categoriesList) {
-                for (String categories : categoriesList) {
-                    Chip chip = new Chip(getContext());
-                    chip.setText(categories);
-//                    chip.setCloseIconVisible(true);
-                    // necessary to get single selection working
-                    chip.setClickable(true);
-                    chip.setCheckable(true);
-//                    chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                        @Override
-//                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                            chip.setCloseIconVisible(b);
-//                            Log.d(TAG, "onCheckedChanged: " + b);
-//                        }
-//                    });
-                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            chip.setChecked(false);
-                        }
-                    });
-                    binding.categoriesChipGroup.addView(chip);
-                }
-            }
-        });
-
-        binding.categoriesChipGroup.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
-            @Override
-            public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
-                Log.d(TAG, "onCheckedChanged: ");
-            }
-        });
+//        homeViewModel.getAllCollection().observe(getViewLifecycleOwner(), categoriesList -> {
+//            categories = categoriesList;
+//            for (String categories : categoriesList) {
+//                Chip chip = new Chip(getContext());
+//                chip.setText(categories);
+////                    chip.setCloseIconVisible(true);
+//                // necessary to get single selection working
+//                chip.setClickable(true);
+//                chip.setCheckable(true);
+////                    chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+////                        @Override
+////                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+////                            chip.setCloseIconVisible(b);
+////                            Log.d(TAG, "onCheckedChanged: " + b);
+////                        }
+////                    });
+//                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view12) {
+//                        chip.setChecked(false);
+//                    }
+//                });
+//                binding.categoriesChipGroup.addView(chip);
+//            }
+//        });
 
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
@@ -92,12 +80,22 @@ public class HomeFragment extends Fragment {
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
+//        binding.categoriesChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+//            Log.d(TAG, "onCheckedChanged: " + checkedIds);
+//            if (!checkedIds.isEmpty()){
+//                homeViewModel.collectionFetchByName(categories.get(checkedIds.get(0)-1)).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+//            } else {
+//                homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+//            }
+//        });
+
         binding.searchView.getEditText().setOnEditorActionListener(
                 (v, actionId, event) -> {
                     Log.d(TAG, "onViewCreated: actionId " + actionId);
                     if (actionId == EditorInfo.IME_NULL
                             && event.getAction() == KeyEvent.ACTION_DOWN) {
                         binding.searchBar.setText(binding.searchView.getText());
+//                        binding.categoriesChipGroup.setVisibility(View.GONE);
                         homeViewModel.searchRecipe(String.valueOf(binding.searchView.getText())).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
                         binding.searchView.hide();
                     }

@@ -1,6 +1,5 @@
 package com.keeprecipes.android;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,19 +41,16 @@ public class SettingsFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
 
-        binding.deleteTextView.setOnClickListener(view1 -> new MaterialAlertDialogBuilder(view1.getContext()).setTitle("Delete all recipes?").setMessage("This will delete all recipes. There is no turning back.")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+        binding.deleteTextView.setOnClickListener(view1 -> new MaterialAlertDialogBuilder(view1.getContext())
+                // Use String resources
+                .setTitle(R.string.title_alert_dialog)
+                .setMessage(R.string.message_alert_dialog)
+                .setNegativeButton(R.string.negative_alert_dialog, (dialogInterface, i) -> {
 
-                    }
                 })
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-                        viewModel.deleteAllRecipes();
-                    }
+                .setPositiveButton(R.string.positive_alert_dialog, (dialogInterface, i) -> {
+                    HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+                    viewModel.deleteAllRecipes();
                 })
                 .show());
 

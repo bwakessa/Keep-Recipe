@@ -1,14 +1,14 @@
 package com.keeprecipes.android.dataLayer.entities;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-@Entity(primaryKeys = {"recipeId", "collectionId"})
+@Entity(primaryKeys = {"collectionId", "recipeId"})
 public class CollectionRecipeCrossRef {
-    @NonNull
-    public int recipeId;
-    @NonNull
-    @ColumnInfo(index = true)
-    public int collectionId;
+    public long collectionId;
+    public long recipeId;
+
+    public CollectionRecipeCrossRef(long collectionId, long recipeId) {
+        this.collectionId = collectionId;
+        this.recipeId = recipeId;
+    }
 }

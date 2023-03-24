@@ -74,7 +74,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
             // https://www.digitalocean.com/community/tutorials/android-recyclerview-data-binding
             cardView.setOnClickListener(view -> {
                 ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
-                action.setRecipeId(recipe.recipeId);
+                action.setRecipeId((int) recipe.recipeId);
                 Navigation.findNavController(view).navigate(action);
             });
         }

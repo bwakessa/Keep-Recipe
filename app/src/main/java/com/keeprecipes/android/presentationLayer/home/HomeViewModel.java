@@ -50,10 +50,6 @@ public class HomeViewModel extends AndroidViewModel {
         recipeRepository.deleteAllRecipes();
     }
 
-    public LiveData<List<String>> getAllCollection() {
-        return recipeRepository.getAllCollection();
-    }
-
     public LiveData<List<Recipe>> searchRecipe(String query) {
         return recipeRepository.searchRecipe(query);
     }

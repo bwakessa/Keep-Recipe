@@ -7,11 +7,12 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 import java.util.List;
 
 public class RecipeDTO {
-    public int id;
+    public long id;
     public String title;
     public String instructions;
     public String cuisine;
-    public List<String> collection;
+    public List<String> collections;
+    public String collection;
     public String portionSize;
     public List<String> photoURI;
 
@@ -23,7 +24,6 @@ public class RecipeDTO {
         this.title = recipe.title;
         this.instructions = recipe.instructions;
         this.cuisine = recipe.cuisine;
-        this.collection = recipe.collection;
         this.portionSize = recipe.portionSize;
         this.photoURI = recipe.photos;
     }

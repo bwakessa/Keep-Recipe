@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +31,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.keeprecipes.android.R;
-import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
@@ -67,11 +70,14 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         assert getArguments() != null;
         int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
         if (recipeId != -1) {
-            mViewModel.getRecipeById(recipeId).observe(getViewLifecycleOwner(), new Observer<Recipe>() {
-                @Override
-                public void onChanged(Recipe recipe) {
-                    mViewModel.setRecipe(recipe);
-                }
+            mViewModel.getRecipeCollections(recipeId).observe(getViewLifecycleOwner(), recipeWithCollections -> {
+                mViewModel.setRecipe(recipeWithCollections.get(0).recipe);
+                Log.d(TAG, "onViewCreated: " + recipeWithCollections.get(0).collections);
+                List<String> collectionNames = recipeWithCollections.get(0).collections.stream().map(collection -> collection.name).collect(Collectors.toList());
+                ArrayAdapter<String> collectionAdapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collectionNames);
+                binding.cusineAutoCompleteTextView.setAdapter(collectionAdapter);
+                binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
+                binding.cusineAutoCompleteTextView.setThreshold(2);
             });
         }
 
@@ -84,7 +90,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         binding.setLifecycleOwner(this);
         // AddRecipeFragment has it's toolbar,
         // here we are setting title, back arrow and the menu for toolbar
-        binding.toolbar.setTitle("Add Recipe");
+//        binding.toolbar.setTitle("Add Recipe");
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
 
 //        mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
@@ -142,6 +148,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         });
 
         binding.cusineAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            final LinkedList<Integer> wordBreakPoints = new LinkedList<>(List.of(0));
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -149,21 +156,29 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.d(TAG, "cusineAutoCompleteTextView onTextChanged: " + charSequence + i + i1 + i2);
                 // adding a new character and the new character is space
                 if (i1 == 0 && charSequence.charAt(i) == ' ') {
-                    Log.d(TAG, "onTextChanged: " + charSequence.charAt(i));
-                    Chip chip = new Chip(getContext());
-                    chip.setText("roney");
-//                    binding.cusineAutoCompleteTextView.getText().setSpan();
-                } else {
+                    Log.d(TAG, "onTextChanged: " + charSequence + i + i1 + i2);
+                    ChipDrawable chip = ChipDrawable.createFromResource(getContext(), R.xml.chip);
+                    Log.d(TAG, "onTextChanged:" + charSequence.subSequence(wordBreakPoints.getLast(), i) + "**");
+                    chip.setText(charSequence.subSequence(wordBreakPoints.getLast(), i));
+                    ImageSpan span = new ImageSpan(chip);
+                    chip.setBounds(0, 0, chip.getIntrinsicWidth(), chip.getIntrinsicHeight());
+                    binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mViewModel.addCollection(charSequence.subSequence(wordBreakPoints.getLast(), i).toString());
+                    wordBreakPoints.add(i + 1);
+                } else if (i1 == 1) {
                     // When deleting the text or backspace
+                    Log.d(TAG, "onTextChanged:" + i + i1 + i2);
+                    if (wordBreakPoints.size() > 1 && wordBreakPoints.getLast() >= i) {
+                        wordBreakPoints.removeLast();
+                        mViewModel.removeCollection();
+                    }
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-//                Log.d(TAG, "cusineAutoCompleteTextView afterTextChanged: "+editable.toString());
             }
         });
 

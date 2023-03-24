@@ -12,3 +12,4 @@ public class CollectionWithRecipes {
     @Relation(parentColumn = "collectionId", entityColumn = "recipeId", associateBy = @Junction(CollectionRecipeCrossRef.class))
     public List<Recipe> recipes;
 }
+
