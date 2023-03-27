@@ -52,9 +52,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
     // Callback is invoked after the user selects a media item or closes the
     // document picker.
-    // Registers a document picker activity launcher in single-select mode.
-    // Used on Build.VERSION.SDK_INT < Build.VERSION_CODES.R || getExtensionVersion(Build.VERSION_CODES.R) < 2
-    ActivityResultLauncher<String[]> galleryActivityLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::handleMediaUri);
     private FragmentAddRecipeBinding binding;
 
     @Override
@@ -93,21 +90,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 //        binding.toolbar.setTitle("Add Recipe");
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
 
-//        mViewModel.getAllCuisine().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-//            @Override
-//            public void onChanged(List<String> cuisines) {
-//                Log.d(TAG, "onChanged: cuisines" + cuisines);
-//                ArrayAdapter<String> adapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, cuisines);
-//                binding.cusineAutoCompleteTextView.setAdapter(adapter);
-//            }
-//        });
-
-//        mViewModel.getAllCollection().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-//            @Override
-//            public void onChanged(List<String> collection) {
-//                binding.collectionAutoCompleteTextView.setAdapter(new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collection));
-//            }
-//        });
 
         ingredientAdapter = new IngredientAdapter();
         binding.ingredientsListView.setAdapter(ingredientAdapter);
@@ -194,12 +176,14 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             // Launch the photo picker and allow the user to choose only images.
             // You will see red line under setMediaType() ignore that.
             // It's an bug with kotlin code used by Google to create contract class
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
-                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
-                pickMedia.launch(request);
-            } else {
-                galleryActivityLauncher.launch(new String[]{"image/*"});
-            }
+            PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
+            pickMedia.launch(request);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
+//                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
+//                pickMedia.launch(request);
+//            } else {
+//                galleryActivityLauncher.launch(new String[]{"image/*"});
+//            }
         });
     }
 
