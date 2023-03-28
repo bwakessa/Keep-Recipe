@@ -1,11 +1,9 @@
 package com.keeprecipes.android.presentationLayer.addRecipe;
 
-import static android.os.ext.SdkExtensions.getExtensionVersion;
-
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
@@ -53,6 +51,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     // Callback is invoked after the user selects a media item or closes the
     // document picker.
     private FragmentAddRecipeBinding binding;
+    final LinkedList<Integer> wordBreakPoints = new LinkedList<>(List.of(0));
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,12 +68,15 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         if (recipeId != -1) {
             mViewModel.getRecipeCollections(recipeId).observe(getViewLifecycleOwner(), recipeWithCollections -> {
                 mViewModel.setRecipe(recipeWithCollections.get(0).recipe);
+                mViewModel.setCollectionList(recipeWithCollections.get(0).collections);
                 Log.d(TAG, "onViewCreated: " + recipeWithCollections.get(0).collections);
                 List<String> collectionNames = recipeWithCollections.get(0).collections.stream().map(collection -> collection.name).collect(Collectors.toList());
                 ArrayAdapter<String> collectionAdapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collectionNames);
                 binding.cusineAutoCompleteTextView.setAdapter(collectionAdapter);
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
                 binding.cusineAutoCompleteTextView.setThreshold(2);
+                Log.d(TAG, "onViewCreated: #" + collectionNames.toString());
+                setChip(collectionNames);
             });
         }
 
@@ -113,6 +115,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Log.d(TAG, "onViewCreated: recipe - " + mViewModel.recipe.getValue().toString());
                 Log.d(TAG, "onViewCreated: ingredients - " + mViewModel.ingredients.getValue().size());
                 Log.d(TAG, "onViewCreated: photos - " + mViewModel.photos.getValue().size());
+                Log.d(TAG, "onViewCreated: categories - " + mViewModel.collections.getValue());
                 try {
                     mViewModel.saveRecipe();
                 } catch (IOException e) {
@@ -130,37 +133,42 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         });
 
         binding.cusineAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            final LinkedList<Integer> wordBreakPoints = new LinkedList<>(List.of(0));
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if (i1 == 1) {
+                    // When deleting the text or backspace
+                    Log.d(TAG, "onTextChanged:" + i + i1 + i2);
+                    if (wordBreakPoints.size() > 1 && wordBreakPoints.getLast() >= i) {
+                        wordBreakPoints.removeLast();
+                        mViewModel.removeCollection();
+                        ImageSpan[] spans = binding.cusineAutoCompleteTextView.getEditableText().getSpans(0, charSequence.length(), ImageSpan.class);
+                        if (spans.length > 0) {
+                            binding.cusineAutoCompleteTextView.getEditableText().removeSpan(spans[spans.length - 1]);
+                        }
+                    }
+                }
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // adding a new character and the new character is space
-                if (i1 == 0 && charSequence.charAt(i) == ' ') {
+                Log.d(TAG, "onTextChanged: " + charSequence + i);
+                if (i1 == 0 && i != 0 && charSequence.charAt(i) == ' ') {
                     Log.d(TAG, "onTextChanged: " + charSequence + i + i1 + i2);
                     ChipDrawable chip = ChipDrawable.createFromResource(getContext(), R.xml.chip);
                     Log.d(TAG, "onTextChanged:" + charSequence.subSequence(wordBreakPoints.getLast(), i) + "**");
                     chip.setText(charSequence.subSequence(wordBreakPoints.getLast(), i));
                     ImageSpan span = new ImageSpan(chip);
                     chip.setBounds(0, 0, chip.getIntrinsicWidth(), chip.getIntrinsicHeight());
-                    binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     mViewModel.addCollection(charSequence.subSequence(wordBreakPoints.getLast(), i).toString());
                     wordBreakPoints.add(i + 1);
-                } else if (i1 == 1) {
-                    // When deleting the text or backspace
-                    Log.d(TAG, "onTextChanged:" + i + i1 + i2);
-                    if (wordBreakPoints.size() > 1 && wordBreakPoints.getLast() >= i) {
-                        wordBreakPoints.removeLast();
-                        mViewModel.removeCollection();
-                    }
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d(TAG, "afterTextChanged: " + editable.toString());
             }
         });
 
@@ -174,17 +182,38 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
         binding.addPhotoButton.setOnClickListener(v -> {
             // Launch the photo picker and allow the user to choose only images.
-            // You will see red line under setMediaType() ignore that.
-            // It's an bug with kotlin code used by Google to create contract class
             PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
             pickMedia.launch(request);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
-//                PickVisualMediaRequest request = new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
-//                pickMedia.launch(request);
-//            } else {
-//                galleryActivityLauncher.launch(new String[]{"image/*"});
-//            }
         });
+    }
+
+
+    private void setChip(List<String> collectionNames) {
+        String chipText = String.join(" ", collectionNames) + " ";
+        Log.d(TAG, "setChip: chipTextLength:" + chipText.length());
+        int lastPoint = 0;
+        SpannableString spannableString = new SpannableString(chipText);
+        for (int a = 0; a < collectionNames.size(); a++) {
+            ChipDrawable chip = ChipDrawable.createFromResource(getContext(), R.xml.chip);
+            chip.setText(collectionNames.get(a));
+            ImageSpan span = new ImageSpan(chip);
+            chip.setBounds(0, 0, chip.getIntrinsicWidth(), chip.getIntrinsicHeight());
+            Log.d(TAG, "setChip: spanStart:" + lastPoint);
+            Log.d(TAG, "setChip: spanEnd:" + (lastPoint + collectionNames.get(a).length()));
+            spannableString.setSpan(span,
+                    lastPoint,
+                    lastPoint + collectionNames.get(a).length(),
+                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            lastPoint += collectionNames.get(a).length() + 1;
+            wordBreakPoints.add(lastPoint);
+        }
+        binding.cusineAutoCompleteTextView.setText(spannableString);
+//        if (startPoint == 0) {
+//
+//        } else {
+////            binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+////            binding.cusineAutoCompleteTextView.getText().setSpan(spannableString);
+//        }
     }
 
     private void handleMediaUri(Uri uri) {

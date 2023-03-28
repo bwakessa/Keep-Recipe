@@ -52,7 +52,7 @@ dependencies {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity:1.6.1'
+    implementation 'androidx.activity:activity:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference:1.2.0'
     def room_version = '2.5.1'

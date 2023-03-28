@@ -23,6 +23,8 @@ import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     private final Application application;
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
-    public MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
+    public MutableLiveData<List<Collection>> collections = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     private boolean updateRecipe = false;
@@ -115,13 +117,17 @@ public class AddRecipeViewModel extends AndroidViewModel {
     }
 
     public void addCollection(String name) {
-        List<String> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
-        collectionList.add(name);
-        collections.postValue(collectionList);
+        List<Collection> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
+        collectionList.add(new Collection(name));
+        setCollectionList(collectionList);
+    }
+
+    public void setCollectionList(List<Collection> collectionsList){
+        collections.postValue(collectionsList);
     }
 
     public void removeCollection() {
-        List<String> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
+        List<Collection> collectionList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
         if (collectionList.size() >= 1) {
             collectionList.remove(collectionList.size() - 1);
             collections.postValue(collectionList);
@@ -139,12 +145,13 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.instructions = recipe.getValue().instructions;
         ArrayList<Long> collectionId = new ArrayList<>();
         if (collections.getValue() != null) {
-            for (String c : collections.getValue()) {
+            for (Collection c : collections.getValue()) {
+//                Collection collection = new Collection(c);
+//                collectionId.add(collectionRepository.insert(collection));
                 if (!collectionRepository.isRowExist(c)) {
-                    Collection collection = new Collection(c);
-                    collectionId.add(collectionRepository.insert(collection));
+                    collectionId.add(collectionRepository.insert(c));
                 } else {
-                    collectionRepository.fetchByName(c).observe((LifecycleOwner) application, collection -> collectionId.add(collection.collectionId));
+                    collectionRepository.fetchByName(c.name).observe((LifecycleOwner) application, collection -> collectionId.add(collection.collectionId));
                 }
             }
         }
