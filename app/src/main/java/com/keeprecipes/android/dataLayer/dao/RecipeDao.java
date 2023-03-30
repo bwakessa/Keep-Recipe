@@ -42,10 +42,13 @@ public interface RecipeDao {
     LiveData<List<Recipe>> searchRecipe(String query);
 
     @Update
-    int updateRecipe(Recipe recipe);
+    void updateRecipe(Recipe recipe);
 
     @Query("DELETE FROM recipes")
     void drop();
+
+    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'recipes'")
+    void clearPrimaryKey();
 
     // Resets the the primary key after deleting entity
     // https://www.sqlite.org/lang_vacuum.html

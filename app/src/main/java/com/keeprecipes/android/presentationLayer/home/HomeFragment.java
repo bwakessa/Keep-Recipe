@@ -1,12 +1,14 @@
 package com.keeprecipes.android.presentationLayer.home;
 
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +19,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
@@ -44,35 +48,35 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(getActivity()).get(HomeViewModel.class);
 
-//        homeViewModel.getAllCollection().observe(getViewLifecycleOwner(), categoriesList -> {
-//            categories = categoriesList;
-//            for (String categories : categoriesList) {
-//                Chip chip = new Chip(getContext());
-//                chip.setText(categories);
-////                    chip.setCloseIconVisible(true);
-//                // necessary to get single selection working
-//                chip.setClickable(true);
-//                chip.setCheckable(true);
-////                    chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-////                        @Override
-////                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-////                            chip.setCloseIconVisible(b);
-////                            Log.d(TAG, "onCheckedChanged: " + b);
-////                        }
-////                    });
-//                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view12) {
-//                        chip.setChecked(false);
-//                    }
-//                });
-//                binding.categoriesChipGroup.addView(chip);
-//            }
-//        });
+        homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesList -> {
+            List<String> collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
+            for (String categories : collectionNames) {
+                Chip chip = new Chip(getContext());
+                chip.setText(categories);
+//                    chip.setCloseIconVisible(true);
+                // necessary to get single selection working
+                chip.setClickable(true);
+                chip.setCheckable(true);
+                chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        chip.setCloseIconVisible(b);
+                        Log.d(TAG, "onCheckedChanged: " + b);
+                    }
+                });
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view12) {
+                        chip.setChecked(false);
+                    }
+                });
+                binding.categoriesChipGroup.addView(chip);
+            }
+        });
 
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
-        homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+        homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
         binding.searchBar.setOnMenuItemClickListener(item -> {
@@ -108,7 +112,7 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "onClick: back button is pressed");
             binding.searchBar.clearText();
             binding.searchView.hide();
-            homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+            homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
         });
 
         // Floating Action Button to create new recipe

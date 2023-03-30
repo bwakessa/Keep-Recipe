@@ -76,7 +76,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
                 binding.cusineAutoCompleteTextView.setThreshold(2);
                 Log.d(TAG, "onViewCreated: #" + collectionNames.toString());
-                setChip(collectionNames);
+                if (collectionNames.size() > 0) {
+                    setChip(collectionNames);
+                }
             });
         }
 
@@ -135,6 +137,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         binding.cusineAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d(TAG, "beforeTextChanged: " + charSequence + i + i1 + i2);
                 if (i1 == 1) {
                     // When deleting the text or backspace
                     Log.d(TAG, "onTextChanged:" + i + i1 + i2);

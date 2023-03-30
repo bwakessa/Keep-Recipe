@@ -69,24 +69,24 @@ public class RecipeRepository {
         });
     }
 
-    public void deleteAllRecipes() {
+    public void deleteAllRecipes(Application application) {
         Executors.newSingleThreadExecutor().execute(() -> {
-            mRecipeDao.drop();
-            mRecipeDao.vacuumDb(new SimpleSQLiteQuery("VACUUM"));
+            Executors.newSingleThreadExecutor().execute(() ->
+                    AppDatabase.getDatabase(application).clearAllTables());
         });
     }
 
-    public long update(Recipe recipe) {
-        executorService = Executors.newSingleThreadExecutor();
-        Callable<Long> insertCallable = () -> Long.valueOf(mRecipeDao.updateRecipe(recipe));
-        long rowId = 0;
-        Future<Long> future = executorService.submit(insertCallable);
-        try {
-            rowId = future.get();
-        } catch (InterruptedException | ExecutionException e1) {
-            e1.printStackTrace();
-        }
-        return rowId;
+    public void clearPrimaryKey() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Executors.newSingleThreadExecutor().execute(() ->
+                    mRecipeDao.clearPrimaryKey());
+        });
+    }
+
+    public void update(Recipe recipe) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            mRecipeDao.updateRecipe(recipe);
+        });
     }
 
     public LiveData<List<Recipe>> searchRecipe(String query) {

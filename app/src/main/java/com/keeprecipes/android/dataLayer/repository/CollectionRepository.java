@@ -31,25 +31,35 @@ public class CollectionRepository {
         return allCollections;
     }
 
-    public long fetchById(String collectionName) {
-        return mCollectionDao.fetchIdByName(collectionName);
+    public Long fetchByName(String collectionName) {
+        executorService = Executors.newSingleThreadExecutor();
+        Callable<Long> fetchIdByNameCallable = () -> mCollectionDao.fetchIdByName(collectionName);
+        Long id = -1L;
+        Future<Long> future = executorService.submit(fetchIdByNameCallable);
+        try {
+            id = future.get();
+        } catch (InterruptedException | ExecutionException e1) {
+            e1.printStackTrace();
+        }
+        executorService.shutdown();
+        return id;
     }
 
-    public LiveData<Collection> fetchByName(String title) {
+    public LiveData<Collection> fetchByNameObserver(String title) {
         return mCollectionDao.fetchByName(title);
     }
 
-    public Boolean isRowExist(String title) {
+    public Boolean isRowExist(Collection collection) {
         executorService = Executors.newSingleThreadExecutor();
-        Callable<Boolean> insertCallable = () -> mCollectionDao.isRowExist(title);
+        Callable<Boolean> isRowExistCallable = () -> mCollectionDao.isRowExist(collection.name);
         Boolean exist = false;
-        Future<Boolean> future = executorService.submit(insertCallable);
+        Future<Boolean> future = executorService.submit(isRowExistCallable);
         try {
             exist = future.get();
         } catch (InterruptedException | ExecutionException e1) {
             e1.printStackTrace();
         }
-        executorService = Executors.newSingleThreadExecutor();
+        executorService.shutdown();
         return exist;
     }
 
@@ -69,6 +79,13 @@ public class CollectionRepository {
 
     public void delete(Collection collection) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(collection));
+    }
+
+    public void clearPrimaryKey() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Executors.newSingleThreadExecutor().execute(() ->
+                    mCollectionDao.clearPrimaryKey());
+        });
     }
 
     public void update(Collection collection) {

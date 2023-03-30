@@ -1,5 +1,6 @@
 package com.keeprecipes.android.dataLayer.dao;
 
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -24,4 +25,10 @@ public interface CollectionWithRecipesDao {
 
     @Delete
     void delete(CollectionRecipeCrossRef collectionWithRecipes);
+
+    @Query("DELETE FROM CollectionRecipeCrossRef WHERE recipeId = :recipeId;")
+    void deleteByRecipe(long recipeId);
+
+    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'CollectionRecipeCrossRef'")
+    void clearPrimaryKey();
 }

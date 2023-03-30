@@ -11,6 +11,7 @@ import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
 import com.keeprecipes.android.dataLayer.entities.RecipeWithCollections;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -38,9 +39,24 @@ public class CollectionWithRecipesRepository {
         return recipeWithCollections;
     }
 
-    public void insert(CollectionRecipeCrossRef collectionWithRecipes) {
+    public void insert(ArrayList<Long> collectionId, long recipeId) {
         Executors.newSingleThreadExecutor().execute(() -> {
-            collectionWithRecipesDao.insert(collectionWithRecipes);
+            collectionWithRecipesDao.deleteByRecipe(recipeId);
+            for (Long c : collectionId) {
+                CollectionRecipeCrossRef collectionRecipeCrossRef = new CollectionRecipeCrossRef(c, recipeId);
+                collectionWithRecipesDao.insert(collectionRecipeCrossRef);
+            }
+        });
+    }
+
+    public void deleteByRecipe(long recipeId) {
+        Executors.newSingleThreadExecutor().execute(() -> collectionWithRecipesDao.deleteByRecipe(recipeId));
+    }
+
+    public void clearPrimaryKey() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Executors.newSingleThreadExecutor().execute(() ->
+                    collectionWithRecipesDao.clearPrimaryKey());
         });
     }
 }

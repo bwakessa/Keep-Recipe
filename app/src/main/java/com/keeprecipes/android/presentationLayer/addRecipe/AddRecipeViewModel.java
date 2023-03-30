@@ -10,7 +10,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -22,8 +21,6 @@ import com.keeprecipes.android.dataLayer.entities.RecipeWithCollections;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +42,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
     public MutableLiveData<List<Collection>> collections = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-    private boolean updateRecipe = false;
+    public MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
 
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);
@@ -59,6 +56,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
     public void setRecipe(Recipe recipe) {
         RecipeDTO recipeDTO = new RecipeDTO(recipe);
         this.recipe.setValue(recipeDTO);
+        this.updateRecipe.setValue(true);
         if (recipe.ingredients != null) {
             List<IngredientDTO> ingredientList = new ArrayList<>();
             for (int a = 0; a < recipe.ingredients.size(); a++) {
@@ -151,7 +149,12 @@ public class AddRecipeViewModel extends AndroidViewModel {
                 if (!collectionRepository.isRowExist(c)) {
                     collectionId.add(collectionRepository.insert(c));
                 } else {
-                    collectionRepository.fetchByName(c.name).observe((LifecycleOwner) application, collection -> collectionId.add(collection.collectionId));
+                    long id = collectionRepository.fetchByName(c.name);
+                    if (id != -1L) {
+                        collectionId.add(id);
+                    } else {
+                        throw new RuntimeException("Couldn't find id");
+                    }
                 }
             }
         }
@@ -201,20 +204,14 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
         recipeToSave.ingredients = ingredientList;
         long recipeId;
-        if (updateRecipe) {
-            recipeId = recipeRepository.update(recipeToSave);
+        if (updateRecipe.getValue()) {
+            recipeRepository.update(recipeToSave);
+            recipeId = recipeToSave.recipeId;
         } else {
             recipeId = recipeRepository.insert(recipeToSave);
         }
-        for (Long c : collectionId) {
-            CollectionRecipeCrossRef collectionRecipeCrossRef = new CollectionRecipeCrossRef(c, recipeId);
-            collectionWithRecipesRepository.insert(collectionRecipeCrossRef);
-        }
-    }
-
-    public LiveData<Recipe> getRecipeById(int recipeId) {
-        updateRecipe = true;
-        return recipeRepository.fetchById(recipeId);
+        collectionWithRecipesRepository.insert(collectionId, recipeId);
+        this.updateRecipe.setValue(false);
     }
 
     public LiveData<List<RecipeWithCollections>> getRecipeCollections(int recipeId) {

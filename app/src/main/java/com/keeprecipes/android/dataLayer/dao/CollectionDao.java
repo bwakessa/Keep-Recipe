@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RawQuery;
 import androidx.room.Update;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Dao
 public interface CollectionDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Collection collection);
 
     @Delete
@@ -35,6 +36,9 @@ public interface CollectionDao {
 
     @Query("SELECT EXISTS(SELECT * FROM collections WHERE name = :name)")
     Boolean isRowExist(String name);
+
+    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'collections'")
+    void clearPrimaryKey();
 
     // Resets the the primary key after deleting entity
     @RawQuery

@@ -50,7 +50,7 @@ public class SettingsFragment extends Fragment {
                 })
                 .setPositiveButton(R.string.positive_alert_dialog, (dialogInterface, i) -> {
                     HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-                    viewModel.deleteAllRecipes();
+                    viewModel.deleteAllRecipes(getActivity().getApplication());
                 })
                 .show());
 
