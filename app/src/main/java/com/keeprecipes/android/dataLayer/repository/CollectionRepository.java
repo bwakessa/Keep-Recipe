@@ -82,10 +82,8 @@ public class CollectionRepository {
     }
 
     public void clearPrimaryKey() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Executors.newSingleThreadExecutor().execute(() ->
-                    mCollectionDao.clearPrimaryKey());
-        });
+        Executors.newSingleThreadExecutor().execute(() ->
+                mCollectionDao.clearPrimaryKey());
     }
 
     public void update(Collection collection) {

@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesList -> {
             List<String> collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
+            binding.categoriesChipGroup.removeAllViews();
             for (String categories : collectionNames) {
                 Chip chip = new Chip(getContext());
                 chip.setText(categories);

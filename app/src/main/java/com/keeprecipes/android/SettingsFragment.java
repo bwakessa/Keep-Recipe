@@ -21,6 +21,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.keeprecipes.android.databinding.FragmentSettingsBinding;
 import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
+import java.io.IOException;
+import java.util.concurrent.Executors;
+
 public class SettingsFragment extends Fragment {
 
     FragmentSettingsBinding binding;
@@ -51,11 +54,25 @@ public class SettingsFragment extends Fragment {
                 .setPositiveButton(R.string.positive_alert_dialog, (dialogInterface, i) -> {
                     HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
                     viewModel.deleteAllRecipes(getActivity().getApplication());
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        try {
+                            deleteFiles(getActivity().getFilesDir().getPath());
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 })
                 .show());
 
         binding.privacyTextView.setOnClickListener(view2 -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://roney.me/")));
         });
+    }
+
+    void deleteFiles(String appFilePath) throws IOException, InterruptedException {
+        String deleteCommand = "rm -rf " + appFilePath;
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(deleteCommand);
+        process.waitFor();
     }
 }
