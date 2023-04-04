@@ -27,8 +27,10 @@ import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 import com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo {
 
@@ -37,6 +39,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
     private FragmentRecipeDetailBinding binding;
+    List<PhotoDTO> photoDTOList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -66,6 +69,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
                 return true;
             } else if (item.getItemId() == R.id.action_delete) {
                 homeViewModel.deleteRecipe(mRecipe);
+                deleteFiles(photoDTOList);
                 Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
                 requireActivity().onBackPressed();
                 return true;
@@ -85,7 +89,6 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
                 binding.photoListView.setAdapter(photoAdapter);
                 if (recipe.photos != null) {
                     File appDir = getContext().getFilesDir();
-                    List<PhotoDTO> photoDTOList = new ArrayList<>();
                     // TODO: Change to streams
                     for (int a = 0; a < recipe.photos.size(); a++) {
                         photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
@@ -103,6 +106,24 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
                     ingredientAdapter.submitList(ingredientDTOList);
                 }
             }
+        });
+    }
+
+    void deleteFiles(List<PhotoDTO> photoDTOList) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            photoDTOList.forEach(photoDTO -> {
+                String deleteCommand = "rm -rf " + photoDTO.uri.getPath();
+                Log.d(TAG, "deleteFiles: "+deleteCommand);
+                Runtime runtime = Runtime.getRuntime();
+                Process process;
+                try {
+                    process = runtime.exec(deleteCommand);
+                    process.waitFor();
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
         });
     }
 

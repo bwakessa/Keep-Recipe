@@ -180,7 +180,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
                         fileCount++;
                         String[] nameSplits = fileName.split("-|\\.");
                         String fileNameWithoutExtension = nameSplits[0];
-                        String extension = nameSplits[1];
+                        String extension = nameSplits[nameSplits.length - 1 ];
                         fileName = fileNameWithoutExtension + "-" + fileCount + "." + extension;
                         photoFile = new File(application.getFilesDir(), fileName);
                     }
