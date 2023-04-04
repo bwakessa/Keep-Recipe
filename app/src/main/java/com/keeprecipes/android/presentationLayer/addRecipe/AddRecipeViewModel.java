@@ -173,8 +173,20 @@ public class AddRecipeViewModel extends AndroidViewModel {
                         fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();
                     }
                     Log.d(TAG, "saveRecipe: filename" + fileName);
+                    assert fileName != null;
+                    File photoFile = new File(application.getFilesDir(), fileName);
+                    int fileCount = 0;
+                    while (photoFile.exists()) {
+                        fileCount++;
+                        String[] nameSplits = fileName.split("-|\\.");
+                        String fileNameWithoutExtension = nameSplits[0];
+                        String extension = nameSplits[1];
+                        fileName = fileNameWithoutExtension + "-" + fileCount + "." + extension;
+                        photoFile = new File(application.getFilesDir(), fileName);
+                    }
                     try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
                         File file = new File(photo.uri.getPath());
+
                         Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
                         Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
