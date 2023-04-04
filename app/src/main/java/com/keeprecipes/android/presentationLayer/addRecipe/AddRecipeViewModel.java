@@ -14,7 +14,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.keeprecipes.android.dataLayer.entities.Collection;
-import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.Ingredient;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.entities.RecipeWithCollections;

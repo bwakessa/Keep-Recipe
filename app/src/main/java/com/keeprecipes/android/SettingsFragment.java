@@ -54,13 +54,11 @@ public class SettingsFragment extends Fragment {
                 .setPositiveButton(R.string.positive_alert_dialog, (dialogInterface, i) -> {
                     HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
                     viewModel.deleteAllRecipes(getActivity().getApplication());
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        try {
-                            deleteFiles(getActivity().getFilesDir().getPath());
-                        } catch (IOException | InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    try {
+                        deleteFiles(getActivity().getFilesDir().getPath());
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .show());
 
@@ -70,9 +68,16 @@ public class SettingsFragment extends Fragment {
     }
 
     void deleteFiles(String appFilePath) throws IOException, InterruptedException {
-        String deleteCommand = "rm -rf " + appFilePath;
-        Runtime runtime = Runtime.getRuntime();
-        Process process = runtime.exec(deleteCommand);
-        process.waitFor();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            String deleteCommand = "rm -rf " + appFilePath;
+            Runtime runtime = Runtime.getRuntime();
+            Process process;
+            try {
+                process = runtime.exec(deleteCommand);
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
