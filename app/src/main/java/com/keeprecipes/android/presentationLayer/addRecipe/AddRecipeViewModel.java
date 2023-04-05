@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 public class AddRecipeViewModel extends AndroidViewModel {
     private final String TAG = "AddRecipeViewModel";
@@ -216,6 +217,15 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.ingredients = ingredientList;
         long recipeId;
         if (updateRecipe.getValue()) {
+            List<String> currentlySavedPhotos = recipe.getValue().photoURI;
+            currentlySavedPhotos.removeAll(recipeToSave.photos);
+            currentlySavedPhotos.forEach(s -> {
+                try {
+                    deleteFiles(s);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             recipeRepository.update(recipeToSave);
             recipeId = recipeToSave.recipeId;
         } else {
@@ -227,5 +237,19 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     public LiveData<List<RecipeWithCollections>> getRecipeCollections(int recipeId) {
         return collectionWithRecipesRepository.getRecipeWithCollections(recipeId);
+    }
+
+    void deleteFiles(String fileName) throws IOException, InterruptedException {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            String deleteCommand = "rm -rf " + application.getFilesDir() + "/" + fileName;
+            Runtime runtime = Runtime.getRuntime();
+            Process process;
+            try {
+                process = runtime.exec(deleteCommand);
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
