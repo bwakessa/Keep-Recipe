@@ -1,11 +1,14 @@
 package com.keeprecipes.android.presentationLayer.home;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
@@ -30,7 +33,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public RecipeAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         return new RecipeAdapter.ViewHolder(RecipeItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
@@ -69,6 +72,10 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
                         .fit()
                         .centerCrop()
                         .into(recipeImage);
+            } else {
+                // If there is now image then remove the imageView space from card
+                recipeImage.getLayoutParams().height = LinearLayoutCompat.LayoutParams.WRAP_CONTENT;
+                recipeImage.requestLayout();
             }
             // Rewrite for setOnClickListener
             // https://www.digitalocean.com/community/tutorials/android-recyclerview-data-binding

@@ -218,14 +218,16 @@ public class AddRecipeViewModel extends AndroidViewModel {
         long recipeId;
         if (updateRecipe.getValue()) {
             List<String> currentlySavedPhotos = recipe.getValue().photoURI;
-            currentlySavedPhotos.removeAll(recipeToSave.photos);
-            currentlySavedPhotos.forEach(s -> {
-                try {
-                    deleteFiles(s);
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            if (currentlySavedPhotos !=null){
+                currentlySavedPhotos.removeAll(recipeToSave.photos);
+                currentlySavedPhotos.forEach(s -> {
+                    try {
+                        deleteFiles(s);
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
             recipeRepository.update(recipeToSave);
             recipeId = recipeToSave.recipeId;
         } else {
