@@ -11,28 +11,23 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="3">
+        android:layout_height="wrap_content"
+        android:weightSum="2">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@{ingredient.name}"
+            android:textAlignment="textStart"
             tools:text="TextView" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@{ingredient.size}"
-            tools:text="TextView" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@{ingredient.quantity}"
+            android:text="@{ingredient.size+' '+ingredient.quantity}"
+            android:textAlignment="textEnd"
             tools:text="TextView" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

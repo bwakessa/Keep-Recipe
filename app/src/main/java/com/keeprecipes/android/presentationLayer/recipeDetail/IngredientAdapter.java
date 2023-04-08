@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keeprecipes.android.databinding.IngredientItemBinding;
 import com.keeprecipes.android.databinding.RecipeDetailIngredientItemBinding;
 import com.keeprecipes.android.presentationLayer.addRecipe.IngredientDTO;
 
@@ -21,11 +20,11 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdap
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public IngredientAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        return new ViewHolder(RecipeDetailIngredientItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new IngredientAdapter.ViewHolder(RecipeDetailIngredientItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
-
+    
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
