@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
@@ -46,6 +47,10 @@ public class HomeViewModel extends AndroidViewModel {
         return collectionRepository.getAllCollections();
     }
 
+    public LiveData<List<CollectionWithRecipes>> getCollectionWithRecipesById(long id){
+        return collectionWithRecipesRepository.getCollectionWithRecipesById(id);
+    }
+
     public void setRecipeId(int id) {
         recipeId.setValue(id);
     }
@@ -63,10 +68,5 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<List<Recipe>> searchRecipe(String query) {
         return recipeRepository.searchRecipe(query);
-    }
-
-    public LiveData<Collection> collectionFetchByName(String query) {
-        Log.d(TAG, "collectionFetchByName: " + query);
-        return collectionRepository.fetchByNameObserver(query);
     }
 }

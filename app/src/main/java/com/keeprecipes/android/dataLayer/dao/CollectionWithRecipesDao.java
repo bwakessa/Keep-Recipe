@@ -23,6 +23,10 @@ public interface CollectionWithRecipesDao {
     @Query("SELECT * FROM collections")
     LiveData<List<CollectionWithRecipes>> getCollectionWithRecipes();
 
+    @Transaction
+    @Query("SELECT * FROM collectionrecipecrossref WHERE collectionId = :collectionId")
+    LiveData<List<CollectionWithRecipes>> getCollectionWithRecipesById(long collectionId);
+
     @Delete
     void delete(CollectionRecipeCrossRef collectionWithRecipes);
 

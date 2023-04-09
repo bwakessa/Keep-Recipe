@@ -27,11 +27,10 @@ public class CollectionWithRecipesRepository {
     public CollectionWithRecipesRepository(Application application) {
         collectionWithRecipesDao = AppDatabase.getDatabase(application).collectionWithRecipesDao();
         recipeWithCollectionsDao = AppDatabase.getDatabase(application).recipeWithCollectionsDao();
-        collectionWithRecipesList = collectionWithRecipesDao.getCollectionWithRecipes();
     }
 
-    public LiveData<List<CollectionWithRecipes>> getCollectionWithRecipesList() {
-        return collectionWithRecipesList;
+    public LiveData<List<CollectionWithRecipes>> getCollectionWithRecipesById(long collectionId) {
+        return collectionWithRecipesDao.getCollectionWithRecipesById(collectionId);
     }
 
     public LiveData<List<RecipeWithCollections>> getRecipeWithCollections(long id) {

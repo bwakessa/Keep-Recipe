@@ -1,7 +1,6 @@
 package com.keeprecipes.android.presentationLayer.home;
 
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
+import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public class HomeFragment extends Fragment {
     HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
-    private List<String> categories;
+    List<String> collectionNames;
+    List<Long> collectionId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,8 +50,13 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(getActivity()).get(HomeViewModel.class);
 
+        RecipeAdapter recipeAdapter = new RecipeAdapter();
+        binding.recipeListView.setAdapter(recipeAdapter);
+        homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+
         homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesList -> {
-            List<String> collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
+            collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
+            collectionId = categoriesList.stream().map(collection -> collection.collectionId).collect(Collectors.toList());
             binding.categoriesChipGroup.removeAllViews();
             for (String categories : collectionNames) {
                 Chip chip = new Chip(getContext());
@@ -69,15 +76,12 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(View view12) {
                         chip.setChecked(false);
+                        homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
                     }
                 });
                 binding.categoriesChipGroup.addView(chip);
             }
         });
-
-        RecipeAdapter recipeAdapter = new RecipeAdapter();
-        binding.recipeListView.setAdapter(recipeAdapter);
-        homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
         binding.searchBar.setOnMenuItemClickListener(item -> {
@@ -85,14 +89,20 @@ public class HomeFragment extends Fragment {
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
-//        binding.categoriesChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-//            Log.d(TAG, "onCheckedChanged: " + checkedIds);
-//            if (!checkedIds.isEmpty()){
-//                homeViewModel.collectionFetchByName(categories.get(checkedIds.get(0)-1)).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-//            } else {
-//                homeViewModel.getRecipe().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-//            }
-//        });
+        binding.categoriesChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            Log.d(TAG, "onCheckedChanged: " + checkedIds);
+            if (!checkedIds.isEmpty()) {
+                homeViewModel.getCollectionWithRecipesById(collectionId.get(checkedIds.get(0) - 1)).observe(getViewLifecycleOwner(), new Observer<List<CollectionWithRecipes>>() {
+                    @Override
+                    public void onChanged(List<CollectionWithRecipes> collectionWithRecipes) {
+                        Log.d(TAG, "onChanged: " + collectionWithRecipes);
+                        recipeAdapter.submitList(collectionWithRecipes.get(0).recipes);
+                    }
+                });
+            } else {
+                homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
+            }
+        });
 
         binding.searchView.getEditText().setOnEditorActionListener(
                 (v, actionId, event) -> {
