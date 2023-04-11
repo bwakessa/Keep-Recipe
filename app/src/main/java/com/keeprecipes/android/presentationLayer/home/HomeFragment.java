@@ -22,7 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
-import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
+import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
 import java.util.List;
@@ -56,8 +56,8 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesList -> {
             collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
-            collectionId = categoriesList.stream().map(collection -> collection.collectionId).collect(Collectors.toList());
-            binding.categoriesChipGroup.removeAllViews();
+            collectionId = categoriesList.stream().map(collection -> collection.categoriesId).collect(Collectors.toList());
+//            binding.categoriesChipGroup.removeAllViews();
             for (String categories : collectionNames) {
                 Chip chip = new Chip(getContext());
                 chip.setText(categories);
@@ -92,11 +92,11 @@ public class HomeFragment extends Fragment {
         binding.categoriesChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             Log.d(TAG, "onCheckedChanged: " + checkedIds);
             if (!checkedIds.isEmpty()) {
-                homeViewModel.getCollectionWithRecipesById(collectionId.get(checkedIds.get(0) - 1)).observe(getViewLifecycleOwner(), new Observer<List<CollectionWithRecipes>>() {
+                homeViewModel.getCollectionWithRecipesById(collectionId.get(checkedIds.get(0) - 1)).observe(getViewLifecycleOwner(), new Observer<List<CategoriesWithRecipes>>() {
                     @Override
-                    public void onChanged(List<CollectionWithRecipes> collectionWithRecipes) {
-                        Log.d(TAG, "onChanged: " + collectionWithRecipes);
-                        recipeAdapter.submitList(collectionWithRecipes.get(0).recipes);
+                    public void onChanged(List<CategoriesWithRecipes> categoriesWithRecipes) {
+                        Log.d(TAG, "onChanged: " + categoriesWithRecipes);
+                        recipeAdapter.submitList(categoriesWithRecipes.get(0).recipes);
                     }
                 });
             } else {

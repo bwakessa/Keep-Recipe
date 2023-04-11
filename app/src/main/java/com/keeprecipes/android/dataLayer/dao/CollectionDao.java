@@ -10,34 +10,34 @@ import androidx.room.RawQuery;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
-import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.Categories;
 
 import java.util.List;
 
 @Dao
 public interface CollectionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    long insert(Collection collection);
+    long insert(Categories categories);
 
     @Delete
-    void delete(Collection collection);
+    void delete(Categories categories);
 
     @Update
-    void updateCollection(Collection collection);
+    void updateCollection(Categories categories);
 
-    @Query("SELECT * FROM collections ORDER BY collectionId DESC")
-    LiveData<List<Collection>> getAll();
+    @Query("SELECT * FROM Categories ORDER BY categoriesId DESC")
+    LiveData<List<Categories>> getAll();
 
-    @Query("SELECT collectionId FROM collections WHERE name = :collectionName")
+    @Query("SELECT categoriesId FROM Categories WHERE name = :collectionName")
     long fetchIdByName(String collectionName);
 
-    @Query("SELECT * FROM collections WHERE name = :collectionName")
-    LiveData<Collection> fetchByName(String collectionName);
+    @Query("SELECT * FROM Categories WHERE name = :collectionName")
+    LiveData<Categories> fetchByName(String collectionName);
 
-    @Query("SELECT EXISTS(SELECT * FROM collections WHERE name = :name)")
+    @Query("SELECT EXISTS(SELECT * FROM Categories WHERE name = :name)")
     Boolean isRowExist(String name);
 
-    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'collections'")
+    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'categories'")
     void clearPrimaryKey();
 
     // Resets the the primary key after deleting entity

@@ -5,7 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.keeprecipes.android.dataLayer.entities.RecipeWithCollections;
+import com.keeprecipes.android.dataLayer.entities.RecipeWithCategories;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 public interface RecipeWithCollectionsDao {
     @Transaction
     @Query("SELECT * FROM recipes WHERE recipeId LIKE :id")
-    public LiveData<List<RecipeWithCollections>> getRecipeWithCollections(long id);
+    public LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id);
 }

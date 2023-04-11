@@ -32,6 +32,13 @@
             </HorizontalScrollView>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recipe_category_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recipe_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

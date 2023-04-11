@@ -68,9 +68,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         if (recipeId != -1) {
             mViewModel.getRecipeCollections(recipeId).observe(getViewLifecycleOwner(), recipeWithCollections -> {
                 mViewModel.setRecipe(recipeWithCollections.get(0).recipe);
-                mViewModel.setCollectionList(recipeWithCollections.get(0).collections);
-                Log.d(TAG, "onViewCreated: " + recipeWithCollections.get(0).collections);
-                List<String> collectionNames = recipeWithCollections.get(0).collections.stream().map(collection -> collection.name).collect(Collectors.toList());
+                mViewModel.setCollectionList(recipeWithCollections.get(0).categories);
+                Log.d(TAG, "onViewCreated: " + recipeWithCollections.get(0).categories);
+                List<String> collectionNames = recipeWithCollections.get(0).categories.stream().map(collection -> collection.name).collect(Collectors.toList());
                 ArrayAdapter<String> collectionAdapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collectionNames);
                 binding.cusineAutoCompleteTextView.setAdapter(collectionAdapter);
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());

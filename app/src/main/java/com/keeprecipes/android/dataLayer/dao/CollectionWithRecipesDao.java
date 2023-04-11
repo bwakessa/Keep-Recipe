@@ -1,6 +1,5 @@
 package com.keeprecipes.android.dataLayer.dao;
 
-import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -9,30 +8,30 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
-import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
+import com.keeprecipes.android.dataLayer.entities.CategoriesRecipeCrossRef;
+import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 
 import java.util.List;
 
 @Dao
 public interface CollectionWithRecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CollectionRecipeCrossRef collectionWithRecipes);
+    void insert(CategoriesRecipeCrossRef collectionWithRecipes);
 
     @Transaction
-    @Query("SELECT * FROM collections")
-    LiveData<List<CollectionWithRecipes>> getCollectionWithRecipes();
+    @Query("SELECT * FROM Categories")
+    LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipes();
 
     @Transaction
-    @Query("SELECT * FROM collectionrecipecrossref WHERE collectionId = :collectionId")
-    LiveData<List<CollectionWithRecipes>> getCollectionWithRecipesById(long collectionId);
+    @Query("SELECT * FROM CategoriesRecipeCrossRef WHERE categoriesId = :collectionId")
+    LiveData<List<CategoriesWithRecipes>> getCategoriesWithRecipesById(long collectionId);
 
     @Delete
-    void delete(CollectionRecipeCrossRef collectionWithRecipes);
+    void delete(CategoriesRecipeCrossRef collectionWithRecipes);
 
-    @Query("DELETE FROM CollectionRecipeCrossRef WHERE recipeId = :recipeId;")
+    @Query("DELETE FROM CategoriesRecipeCrossRef WHERE recipeId = :recipeId;")
     void deleteByRecipe(long recipeId);
 
-    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'CollectionRecipeCrossRef'")
+    @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'CategoriesRecipeCrossRef'")
     void clearPrimaryKey();
 }

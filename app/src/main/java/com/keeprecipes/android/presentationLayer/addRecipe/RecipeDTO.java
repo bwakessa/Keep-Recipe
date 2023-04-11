@@ -12,7 +12,7 @@ public class RecipeDTO {
     public String instructions;
     public String cuisine;
     public List<String> collections;
-    public String collection;
+    public String categories;
     public String portionSize;
     public List<String> photoURI;
 
@@ -35,7 +35,7 @@ public class RecipeDTO {
                 "title='" + title + '\'' +
                 ", instructions=" + instructions +
                 ", cuisine='" + cuisine + '\'' +
-                ", collection='" + collection + '\'' +
+                ", categories='" + categories + '\'' +
                 ", portionSize=" + portionSize +
                 ", photoURI=" + photoURI +
                 '}';

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.keeprecipes.android.dataLayer.AppDatabase;
 import com.keeprecipes.android.dataLayer.dao.CollectionDao;
-import com.keeprecipes.android.dataLayer.entities.Collection;
+import com.keeprecipes.android.dataLayer.entities.Categories;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 public class CollectionRepository {
 
     private CollectionDao mCollectionDao;
-    private LiveData<List<Collection>> allCollections;
+    private LiveData<List<Categories>> allCollections;
 
     private ExecutorService executorService;
 
@@ -27,7 +27,7 @@ public class CollectionRepository {
         allCollections = mCollectionDao.getAll();
     }
 
-    public LiveData<List<Collection>> getAllCollections() {
+    public LiveData<List<Categories>> getAllCollections() {
         return allCollections;
     }
 
@@ -45,13 +45,13 @@ public class CollectionRepository {
         return id;
     }
 
-    public LiveData<Collection> fetchByNameObserver(String title) {
+    public LiveData<Categories> fetchByNameObserver(String title) {
         return mCollectionDao.fetchByName(title);
     }
 
-    public Boolean isRowExist(Collection collection) {
+    public Boolean isRowExist(Categories categories) {
         executorService = Executors.newSingleThreadExecutor();
-        Callable<Boolean> isRowExistCallable = () -> mCollectionDao.isRowExist(collection.name);
+        Callable<Boolean> isRowExistCallable = () -> mCollectionDao.isRowExist(categories.name);
         Boolean exist = false;
         Future<Boolean> future = executorService.submit(isRowExistCallable);
         try {
@@ -63,9 +63,9 @@ public class CollectionRepository {
         return exist;
     }
 
-    public long insert(Collection collection) {
+    public long insert(Categories categories) {
         executorService = Executors.newSingleThreadExecutor();
-        Callable<Long> insertCallable = () -> mCollectionDao.insert(collection);
+        Callable<Long> insertCallable = () -> mCollectionDao.insert(categories);
         long rowId = 0;
         Future<Long> future = executorService.submit(insertCallable);
         try {
@@ -77,8 +77,8 @@ public class CollectionRepository {
         return rowId;
     }
 
-    public void delete(Collection collection) {
-        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(collection));
+    public void delete(Categories categories) {
+        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(categories));
     }
 
     public void clearPrimaryKey() {
@@ -86,7 +86,7 @@ public class CollectionRepository {
                 mCollectionDao.clearPrimaryKey());
     }
 
-    public void update(Collection collection) {
-        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.updateCollection(collection));
+    public void update(Categories categories) {
+        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.updateCollection(categories));
     }
 }

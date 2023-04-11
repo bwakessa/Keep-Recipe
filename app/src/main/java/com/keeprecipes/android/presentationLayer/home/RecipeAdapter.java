@@ -1,9 +1,7 @@
 package com.keeprecipes.android.presentationLayer.home;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keeprecipes.android.dataLayer.entities.CollectionWithRecipes;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.RecipeItemBinding;
 import com.keeprecipes.android.presentationLayer.home.HomeFragmentDirections.ActionNavigationHomeToRecipeDetailFragment;
@@ -22,7 +19,6 @@ import com.keeprecipes.android.utils.Util;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder> {
 

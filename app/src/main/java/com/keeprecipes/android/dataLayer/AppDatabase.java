@@ -11,12 +11,12 @@ import com.keeprecipes.android.dataLayer.dao.CollectionDao;
 import com.keeprecipes.android.dataLayer.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeWithCollectionsDao;
-import com.keeprecipes.android.dataLayer.entities.Collection;
-import com.keeprecipes.android.dataLayer.entities.CollectionRecipeCrossRef;
+import com.keeprecipes.android.dataLayer.entities.Categories;
+import com.keeprecipes.android.dataLayer.entities.CategoriesRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.entities.RecipeFts;
 
-@Database(entities = {Recipe.class, Collection.class, RecipeFts.class, CollectionRecipeCrossRef.class}, version = 1, exportSchema = false)
+@Database(entities = {Recipe.class, Categories.class, RecipeFts.class, CategoriesRecipeCrossRef.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance = null;

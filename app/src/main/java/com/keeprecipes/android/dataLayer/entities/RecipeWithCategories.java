@@ -6,9 +6,9 @@ import androidx.room.Relation;
 
 import java.util.List;
 
-public class RecipeWithCollections {
+public class RecipeWithCategories {
     @Embedded
     public Recipe recipe;
-    @Relation(parentColumn = "recipeId", entityColumn = "collectionId", associateBy = @Junction(CollectionRecipeCrossRef.class))
-    public List<Collection> collections;
+    @Relation(parentColumn = "recipeId", entityColumn = "categoriesId", associateBy = @Junction(CategoriesRecipeCrossRef.class))
+    public List<Categories> categories;
 }
