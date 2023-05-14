@@ -4,20 +4,23 @@ plugins {
 }
 
 allprojects {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
     }
 }
 
 android {
     namespace 'com.keeprecipes.android'
-    compileSdk 33
-    compileSdkExtension 4
+    compileSdkPreview 'UpsideDownCake'
+//    Undo this when android 14 becomes beta
+//    compileSdkExtension 4
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
-        minSdk 26
-        targetSdk 33
+        minSdkPreview = "UpsideDownCake"
+        targetSdkPreview = "UpsideDownCake"
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -31,8 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
@@ -61,7 +64,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0-alpha02'
     implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
