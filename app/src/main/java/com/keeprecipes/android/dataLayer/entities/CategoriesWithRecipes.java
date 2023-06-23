@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CategoriesWithRecipes {
     @Embedded
-    public Categories categories;
+    public Category categories;
     @Relation(parentColumn = "categoriesId", entityColumn = "recipeId", associateBy = @Junction(CategoriesRecipeCrossRef.class))
     public List<Recipe> recipes;
 }

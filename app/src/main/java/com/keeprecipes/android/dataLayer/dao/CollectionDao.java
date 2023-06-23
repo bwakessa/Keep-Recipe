@@ -10,31 +10,31 @@ import androidx.room.RawQuery;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
-import com.keeprecipes.android.dataLayer.entities.Categories;
+import com.keeprecipes.android.dataLayer.entities.Category;
 
 import java.util.List;
 
 @Dao
 public interface CollectionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    long insert(Categories categories);
+    long insert(Category categories);
 
     @Delete
-    void delete(Categories categories);
+    void delete(Category categories);
 
     @Update
-    void updateCollection(Categories categories);
+    void updateCollection(Category categories);
 
-    @Query("SELECT * FROM Categories ORDER BY categoriesId DESC")
-    LiveData<List<Categories>> getAll();
+    @Query("SELECT * FROM Category ORDER BY categoriesId DESC")
+    LiveData<List<Category>> getAll();
 
-    @Query("SELECT categoriesId FROM Categories WHERE name = :collectionName")
+    @Query("SELECT categoriesId FROM Category WHERE name = :collectionName")
     long fetchIdByName(String collectionName);
 
-    @Query("SELECT * FROM Categories WHERE name = :collectionName")
-    LiveData<Categories> fetchByName(String collectionName);
+    @Query("SELECT * FROM Category WHERE name = :collectionName")
+    LiveData<Category> fetchByName(String collectionName);
 
-    @Query("SELECT EXISTS(SELECT * FROM Categories WHERE name = :name)")
+    @Query("SELECT EXISTS(SELECT * FROM Category WHERE name = :name)")
     Boolean isRowExist(String name);
 
     @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'categories'")

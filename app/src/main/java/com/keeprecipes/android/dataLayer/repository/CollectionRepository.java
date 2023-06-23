@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.keeprecipes.android.dataLayer.AppDatabase;
 import com.keeprecipes.android.dataLayer.dao.CollectionDao;
-import com.keeprecipes.android.dataLayer.entities.Categories;
+import com.keeprecipes.android.dataLayer.entities.Category;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -17,8 +17,8 @@ import java.util.concurrent.Future;
 
 public class CollectionRepository {
 
-    private CollectionDao mCollectionDao;
-    private LiveData<List<Categories>> allCollections;
+    private final CollectionDao mCollectionDao;
+    private final LiveData<List<Category>> allCollections;
 
     private ExecutorService executorService;
 
@@ -27,7 +27,7 @@ public class CollectionRepository {
         allCollections = mCollectionDao.getAll();
     }
 
-    public LiveData<List<Categories>> getAllCollections() {
+    public LiveData<List<Category>> getAllCollections() {
         return allCollections;
     }
 
@@ -45,11 +45,11 @@ public class CollectionRepository {
         return id;
     }
 
-    public LiveData<Categories> fetchByNameObserver(String title) {
+    public LiveData<Category> fetchByNameObserver(String title) {
         return mCollectionDao.fetchByName(title);
     }
 
-    public Boolean isRowExist(Categories categories) {
+    public Boolean isRowExist(Category categories) {
         executorService = Executors.newSingleThreadExecutor();
         Callable<Boolean> isRowExistCallable = () -> mCollectionDao.isRowExist(categories.name);
         Boolean exist = false;
@@ -63,7 +63,7 @@ public class CollectionRepository {
         return exist;
     }
 
-    public long insert(Categories categories) {
+    public long insert(Category categories) {
         executorService = Executors.newSingleThreadExecutor();
         Callable<Long> insertCallable = () -> mCollectionDao.insert(categories);
         long rowId = 0;
@@ -77,16 +77,15 @@ public class CollectionRepository {
         return rowId;
     }
 
-    public void delete(Categories categories) {
+    public void delete(Category categories) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(categories));
     }
 
     public void clearPrimaryKey() {
-        Executors.newSingleThreadExecutor().execute(() ->
-                mCollectionDao.clearPrimaryKey());
+        Executors.newSingleThreadExecutor().execute(mCollectionDao::clearPrimaryKey);
     }
 
-    public void update(Categories categories) {
+    public void update(Category categories) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.updateCollection(categories));
     }
 }

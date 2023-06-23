@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.keeprecipes.android.dataLayer.entities.Categories;
+import com.keeprecipes.android.dataLayer.entities.Category;
 import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
@@ -22,8 +22,8 @@ public class HomeViewModel extends AndroidViewModel {
 
     private final LiveData<List<Recipe>> recipe;
     private final MutableLiveData<Integer> recipeId;
-    private CollectionRepository collectionRepository;
-    private RecipeRepository recipeRepository;
+    private final CollectionRepository collectionRepository;
+    private final RecipeRepository recipeRepository;
     public final LiveData<Recipe> selectedRecipe;
 
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -42,7 +42,7 @@ public class HomeViewModel extends AndroidViewModel {
         return recipe;
     }
 
-    public LiveData<List<Categories>> getCollections() {
+    public LiveData<List<Category>> getCollections() {
         return collectionRepository.getAllCollections();
     }
 

@@ -8,16 +8,16 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = "categories")
-public class Categories {
-    public static final DiffUtil.ItemCallback<Categories> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+@Entity(tableName = "category")
+public class Category {
+    public static final DiffUtil.ItemCallback<Category> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Categories oldItem, @NonNull Categories newItem) {
+        public boolean areItemsTheSame(@NonNull Category oldItem, @NonNull Category newItem) {
             return Objects.equals(oldItem.categoriesId, newItem.categoriesId);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Categories oldItem, @NonNull Categories newItem) {
+        public boolean areContentsTheSame(@NonNull Category oldItem, @NonNull Category newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -28,7 +28,7 @@ public class Categories {
     @ColumnInfo(name = "name")
     public String name;
 
-    public Categories(String name) {
+    public Category(String name) {
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public class Categories {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Categories categories = (Categories) o;
+        Category categories = (Category) o;
         return Objects.equals(categoriesId, categories.categoriesId);
     }
 

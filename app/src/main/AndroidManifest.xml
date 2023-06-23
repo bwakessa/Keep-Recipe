@@ -26,10 +26,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <!-- Trigger Google Play services to install the backported photo picker module. -->
+        <!--
+            Prompt Google Play services to install the backported photo picker module
+            https://developer.android.com/training/data-storage/shared/photopicker#device-availability
+        -->
+        <!--suppress AndroidDomInspection -->
         <service android:name="com.google.android.gms.metadata.ModuleDependencies"
             android:enabled="false"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
             </intent-filter>

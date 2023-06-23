@@ -20,13 +20,8 @@ public class RecipeRepository {
 
     private static final String TAG = "RecipeRepository";
 
-    private RecipeDao mRecipeDao;
-    private LiveData<List<Recipe>> allRecipes;
-
-    private ExecutorService executorService;
-
-    public RecipeRepository() {
-    }
+    private final RecipeDao mRecipeDao;
+    private final LiveData<List<Recipe>> allRecipes;
 
     public RecipeRepository(Application application) {
         mRecipeDao = AppDatabase.getDatabase(application).recipeDao();
@@ -50,7 +45,7 @@ public class RecipeRepository {
     }
 
     public long insert(Recipe recipe) {
-        executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         Callable<Long> insertCallable = () -> mRecipeDao.insert(recipe);
         long rowId = 0;
         Future<Long> future = executorService.submit(insertCallable);
@@ -78,8 +73,7 @@ public class RecipeRepository {
 
     public void clearPrimaryKey() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Executors.newSingleThreadExecutor().execute(() ->
-                    mRecipeDao.clearPrimaryKey());
+            Executors.newSingleThreadExecutor().execute(mRecipeDao::clearPrimaryKey);
         });
     }
 

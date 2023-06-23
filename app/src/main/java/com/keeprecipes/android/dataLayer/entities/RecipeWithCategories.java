@@ -10,5 +10,5 @@ public class RecipeWithCategories {
     @Embedded
     public Recipe recipe;
     @Relation(parentColumn = "recipeId", entityColumn = "categoriesId", associateBy = @Junction(CategoriesRecipeCrossRef.class))
-    public List<Categories> categories;
+    public List<Category> categories;
 }

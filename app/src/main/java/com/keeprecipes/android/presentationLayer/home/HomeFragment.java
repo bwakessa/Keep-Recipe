@@ -26,6 +26,7 @@ import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
@@ -33,9 +34,6 @@ public class HomeFragment extends Fragment {
     final String TAG = "HomeFragment";
     HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-
-    List<String> collectionNames;
-    List<Long> collectionId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,60 +46,21 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel =
-                new ViewModelProvider(getActivity()).get(HomeViewModel.class);
+                new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
         RecipeAdapter recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
         homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
-        homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesList -> {
-            collectionNames = categoriesList.stream().map(collection -> collection.name).collect(Collectors.toList());
-            collectionId = categoriesList.stream().map(collection -> collection.categoriesId).collect(Collectors.toList());
-//            binding.categoriesChipGroup.removeAllViews();
-            for (String categories : collectionNames) {
-                Chip chip = new Chip(getContext());
-                chip.setText(categories);
-//                    chip.setCloseIconVisible(true);
-                // necessary to get single selection working
-                chip.setClickable(true);
-                chip.setCheckable(true);
-                chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        chip.setCloseIconVisible(b);
-                        Log.d(TAG, "onCheckedChanged: " + b);
-                    }
-                });
-                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view12) {
-                        chip.setChecked(false);
-                        homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-                    }
-                });
-                binding.categoriesChipGroup.addView(chip);
-            }
-        });
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter();
+        binding.recipeCategoryListView.setAdapter(categoriesAdapter);
+        homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesAdapter::submitList);
+
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
         binding.searchBar.setOnMenuItemClickListener(item -> {
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
             return NavigationUI.onNavDestinationSelected(item, navController);
-        });
-
-        binding.categoriesChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            Log.d(TAG, "onCheckedChanged: " + checkedIds);
-            if (!checkedIds.isEmpty()) {
-                homeViewModel.getCollectionWithRecipesById(collectionId.get(checkedIds.get(0) - 1)).observe(getViewLifecycleOwner(), new Observer<List<CategoriesWithRecipes>>() {
-                    @Override
-                    public void onChanged(List<CategoriesWithRecipes> categoriesWithRecipes) {
-                        Log.d(TAG, "onChanged: " + categoriesWithRecipes);
-                        recipeAdapter.submitList(categoriesWithRecipes.get(0).recipes);
-                    }
-                });
-            } else {
-                homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-            }
         });
 
         binding.searchView.getEditText().setOnEditorActionListener(

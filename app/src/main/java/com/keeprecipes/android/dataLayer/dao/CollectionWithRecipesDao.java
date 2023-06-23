@@ -19,7 +19,7 @@ public interface CollectionWithRecipesDao {
     void insert(CategoriesRecipeCrossRef collectionWithRecipes);
 
     @Transaction
-    @Query("SELECT * FROM Categories")
+    @Query("SELECT * FROM Category")
     LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipes();
 
     @Transaction
