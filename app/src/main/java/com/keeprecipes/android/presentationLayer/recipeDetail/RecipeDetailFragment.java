@@ -38,13 +38,14 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     PhotoAdapter photoAdapter;
     IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
-    private FragmentRecipeDetailBinding binding;
     List<PhotoDTO> photoDTOList = new ArrayList<>();
+    private FragmentRecipeDetailBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRecipeDetailBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -71,7 +72,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
                 homeViewModel.deleteRecipe(mRecipe);
                 deleteFiles(photoDTOList);
                 Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
                 return true;
             }
             return false;
@@ -113,7 +114,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         Executors.newSingleThreadExecutor().execute(() -> {
             photoDTOList.forEach(photoDTO -> {
                 String deleteCommand = "rm -rf " + photoDTO.uri.getPath();
-                Log.d(TAG, "deleteFiles: "+deleteCommand);
+                Log.d(TAG, "deleteFiles: " + deleteCommand);
                 Runtime runtime = Runtime.getRuntime();
                 Process process;
                 try {
@@ -122,6 +123,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                process.destroy();
             });
 
         });

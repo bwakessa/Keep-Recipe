@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class AddRecipeViewModel extends AndroidViewModel {
     private final String TAG = "AddRecipeViewModel";
@@ -39,7 +40,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
 
     private final Application application;
     public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
-    public MutableLiveData<List<Category>> collections = new MutableLiveData<>(new ArrayList<>());
+    public MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     public MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
@@ -114,18 +115,23 @@ public class AddRecipeViewModel extends AndroidViewModel {
         }
     }
 
-    public void addCollection(String name) {
-        List<Category> categoriesList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
-        categoriesList.add(new Category(name));
-        setCollectionList(categoriesList);
+
+    public void setCategoryList(List<Category> collectionsList) {
+        Log.d(TAG, "setCollectionList: " + collectionsList.toString());
+        // Ignore 'collect(toList())' can be replaced with 'toList()' suggestion as we need to compatibility
+        List<String> categoriesList = collectionsList.stream().distinct().map(c -> c.name).collect(Collectors.toList());
+        collections.postValue(categoriesList);
     }
 
-    public void setCollectionList(List<Category> collectionsList) {
-        collections.postValue(collectionsList);
+    public void setCollection(List<String> collectionsList) {
+        Log.d(TAG, "setCollectionList: " + collectionsList.toString());
+        List<String> categoriesList = collectionsList.stream().distinct().collect(Collectors.toList());
+        Log.d(TAG, "setCollectionList: " + categoriesList.size());
+        collections.postValue(categoriesList);
     }
 
     public void removeCollection() {
-        List<Category> categoriesList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
+        List<String> categoriesList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
         if (categoriesList.size() >= 1) {
             categoriesList.remove(categoriesList.size() - 1);
             collections.postValue(categoriesList);
@@ -143,13 +149,12 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.instructions = recipe.getValue().instructions;
         ArrayList<Long> collectionId = new ArrayList<>();
         if (collections.getValue() != null) {
-            for (Category c : collections.getValue()) {
-//                Collection collection = new Collection(c);
-//                collectionId.add(collectionRepository.insert(collection));
-                if (!collectionRepository.isRowExist(c)) {
-                    collectionId.add(collectionRepository.insert(c));
+            for (String c : collections.getValue()) {
+                Category category = new Category(c);
+                if (!collectionRepository.isRowExist(category)) {
+                    collectionId.add(collectionRepository.insert(category));
                 } else {
-                    long id = collectionRepository.fetchByName(c.name);
+                    long id = collectionRepository.fetchByName(category.name);
                     if (id != -1L) {
                         collectionId.add(id);
                     } else {
@@ -181,7 +186,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
                         fileCount++;
                         String[] nameSplits = fileName.split("-|\\.");
                         String fileNameWithoutExtension = nameSplits[0];
-                        String extension = nameSplits[nameSplits.length - 1 ];
+                        String extension = nameSplits[nameSplits.length - 1];
                         fileName = fileNameWithoutExtension + "-" + fileCount + "." + extension;
                         photoFile = new File(application.getFilesDir(), fileName);
                     }
@@ -218,7 +223,7 @@ public class AddRecipeViewModel extends AndroidViewModel {
         long recipeId;
         if (updateRecipe.getValue()) {
             List<String> currentlySavedPhotos = recipe.getValue().photoURI;
-            if (currentlySavedPhotos !=null){
+            if (currentlySavedPhotos != null) {
                 currentlySavedPhotos.removeAll(recipeToSave.photos);
                 currentlySavedPhotos.forEach(s -> {
                     try {

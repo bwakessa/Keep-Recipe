@@ -11,8 +11,8 @@ import com.keeprecipes.android.dataLayer.dao.CollectionDao;
 import com.keeprecipes.android.dataLayer.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeWithCollectionsDao;
-import com.keeprecipes.android.dataLayer.entities.Category;
 import com.keeprecipes.android.dataLayer.entities.CategoriesRecipeCrossRef;
+import com.keeprecipes.android.dataLayer.entities.Category;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.entities.RecipeFts;
 

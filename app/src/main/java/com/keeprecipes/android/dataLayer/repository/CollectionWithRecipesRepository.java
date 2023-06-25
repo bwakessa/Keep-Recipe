@@ -33,6 +33,10 @@ public class CollectionWithRecipesRepository {
         return collectionWithRecipesDao.getCategoriesWithRecipesById(categoriesId);
     }
 
+    public List<Long> getUniqueCategories(long recipeId) {
+        return collectionWithRecipesDao.getUniqueCategories(recipeId);
+    }
+
     public LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id) {
         recipeWithCollections = recipeWithCollectionsDao.getRecipeWithCategories(id);
         return recipeWithCollections;

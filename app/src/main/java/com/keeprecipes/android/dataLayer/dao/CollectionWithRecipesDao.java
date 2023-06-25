@@ -26,6 +26,14 @@ public interface CollectionWithRecipesDao {
     @Query("SELECT * FROM CategoriesRecipeCrossRef WHERE categoriesId = :collectionId")
     LiveData<List<CategoriesWithRecipes>> getCategoriesWithRecipesById(long collectionId);
 
+    @Transaction
+    @Query("SELECT categoriesId\n" +
+            "FROM CategoriesRecipeCrossRef \n" +
+            "GROUP BY categoriesId\n" +
+            "HAVING COUNT(categoriesId) == 1\n" +
+            "AND recipeId == :recipeId;")
+    List<Long> getUniqueCategories(long recipeId);
+
     @Delete
     void delete(CategoriesRecipeCrossRef collectionWithRecipes);
 

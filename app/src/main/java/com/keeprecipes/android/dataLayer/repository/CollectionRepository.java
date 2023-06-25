@@ -81,6 +81,10 @@ public class CollectionRepository {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.delete(categories));
     }
 
+    public void deleteById(long id) {
+        Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.deleteById(id));
+    }
+
     public void clearPrimaryKey() {
         Executors.newSingleThreadExecutor().execute(mCollectionDao::clearPrimaryKey);
     }

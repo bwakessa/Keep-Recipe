@@ -7,27 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
-import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 

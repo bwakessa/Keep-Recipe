@@ -22,6 +22,9 @@ public interface CollectionDao {
     @Delete
     void delete(Category categories);
 
+    @Query("DELETE FROM Category WHERE categoriesId = :categoriesId")
+    void deleteById(long categoriesId);
+
     @Update
     void updateCollection(Category categories);
 

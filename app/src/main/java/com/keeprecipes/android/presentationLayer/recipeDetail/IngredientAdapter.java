@@ -24,7 +24,7 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdap
         // Create a new view, which defines the UI of the list item
         return new IngredientAdapter.ViewHolder(RecipeDetailIngredientItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
-    
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {

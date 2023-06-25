@@ -34,6 +34,7 @@ import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
     final String TAG = "AddRecipeFragment";
+    final LinkedList<Integer> wordBreakPoints = new LinkedList<>(List.of(0));
     IngredientAdapter ingredientAdapter;
     RecipePhotoAdapter recipePhotoAdapter;
     AddRecipeViewModel mViewModel;
@@ -51,11 +53,11 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     // Callback is invoked after the user selects a media item or closes the
     // document picker.
     private FragmentAddRecipeBinding binding;
-    final LinkedList<Integer> wordBreakPoints = new LinkedList<>(List.of(0));
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_recipe, container, false);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -68,9 +70,10 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         if (recipeId != -1) {
             mViewModel.getRecipeCollections(recipeId).observe(getViewLifecycleOwner(), recipeWithCollections -> {
                 mViewModel.setRecipe(recipeWithCollections.get(0).recipe);
-                mViewModel.setCollectionList(recipeWithCollections.get(0).categories);
+//                mViewModel.setCategoryList(recipeWithCollections.get(0).categories);
                 Log.d(TAG, "onViewCreated: " + recipeWithCollections.get(0).categories);
                 List<String> collectionNames = recipeWithCollections.get(0).categories.stream().map(collection -> collection.name).collect(Collectors.toList());
+                mViewModel.setCollection(collectionNames);
                 ArrayAdapter<String> collectionAdapter = new ArrayAdapter<>(binding.getRoot().getContext(), android.R.layout.select_dialog_item, collectionNames);
                 binding.cusineAutoCompleteTextView.setAdapter(collectionAdapter);
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
@@ -164,14 +167,21 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                     ImageSpan span = new ImageSpan(chip);
                     chip.setBounds(0, 0, chip.getIntrinsicWidth(), chip.getIntrinsicHeight());
                     binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    mViewModel.addCollection(charSequence.subSequence(wordBreakPoints.getLast(), i).toString());
+//                    mViewModel.addCollection(charSequence.subSequence(wordBreakPoints.getLast(), i).toString());
                     wordBreakPoints.add(i + 1);
+                } else {
+                    Log.d(TAG, "onTextChanged: not in if " + charSequence);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 Log.d(TAG, "afterTextChanged: " + editable.toString());
+                List<String> collections = Arrays.asList(editable.toString().split("\\s+"));
+                Log.d(TAG, "afterTextChanged: " + collections.size());
+                if (collections.size() > 0) {
+                    mViewModel.setCollection(collections);
+                }
             }
         });
 
@@ -227,6 +237,16 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         } else {
             Log.d("PhotoPicker", "No media selected");
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -13,5 +13,5 @@ import java.util.List;
 public interface RecipeWithCollectionsDao {
     @Transaction
     @Query("SELECT * FROM recipes WHERE recipeId LIKE :id")
-    public LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id);
+    LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id);
 }
