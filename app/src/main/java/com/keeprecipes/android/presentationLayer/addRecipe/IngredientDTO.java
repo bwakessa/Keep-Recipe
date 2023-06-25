@@ -15,10 +15,10 @@ public class IngredientDTO {
             return oldItem.equals(newItem);
         }
     };
-    public int id;
-    public String name;
-    public String size;
-    public String quantity;
+    public final int id;
+    public final String name;
+    public final String size;
+    public final String quantity;
 
     public IngredientDTO(int id, String name, String size, String quantity) {
         this.id = id;

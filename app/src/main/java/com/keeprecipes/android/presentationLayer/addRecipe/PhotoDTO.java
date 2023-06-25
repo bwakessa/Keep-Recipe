@@ -19,8 +19,8 @@ public class PhotoDTO {
             return oldItem.equals(newItem);
         }
     };
-    public int id;
-    public Uri uri;
+    public final int id;
+    public final Uri uri;
 
     public PhotoDTO(int id, Uri uri) {
         this.id = id;

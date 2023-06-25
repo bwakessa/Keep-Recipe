@@ -35,10 +35,10 @@ import java.util.concurrent.Executors;
 public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo {
 
     private static final String TAG = "RecipeDetailFragment";
+    final List<PhotoDTO> photoDTOList = new ArrayList<>();
     PhotoAdapter photoAdapter;
     IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
-    List<PhotoDTO> photoDTOList = new ArrayList<>();
     private FragmentRecipeDetailBinding binding;
 
     @Nullable
@@ -111,22 +111,19 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     }
 
     void deleteFiles(List<PhotoDTO> photoDTOList) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            photoDTOList.forEach(photoDTO -> {
-                String deleteCommand = "rm -rf " + photoDTO.uri.getPath();
-                Log.d(TAG, "deleteFiles: " + deleteCommand);
-                Runtime runtime = Runtime.getRuntime();
-                Process process;
-                try {
-                    process = runtime.exec(deleteCommand);
-                    process.waitFor();
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                process.destroy();
-            });
-
-        });
+        Executors.newSingleThreadExecutor().execute(() -> photoDTOList.forEach(photoDTO -> {
+            String deleteCommand = "rm -rf " + photoDTO.uri.getPath();
+            Log.d(TAG, "deleteFiles: " + deleteCommand);
+            Runtime runtime = Runtime.getRuntime();
+            Process process;
+            try {
+                process = runtime.exec(deleteCommand);
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            process.destroy();
+        }));
     }
 
     @Override

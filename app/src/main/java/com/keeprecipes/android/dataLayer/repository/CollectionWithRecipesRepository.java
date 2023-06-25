@@ -22,8 +22,6 @@ public class CollectionWithRecipesRepository {
 
     private LiveData<List<CategoriesWithRecipes>> collectionWithRecipesList;
 
-    private LiveData<List<RecipeWithCategories>> recipeWithCollections;
-
     public CollectionWithRecipesRepository(Application application) {
         collectionWithRecipesDao = AppDatabase.getDatabase(application).collectionWithRecipesDao();
         recipeWithCollectionsDao = AppDatabase.getDatabase(application).recipeWithCollectionsDao();
@@ -38,7 +36,7 @@ public class CollectionWithRecipesRepository {
     }
 
     public LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id) {
-        recipeWithCollections = recipeWithCollectionsDao.getRecipeWithCategories(id);
+        LiveData<List<RecipeWithCategories>> recipeWithCollections = recipeWithCollectionsDao.getRecipeWithCategories(id);
         return recipeWithCollections;
     }
 
@@ -57,9 +55,7 @@ public class CollectionWithRecipesRepository {
     }
 
     public void clearPrimaryKey() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Executors.newSingleThreadExecutor().execute(() ->
-                    collectionWithRecipesDao.clearPrimaryKey());
-        });
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(() ->
+                collectionWithRecipesDao.clearPrimaryKey()));
     }
 }

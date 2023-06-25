@@ -28,7 +28,7 @@
                 android:value="" />
         </activity>
         <!--
-            Prompt Google Play services to install the backported photo picker module
+            Prompt Google Play services to install the backport photo picker module
             https://developer.android.com/training/data-storage/shared/photopicker#device-availability
         -->
         <!--suppress AndroidDomInspection -->

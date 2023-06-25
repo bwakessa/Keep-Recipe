@@ -35,7 +35,7 @@ public class Converters {
 //
 //    @TypeConverter
 //    public static ArrayList<String> stringToInstructions(String s) {
-//        // Assume that string is comma seperated
+//        // Assume that string is comma separated
 //        if (s == null) {return null;}
 //        else {
 //            String[] inst = s.split(",");

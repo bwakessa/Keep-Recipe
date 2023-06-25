@@ -33,17 +33,16 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class AddRecipeViewModel extends AndroidViewModel {
+    public final MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
+    public final MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
+    public final MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
+    public final MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
+    public final MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
     private final String TAG = "AddRecipeViewModel";
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
-
     private final Application application;
-    public MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
-    public MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
-    public MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
-    public MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-    public MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
 
     public AddRecipeViewModel(@NonNull Application application) {
         super(application);

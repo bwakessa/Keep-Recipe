@@ -27,11 +27,12 @@ public interface CollectionWithRecipesDao {
     LiveData<List<CategoriesWithRecipes>> getCategoriesWithRecipesById(long collectionId);
 
     @Transaction
-    @Query("SELECT categoriesId\n" +
-            "FROM CategoriesRecipeCrossRef \n" +
-            "GROUP BY categoriesId\n" +
-            "HAVING COUNT(categoriesId) == 1\n" +
-            "AND recipeId == :recipeId;")
+    @Query("""
+            SELECT categoriesId
+            FROM CategoriesRecipeCrossRef\s
+            GROUP BY categoriesId
+            HAVING COUNT(categoriesId) == 1
+            AND recipeId == :recipeId;""")
     List<Long> getUniqueCategories(long recipeId);
 
     @Delete

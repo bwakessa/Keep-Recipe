@@ -79,9 +79,7 @@ public class HomeFragment extends Fragment {
 
         // Floating Action Button to create new recipe
         FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_addRecipeFragment);
-        });
+        fab.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_addRecipeFragment));
     }
 
     @Override

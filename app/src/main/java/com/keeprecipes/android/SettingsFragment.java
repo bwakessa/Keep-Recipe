@@ -62,9 +62,7 @@ public class SettingsFragment extends Fragment {
                 })
                 .show());
 
-        binding.privacyTextView.setOnClickListener(view2 -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://roney.me/")));
-        });
+        binding.privacyTextView.setOnClickListener(view2 -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://roney.me/"))));
     }
 
     void deleteFiles(String appFilePath) throws IOException, InterruptedException {

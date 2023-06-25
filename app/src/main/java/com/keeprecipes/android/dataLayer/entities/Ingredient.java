@@ -1,9 +1,9 @@
 package com.keeprecipes.android.dataLayer.entities;
 
 public class Ingredient {
-    public String name;
-    public int size;
-    public String quantity;
+    public final String name;
+    public final int size;
+    public final String quantity;
 
     public Ingredient(String name, int size, String quantity) {
         this.name = name;

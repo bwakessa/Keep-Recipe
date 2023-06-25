@@ -22,7 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,7 +48,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     // Callback is invoked after the user selects a media item or closes the
     // photo picker.
     // Registers a photo picker activity launcher in single-select mode.
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
+    final ActivityResultLauncher<PickVisualMediaRequest> pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::handleMediaUri);
     // Callback is invoked after the user selects a media item or closes the
     // document picker.
     private FragmentAddRecipeBinding binding;
@@ -78,7 +77,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 binding.cusineAutoCompleteTextView.setAdapter(collectionAdapter);
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
                 binding.cusineAutoCompleteTextView.setThreshold(2);
-                Log.d(TAG, "onViewCreated: #" + collectionNames.toString());
+                Log.d(TAG, "onViewCreated: #" + collectionNames);
                 if (collectionNames.size() > 0) {
                     setChip(collectionNames);
                 }
@@ -104,12 +103,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         recipePhotoAdapter = new RecipePhotoAdapter(this);
         binding.photoListView.setAdapter(recipePhotoAdapter);
 
-        mViewModel.recipe.observe(getViewLifecycleOwner(), new Observer<RecipeDTO>() {
-            @Override
-            public void onChanged(RecipeDTO recipeDTO) {
-                Log.d(TAG, "onChanged: recipe" + recipeDTO);
-            }
-        });
+        mViewModel.recipe.observe(getViewLifecycleOwner(), recipeDTO -> Log.d(TAG, "onChanged: recipe" + recipeDTO));
 
         mViewModel.ingredients.observe(getViewLifecycleOwner(), ingredientAdapter::submitList);
         mViewModel.photos.observe(getViewLifecycleOwner(), recipePhotoAdapter::submitList);
@@ -127,11 +121,11 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                     throw new RuntimeException(e);
                 }
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
                 return true;
             } else if (item.getItemId() == R.id.action_delete) {
                 Toast.makeText(getActivity(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
                 return true;
             }
             return false;
@@ -185,13 +179,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             }
         });
 
-        binding.addIngredientButton.setOnClickListener(v -> {
-            mViewModel.addIngredient();
-        });
+        binding.addIngredientButton.setOnClickListener(v -> mViewModel.addIngredient());
 
-        binding.removeIngredientButton.setOnClickListener(v -> {
-            mViewModel.removeIngredient();
-        });
+        binding.removeIngredientButton.setOnClickListener(v -> mViewModel.removeIngredient());
 
         binding.addPhotoButton.setOnClickListener(v -> {
             // Launch the photo picker and allow the user to choose only images.
@@ -221,12 +211,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             wordBreakPoints.add(lastPoint);
         }
         binding.cusineAutoCompleteTextView.setText(spannableString);
-//        if (startPoint == 0) {
-//
-//        } else {
-////            binding.cusineAutoCompleteTextView.getText().setSpan(span, wordBreakPoints.getLast(), i, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-////            binding.cusineAutoCompleteTextView.getText().setSpan(spannableString);
-//        }
     }
 
     private void handleMediaUri(Uri uri) {
@@ -237,11 +221,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
         } else {
             Log.d("PhotoPicker", "No media selected");
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override

@@ -65,22 +65,16 @@ public class RecipeRepository {
     }
 
     public void deleteAllRecipes(Application application) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Executors.newSingleThreadExecutor().execute(() ->
-                    AppDatabase.getDatabase(application).clearAllTables());
-        });
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(() ->
+                AppDatabase.getDatabase(application).clearAllTables()));
     }
 
     public void clearPrimaryKey() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Executors.newSingleThreadExecutor().execute(mRecipeDao::clearPrimaryKey);
-        });
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(mRecipeDao::clearPrimaryKey));
     }
 
     public void update(Recipe recipe) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            mRecipeDao.updateRecipe(recipe);
-        });
+        Executors.newSingleThreadExecutor().execute(() -> mRecipeDao.updateRecipe(recipe));
     }
 
     public LiveData<List<Recipe>> searchRecipe(String query) {

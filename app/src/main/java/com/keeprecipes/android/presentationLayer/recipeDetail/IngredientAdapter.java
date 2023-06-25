@@ -33,7 +33,7 @@ public class IngredientAdapter extends ListAdapter<IngredientDTO, IngredientAdap
         // contents of the view with that element
         IngredientDTO ingredient = getItem(position);
         holder.bind(ingredient);
-        Log.d("Ingedient Adapter", "onBindViewHolder: " + getItemCount());
+        Log.d("Ingredient Adapter", "onBindViewHolder: " + getItemCount());
     }
 
     /**
