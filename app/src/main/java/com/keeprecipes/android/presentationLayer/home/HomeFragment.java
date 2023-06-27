@@ -21,7 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements ChipClickListener {
 
     final String TAG = "HomeFragment";
     HomeViewModel homeViewModel;
@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
         binding.recipeListView.setAdapter(recipeAdapter);
         homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter();
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
         binding.recipeCategoryListView.setAdapter(categoriesAdapter);
         homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesAdapter::submitList);
 
@@ -61,19 +61,19 @@ public class HomeFragment extends Fragment {
                     if (actionId == EditorInfo.IME_NULL
                             && event.getAction() == KeyEvent.ACTION_DOWN) {
                         binding.searchBar.setText(binding.searchView.getText());
-//                        binding.categoriesChipGroup.setVisibility(View.GONE);
+                        binding.recipeCategoryListView.setVisibility(View.GONE);
                         homeViewModel.searchRecipe(String.valueOf(binding.searchView.getText())).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
-                        binding.searchView.hide();
                     }
                     Log.d(TAG, "setOnEditorActionListener: " + binding.searchView.getText());
-//                    binding.searchView.hide();
-                    return false;
+                    binding.searchView.hide();
+                    return true;
                 });
 
         binding.searchView.getToolbar().setNavigationOnClickListener(view1 -> {
             Log.d(TAG, "onClick: back button is pressed");
             binding.searchBar.clearText();
             binding.searchView.hide();
+            binding.recipeCategoryListView.setVisibility(View.VISIBLE);
             homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
         });
 
@@ -92,5 +92,10 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void chipClicked(long categoryId) {
+        Log.d(TAG, "chipClicked: " + categoryId);
     }
 }

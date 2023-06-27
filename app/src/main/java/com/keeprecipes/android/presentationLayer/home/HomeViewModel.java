@@ -25,10 +25,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class HomeViewModel extends AndroidViewModel {
-    public final LiveData<Recipe> selectedRecipe;
     final String TAG = "AndroidViewModel";
+    public final LiveData<Recipe> selectedRecipe;
     private final LiveData<List<Recipe>> recipe;
     private final MutableLiveData<Integer> recipeId;
+    private final MutableLiveData<List<String>> selectedCollection;
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -41,6 +42,7 @@ public class HomeViewModel extends AndroidViewModel {
         this.recipe = recipeRepository.getAllRecipes();
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
+        this.selectedCollection = new MutableLiveData<>();
     }
 
     public LiveData<List<Recipe>> getRecipes() {

@@ -14,8 +14,8 @@ allprojects {
 android {
     namespace 'com.keeprecipes.android'
     compileSdk 34
-//    Wait for Google release support for SdkExtension for api level 34
-//    compileSdkExtension 2
+//    Turn this on after 34 becomes stable
+//    compileSdkExtension 4
 
     defaultConfig {
         applicationId "com.keeprecipes.android"

@@ -12,8 +12,11 @@ import com.keeprecipes.android.databinding.CategoryItemBinding;
 
 public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.ViewHolder> {
 
-    public CategoriesAdapter() {
+    private final ChipClickListener chipClickListener;
+
+    public CategoriesAdapter(ChipClickListener chipClickListener) {
         super(Category.DIFF_CALLBACK);
+        this.chipClickListener = chipClickListener;
     }
 
     @NonNull
@@ -25,7 +28,7 @@ public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.V
     @Override
     public void onBindViewHolder(@NonNull CategoriesAdapter.ViewHolder holder, int position) {
         Category categories = getItem(position);
-        holder.bind(categories);
+        holder.bind(categories, chipClickListener);
     }
 
     /**
@@ -41,8 +44,10 @@ public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.V
             categoryItemBinding = binding;
         }
 
-        public void bind(Category category) {
+        public void bind(Category category, ChipClickListener chipClickListener) {
             categoryItemBinding.setCategory(category);
+            categoryItemBinding.setItemClickListener(chipClickListener);
         }
+
     }
 }
