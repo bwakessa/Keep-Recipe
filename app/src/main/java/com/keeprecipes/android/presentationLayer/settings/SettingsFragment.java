@@ -1,4 +1,4 @@
-package com.keeprecipes.android;
+package com.keeprecipes.android.presentationLayer.settings;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentSettingsBinding;
 import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
@@ -77,5 +78,11 @@ public class SettingsFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

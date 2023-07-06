@@ -43,4 +43,10 @@ public class SearchFragment extends Fragment {
             searchViewModel.searchRecipe(searchArg).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
