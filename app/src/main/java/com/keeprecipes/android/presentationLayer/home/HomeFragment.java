@@ -97,5 +97,6 @@ public class HomeFragment extends Fragment implements ChipClickListener {
     @Override
     public void chipClicked(long categoryId) {
         Log.d(TAG, "chipClicked: " + categoryId);
+
     }
 }

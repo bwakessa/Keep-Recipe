@@ -5,26 +5,25 @@
 
         <variable
             name="category"
-            type="com.keeprecipes.android.dataLayer.entities.Category" />
-
-        <variable
-            name="itemClickListener"
-            type="com.keeprecipes.android.presentationLayer.home.ChipClickListener" />
+            type="com.keeprecipes.android.presentationLayer.home.CategoriesDTO" />
     </data>
 
-
-    <FrameLayout
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip"
+        style="@style/Widget.Material3.Chip.Suggestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp">
+        android:layout_marginEnd="6dp"
+        android:checked="@={category.selected}"
+        android:text="@={category.name}" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip"
-            style="@style/Widget.Material3.Chip.Suggestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:onClick="@{() -> itemClickListener.chipClicked(category.categoriesId)}"
-            android:text="@={category.name}" />
-    </FrameLayout>
+
+    <!--    <FrameLayout-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        -->
+    <!--        android:layout_marginEnd="6dp">-->
+
+
+    <!--    </FrameLayout>-->
 </layout>

@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
-import com.keeprecipes.android.dataLayer.entities.Category;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
@@ -23,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class HomeViewModel extends AndroidViewModel {
     final String TAG = "AndroidViewModel";
@@ -30,6 +30,8 @@ public class HomeViewModel extends AndroidViewModel {
     private final LiveData<List<Recipe>> recipe;
     private final MutableLiveData<Integer> recipeId;
     private final MutableLiveData<List<String>> selectedCollection;
+
+    private MutableLiveData<List<CategoriesDTO>> categories;
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -49,8 +51,13 @@ public class HomeViewModel extends AndroidViewModel {
         return recipe;
     }
 
-    public LiveData<List<Category>> getCollections() {
-        return collectionRepository.getAllCollections();
+    public LiveData<List<CategoriesDTO>> getCollections() {
+        this.categories = (MutableLiveData<List<CategoriesDTO>>) Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
+        return this.categories;
+    }
+
+    public void setSelectedCollection(long id){
+
     }
 
     public LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipesById(long id) {

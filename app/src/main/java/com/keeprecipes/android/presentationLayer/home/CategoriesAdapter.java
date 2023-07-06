@@ -1,21 +1,22 @@
 package com.keeprecipes.android.presentationLayer.home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keeprecipes.android.dataLayer.entities.Category;
 import com.keeprecipes.android.databinding.CategoryItemBinding;
 
-public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.ViewHolder> {
+public class CategoriesAdapter extends ListAdapter<CategoriesDTO, CategoriesAdapter.ViewHolder> {
 
     private final ChipClickListener chipClickListener;
 
     public CategoriesAdapter(ChipClickListener chipClickListener) {
-        super(Category.DIFF_CALLBACK);
+        super(CategoriesDTO.DIFF_CALLBACK);
         this.chipClickListener = chipClickListener;
     }
 
@@ -27,7 +28,7 @@ public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.V
 
     @Override
     public void onBindViewHolder(@NonNull CategoriesAdapter.ViewHolder holder, int position) {
-        Category categories = getItem(position);
+        CategoriesDTO categories = getItem(position);
         holder.bind(categories, chipClickListener);
     }
 
@@ -44,9 +45,14 @@ public class CategoriesAdapter extends ListAdapter<Category, CategoriesAdapter.V
             categoryItemBinding = binding;
         }
 
-        public void bind(Category category, ChipClickListener chipClickListener) {
+        public void bind(CategoriesDTO category, ChipClickListener chipClickListener) {
             categoryItemBinding.setCategory(category);
-            categoryItemBinding.setItemClickListener(chipClickListener);
+            categoryItemBinding.chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chipClickListener.chipClicked(category.categoriesId);
+                }
+            });
         }
 
     }
