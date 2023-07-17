@@ -6,10 +6,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
@@ -25,13 +25,13 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class HomeViewModel extends AndroidViewModel {
-    final String TAG = "AndroidViewModel";
     public final LiveData<Recipe> selectedRecipe;
+    final String TAG = "AndroidViewModel";
     private final LiveData<List<Recipe>> recipe;
     private final MutableLiveData<Integer> recipeId;
-    private final MutableLiveData<List<String>> selectedCollection;
-
-    private MutableLiveData<List<CategoriesDTO>> categories;
+    private final MutableLiveData<Long> selectedCategory;
+    private final LiveData<List<CategoriesDTO>> categories;
+    private final MediatorLiveData<List<CategoriesDTO>> filteredCategoryRecipe;
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -41,27 +41,51 @@ public class HomeViewModel extends AndroidViewModel {
         this.recipeRepository = new RecipeRepository(application);
         this.collectionRepository = new CollectionRepository(application);
         this.collectionWithRecipesRepository = new CollectionWithRecipesRepository(application);
-        this.recipe = recipeRepository.getAllRecipes();
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
-        this.selectedCollection = new MutableLiveData<>();
+        this.selectedCategory = new MutableLiveData<>((long) -2);
+        this.categories = Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
+        this.filteredCategoryRecipe = new MediatorLiveData<>();
+        this.filteredCategoryRecipe.addSource(this.categories, filteredCategoryRecipe::setValue);
+        this.filteredCategoryRecipe.addSource(this.selectedCategory, selectedCategoryId -> {
+            List<CategoriesDTO> c = filteredCategoryRecipe.getValue();
+            if (c != null && selectedCategoryId != -2) {
+                c.forEach(categoriesDTO -> {
+                    Log.d(TAG, "HomeViewModel: selectedCategoryId outside " + selectedCategoryId + categoriesDTO.name + categoriesDTO.categoriesId);
+                    if (categoriesDTO.categoriesId != selectedCategoryId) {
+                        Log.d(TAG, "HomeViewModel: selectedCategoryId inside " + selectedCategoryId + categoriesDTO.name + categoriesDTO.categoriesId);
+                        categoriesDTO.selected = false;
+                    } else {
+                        categoriesDTO.selected = true;
+                    }
+                });
+                filteredCategoryRecipe.setValue(c);
+            }
+        });
+        this.recipe = Transformations.switchMap(selectedCategory, selectedCategoryId -> {
+            Log.d(TAG, "HomeViewModel: " + selectedCategoryId);
+            if (selectedCategoryId == -1 || selectedCategoryId == -2) {
+                return recipeRepository.getAllRecipes();
+            } else {
+                return collectionWithRecipesRepository.getCollectionWithRecipesById(selectedCategoryId);
+            }
+        });
     }
 
     public LiveData<List<Recipe>> getRecipes() {
         return recipe;
     }
 
-    public LiveData<List<CategoriesDTO>> getCollections() {
-        this.categories = (MutableLiveData<List<CategoriesDTO>>) Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
-        return this.categories;
+    public MediatorLiveData<List<CategoriesDTO>> getCollections() {
+        return this.filteredCategoryRecipe;
     }
 
-    public void setSelectedCollection(long id){
-
-    }
-
-    public LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipesById(long id) {
-        return collectionWithRecipesRepository.getCollectionWithRecipesById(id);
+    public void setSelectedCategory(long categoryId) {
+        if (this.selectedCategory.getValue() == categoryId) {
+            this.selectedCategory.setValue((long) -1);
+        } else {
+            this.selectedCategory.setValue(categoryId);
+        }
     }
 
     public void setRecipeId(int id) {

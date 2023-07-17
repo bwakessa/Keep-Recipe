@@ -21,10 +21,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentHomeBinding;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class HomeFragment extends Fragment implements ChipClickListener {
 
     final String TAG = "HomeFragment";
     HomeViewModel homeViewModel;
+    RecipeAdapter recipeAdapter;
+    CategoriesAdapter categoriesAdapter;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -40,13 +45,18 @@ public class HomeFragment extends Fragment implements ChipClickListener {
         homeViewModel =
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-        RecipeAdapter recipeAdapter = new RecipeAdapter();
+        recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
         homeViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeAdapter::submitList);
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
+        categoriesAdapter = new CategoriesAdapter(this);
         binding.recipeCategoryListView.setAdapter(categoriesAdapter);
-        homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesAdapter::submitList);
+        binding.recipeCategoryListView.setItemAnimator(null);
+        homeViewModel.getCollections().observe(getViewLifecycleOwner(), categoriesDTOS -> {
+            Log.d(TAG, "onChanged: categories changed");
+            List<CategoriesDTO> categoryCopy = categoriesDTOS.stream().map(item -> new CategoriesDTO(item.categoriesId, item.name, item.selected)).collect(Collectors.toList());
+            categoriesAdapter.submitList(categoryCopy);
+        });
 
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
@@ -97,6 +107,6 @@ public class HomeFragment extends Fragment implements ChipClickListener {
     @Override
     public void chipClicked(long categoryId) {
         Log.d(TAG, "chipClicked: " + categoryId);
-
+        homeViewModel.setSelectedCategory(categoryId);
     }
 }

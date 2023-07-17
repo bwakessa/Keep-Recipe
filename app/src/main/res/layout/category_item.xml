@@ -14,16 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
+        android:checkable="true"
         android:checked="@={category.selected}"
         android:text="@={category.name}" />
-
-
-    <!--    <FrameLayout-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        -->
-    <!--        android:layout_marginEnd="6dp">-->
-
-
-    <!--    </FrameLayout>-->
 </layout>

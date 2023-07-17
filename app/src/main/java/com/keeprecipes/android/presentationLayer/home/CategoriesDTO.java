@@ -6,6 +6,19 @@ import androidx.recyclerview.widget.DiffUtil;
 import java.util.Objects;
 
 public class CategoriesDTO {
+    public static final DiffUtil.ItemCallback<CategoriesDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull CategoriesDTO oldItem, @NonNull CategoriesDTO newItem) {
+            boolean b = Objects.equals(oldItem.categoriesId, newItem.categoriesId);
+            return b;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull CategoriesDTO oldItem, @NonNull CategoriesDTO newItem) {
+            boolean b = oldItem.equals(newItem);
+            return b;
+        }
+    };
     public long categoriesId;
     public String name;
     public boolean selected;
@@ -15,18 +28,6 @@ public class CategoriesDTO {
         this.name = name;
         this.selected = selected;
     }
-
-    public static final DiffUtil.ItemCallback<CategoriesDTO> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull CategoriesDTO oldItem, @NonNull CategoriesDTO newItem) {
-            return Objects.equals(oldItem.categoriesId, newItem.categoriesId);
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull CategoriesDTO oldItem, @NonNull CategoriesDTO newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 
     @Override
     public boolean equals(Object o) {

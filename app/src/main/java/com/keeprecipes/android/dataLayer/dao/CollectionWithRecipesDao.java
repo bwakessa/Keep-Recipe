@@ -10,6 +10,7 @@ import androidx.room.Transaction;
 
 import com.keeprecipes.android.dataLayer.entities.CategoriesRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
+import com.keeprecipes.android.dataLayer.entities.Recipe;
 
 import java.util.List;
 
@@ -23,8 +24,8 @@ public interface CollectionWithRecipesDao {
     LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipes();
 
     @Transaction
-    @Query("SELECT * FROM CategoriesRecipeCrossRef WHERE categoriesId = :collectionId")
-    LiveData<List<CategoriesWithRecipes>> getCategoriesWithRecipesById(long collectionId);
+    @Query("SELECT * FROM recipes LEFT JOIN CategoriesRecipeCrossRef WHERE recipes.recipeId = CategoriesRecipeCrossRef.recipeId AND categoriesId = :collectionId")
+    LiveData<List<Recipe>> getCategoriesWithRecipesById(long collectionId);
 
     @Transaction
     @Query("""

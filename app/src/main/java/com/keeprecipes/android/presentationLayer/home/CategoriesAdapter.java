@@ -1,8 +1,6 @@
 package com.keeprecipes.android.presentationLayer.home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -47,12 +45,11 @@ public class CategoriesAdapter extends ListAdapter<CategoriesDTO, CategoriesAdap
 
         public void bind(CategoriesDTO category, ChipClickListener chipClickListener) {
             categoryItemBinding.setCategory(category);
-            categoryItemBinding.chip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chipClickListener.chipClicked(category.categoriesId);
-                }
-            });
+//            categoryItemBinding.chip.setOnCheckedChangeListener((compoundButton, b) -> {
+//                chipClickListener.chipClicked(category.categoriesId);
+//                Log.d("das", "bind: "+b);
+//            });
+            categoryItemBinding.chip.setOnClickListener(view -> chipClickListener.chipClicked(category.categoriesId));
         }
 
     }

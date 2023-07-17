@@ -9,6 +9,7 @@ import com.keeprecipes.android.dataLayer.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.dataLayer.dao.RecipeWithCollectionsDao;
 import com.keeprecipes.android.dataLayer.entities.CategoriesRecipeCrossRef;
 import com.keeprecipes.android.dataLayer.entities.CategoriesWithRecipes;
+import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.entities.RecipeWithCategories;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CollectionWithRecipesRepository {
         recipeWithCollectionsDao = AppDatabase.getDatabase(application).recipeWithCollectionsDao();
     }
 
-    public LiveData<List<CategoriesWithRecipes>> getCollectionWithRecipesById(long categoriesId) {
+    public LiveData<List<Recipe>> getCollectionWithRecipesById(long categoriesId) {
         return collectionWithRecipesDao.getCategoriesWithRecipesById(categoriesId);
     }
 
