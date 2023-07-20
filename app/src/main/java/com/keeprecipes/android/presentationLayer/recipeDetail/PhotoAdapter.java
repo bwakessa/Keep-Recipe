@@ -55,7 +55,7 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
                     .fit()
                     .centerCrop()
                     .into(recipeImageView);
-//            recipeImageView.setOnClickListener(onClickListener);
+            recipeImageView.setOnClickListener(onClickListener);
         }
     }
 }

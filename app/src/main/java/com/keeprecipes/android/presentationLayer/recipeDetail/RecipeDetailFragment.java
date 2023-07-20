@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 public class RecipeDetailFragment extends Fragment implements PhotoClickListener {
 
     private static final String TAG = "RecipeDetailFragment";
-    final List<PhotoDTO> photoDTOList = new ArrayList<>();
+    private List<PhotoDTO> photoDTOList;
     PhotoAdapter photoAdapter;
     IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
@@ -92,6 +92,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                 binding.setRecipe(recipe);
                 photoAdapter = new PhotoAdapter(this);
                 binding.photoListView.setAdapter(photoAdapter);
+                photoDTOList = new ArrayList<>();
                 if (recipe.photos != null) {
                     File appDir = getContext().getFilesDir();
                     // TODO: Change to streams
