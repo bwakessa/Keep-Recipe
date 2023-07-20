@@ -58,10 +58,18 @@
         <action
             android:id="@+id/action_recipeDetailFragment_to_addRecipeFragment"
             app:destination="@id/addRecipeFragment" />
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_photoDetailFragment"
+            app:destination="@id/photoDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.keeprecipes.android.presentationLayer.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/photoDetailFragment"
+        android:name="com.keeprecipes.android.PhotoDetailFragment"
+        android:label="fragment_photo_detail"
+        tools:layout="@layout/fragment_photo_detail" />
 </navigation>

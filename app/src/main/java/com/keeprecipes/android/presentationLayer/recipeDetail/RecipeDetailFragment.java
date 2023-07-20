@@ -15,9 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.keeprecipes.android.PhotoClickListener;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo {
+public class RecipeDetailFragment extends Fragment implements PhotoClickListener {
 
     private static final String TAG = "RecipeDetailFragment";
     final List<PhotoDTO> photoDTOList = new ArrayList<>();
@@ -60,6 +62,8 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(
                 toolbar, navController, appBarConfiguration);
+
+//        ActionRecipeDetailFragmentToPhotoDetailFragment action = new RecipeDetailFragmentDirections().actionRecipeDetailFragmentToPhotoDetailFragment();
 
         binding.toolbar.inflateMenu(R.menu.recipe_detail_menu);
         binding.toolbar.setOnMenuItemClickListener(item -> {
@@ -133,7 +137,8 @@ public class RecipeDetailFragment extends Fragment implements PhotoAdapter.Photo
     }
 
     @Override
-    public void removeItem(int position) {
-
+    public void photoClicked(int photoId) {
+        Log.d(TAG, "photoClicked: " + photoId);
+//        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
     }
 }

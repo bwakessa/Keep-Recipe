@@ -9,17 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.keeprecipes.android.PhotoClickListener;
 import com.keeprecipes.android.databinding.RecipeDetailPhotoItemBinding;
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
 import com.squareup.picasso.Picasso;
 
 public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder> {
+    private final PhotoClickListener photoClickListener;
 
-    private final Photo recipePhoto;
-
-    public PhotoAdapter(Photo recipePhoto) {
+    public PhotoAdapter(PhotoClickListener photoClickListener) {
         super(PhotoDTO.DIFF_CALLBACK);
-        this.recipePhoto = recipePhoto;
+        this.photoClickListener = photoClickListener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -32,11 +32,7 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull PhotoAdapter.ViewHolder holder, int position) {
-        holder.bind(getItem(position), view -> recipePhoto.removeItem(holder.getAdapterPosition()));
-    }
-
-    public interface Photo {
-        void removeItem(int position);
+        holder.bind(getItem(position), view -> photoClickListener.photoClicked(position));
     }
 
     /**
@@ -59,6 +55,7 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
                     .fit()
                     .centerCrop()
                     .into(recipeImageView);
+//            recipeImageView.setOnClickListener(onClickListener);
         }
     }
 }
