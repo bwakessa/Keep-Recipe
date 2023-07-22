@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -48,6 +49,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRecipeDetailBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         return binding.getRoot();
     }
 
@@ -139,7 +141,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
 
     @Override
     public void photoClicked(int photoId) {
-        Log.d(TAG, "photoClicked: " + photoId);
-//        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
+        Log.d(TAG, "photoClicked: " + photoDTOList.get(photoId).uri);
+        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
     }
 }

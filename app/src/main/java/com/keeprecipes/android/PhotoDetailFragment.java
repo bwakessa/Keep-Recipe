@@ -1,6 +1,6 @@
 package com.keeprecipes.android;
 
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +9,13 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.keeprecipes.android.databinding.FragmentPhotoDetailBinding;
 
@@ -25,12 +29,22 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPhotoDetailBinding.inflate(inflater, container, false);
+        getActivity().getWindow().setNavigationBarColor(Color.BLACK);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        NavController navController = Navigation.findNavController(view);
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        NavigationUI.setupWithNavController(
+                toolbar, navController, appBarConfiguration);
+
         pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle());
 //        pagerAdapter.addFragment(new PhotoDetailImageFragment(new Uri("df")));
         binding.imageViewpager.setAdapter(pagerAdapter);
@@ -38,11 +52,7 @@ public class PhotoDetailFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (binding.imageViewpager.getCurrentItem() == 0) {
-                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
-                } else {
-                    binding.imageViewpager.setCurrentItem(binding.imageViewpager.getCurrentItem() - 1);
-                }
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             }
         });
     }

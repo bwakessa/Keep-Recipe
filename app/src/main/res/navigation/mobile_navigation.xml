@@ -70,6 +70,6 @@
     <fragment
         android:id="@+id/photoDetailFragment"
         android:name="com.keeprecipes.android.PhotoDetailFragment"
-        android:label="fragment_photo_detail"
+        android:label=""
         tools:layout="@layout/fragment_photo_detail" />
 </navigation>
