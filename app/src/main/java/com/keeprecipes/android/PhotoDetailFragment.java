@@ -23,9 +23,9 @@ import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
 
 public class PhotoDetailFragment extends Fragment {
+    private final String TAG = "PhotoDetailFragment";
     private FragmentPhotoDetailBinding binding;
     private ScreenSlidePagerAdapter pagerAdapter;
-    private final String TAG = "PhotoDetailFragment";
 
     @Nullable
     @Override

@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -38,10 +37,10 @@ import java.util.concurrent.Executors;
 public class RecipeDetailFragment extends Fragment implements PhotoClickListener {
 
     private static final String TAG = "RecipeDetailFragment";
-    private List<PhotoDTO> photoDTOList;
     PhotoAdapter photoAdapter;
     IngredientAdapter ingredientAdapter;
     Recipe mRecipe;
+    private List<PhotoDTO> photoDTOList;
     private FragmentRecipeDetailBinding binding;
 
     @Nullable
@@ -112,7 +111,10 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                     for (int a = 0; a < recipe.ingredients.size(); a++) {
                         ingredientDTOList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
                     }
+                    binding.ingredientsTitle.setVisibility(View.VISIBLE);
                     ingredientAdapter.submitList(ingredientDTOList);
+                } else {
+                    binding.ingredientsTitle.setVisibility(View.INVISIBLE);
                 }
             }
         });

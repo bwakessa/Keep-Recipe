@@ -18,11 +18,9 @@ import java.io.File;
 
 public class PhotoDetailImageFragment extends Fragment {
 
-    private PhotoDetailImageSlideBinding binding;
-
-    private Uri photoUri;
-
     private final String TAG = "PhotoDetailImageFragment";
+    private PhotoDetailImageSlideBinding binding;
+    private Uri photoUri;
 
     public static PhotoDetailImageFragment newInstance(Uri photoUri) {
 

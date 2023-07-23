@@ -8,7 +8,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentStateAdapter {

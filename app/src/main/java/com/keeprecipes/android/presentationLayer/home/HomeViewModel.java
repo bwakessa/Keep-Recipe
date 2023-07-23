@@ -95,12 +95,12 @@ public class HomeViewModel extends AndroidViewModel {
         recipeId.setValue(id);
     }
 
-    public void setPhotoDTOlist(List<PhotoDTO> photoDTOlist) {
-        this.photoDTOlist.setValue(photoDTOlist);
-    }
-
     public MutableLiveData<List<PhotoDTO>> getPhotoDTOlist() {
         return this.photoDTOlist;
+    }
+
+    public void setPhotoDTOlist(List<PhotoDTO> photoDTOlist) {
+        this.photoDTOlist.setValue(photoDTOlist);
     }
 
     public void deleteRecipe(Recipe recipe) {
