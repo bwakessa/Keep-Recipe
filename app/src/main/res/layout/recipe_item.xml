@@ -7,9 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     app:cardBackgroundColor="?attr/colorOnSurfaceInverse"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="1dp"
-    app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -17,11 +16,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/recipe_image"
             android:layout_width="match_parent"
             android:layout_height="175dp"
             android:layout_marginBottom="8dp"
+            app:shapeAppearanceOverlay="@style/rounded_corner"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
