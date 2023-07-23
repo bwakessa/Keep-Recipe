@@ -102,6 +102,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                         photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
                     }
                     photoAdapter.submitList(photoDTOList);
+                    homeViewModel.setPhotoDTOlist(photoDTOList);
                 }
                 ingredientAdapter = new IngredientAdapter();
                 binding.ingredientsListView.setAdapter(ingredientAdapter);
@@ -140,8 +141,11 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     }
 
     @Override
-    public void photoClicked(int photoId) {
+    public void photoClicked(View view, int photoId) {
         Log.d(TAG, "photoClicked: " + photoDTOList.get(photoId).uri);
-        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
+//        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
+        RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToPhotoDetailFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToPhotoDetailFragment();
+        action.setPhotoId(photoId);
+        Navigation.findNavController(view).navigate(action);
     }
 }

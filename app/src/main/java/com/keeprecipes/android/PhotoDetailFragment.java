@@ -2,28 +2,32 @@ package com.keeprecipes.android;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.keeprecipes.android.databinding.FragmentPhotoDetailBinding;
+import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
 
 public class PhotoDetailFragment extends Fragment {
 
     private FragmentPhotoDetailBinding binding;
     private ScreenSlidePagerAdapter pagerAdapter;
+
+    private final String TAG = "PhotoDetailFragment";
 
     @Nullable
     @Override
@@ -37,6 +41,7 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        HomeViewModel homeViewModel = new ViewModelProvider(getActivity()).get(HomeViewModel.class);
 
         NavController navController = Navigation.findNavController(view);
         AppBarConfiguration appBarConfiguration =
@@ -45,15 +50,13 @@ public class PhotoDetailFragment extends Fragment {
         NavigationUI.setupWithNavController(
                 toolbar, navController, appBarConfiguration);
 
-        pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle());
-//        pagerAdapter.addFragment(new PhotoDetailImageFragment(new Uri("df")));
-        binding.imageViewpager.setAdapter(pagerAdapter);
+        int photoId = PhotoDetailFragmentArgs.fromBundle(getArguments()).getPhotoId();
+        Log.d(TAG, "onViewCreated: " + photoId);
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            }
-        });
+        homeViewModel.getPhotoDTOlist().observe(getViewLifecycleOwner(), photoDTOS -> {
+                    pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle(), photoDTOS);
+                    binding.imageViewpager.setAdapter(pagerAdapter);
+                }
+        );
     }
 }

@@ -2,6 +2,7 @@ package com.keeprecipes.android;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +14,40 @@ import androidx.fragment.app.Fragment;
 import com.keeprecipes.android.databinding.PhotoDetailImageSlideBinding;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 public class PhotoDetailImageFragment extends Fragment {
 
     private PhotoDetailImageSlideBinding binding;
 
     private Uri photoUri;
 
-    public PhotoDetailImageFragment(Uri photoUri) {
-        this.photoUri = photoUri;
+    private final String TAG = "PhotoDetailImageFragment";
+
+    public static PhotoDetailImageFragment newInstance(Uri photoUri) {
+
+        Bundle args = new Bundle();
+        args.putString("Photo Uri", photoUri.getPath());
+
+        PhotoDetailImageFragment fragment = new PhotoDetailImageFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = PhotoDetailImageSlideBinding.inflate(inflater, container, false);
+        this.photoUri = Uri.parse(getArguments().getString("Photo Uri"));
+        Log.d(TAG, "onCreateView: " + getArguments().getString("Photo Uri"));
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Picasso.get()
-                .load(this.photoUri)
+        File file = new File(String.valueOf(this.photoUri));
+        Picasso.get().load(file)
                 .into(binding.recipeFullImage);
     }
 }

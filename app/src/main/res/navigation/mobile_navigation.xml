@@ -71,5 +71,10 @@
         android:id="@+id/photoDetailFragment"
         android:name="com.keeprecipes.android.PhotoDetailFragment"
         android:label=""
-        tools:layout="@layout/fragment_photo_detail" />
+        tools:layout="@layout/fragment_photo_detail" >
+        <argument
+            android:name="photoId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>

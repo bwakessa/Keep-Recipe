@@ -14,6 +14,7 @@ import com.keeprecipes.android.dataLayer.entities.Recipe;
 import com.keeprecipes.android.dataLayer.repository.CollectionRepository;
 import com.keeprecipes.android.dataLayer.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.dataLayer.repository.RecipeRepository;
+import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class HomeViewModel extends AndroidViewModel {
     private final MutableLiveData<Long> selectedCategory;
     private final LiveData<List<CategoriesDTO>> categories;
     private final MediatorLiveData<List<CategoriesDTO>> filteredCategoryRecipe;
+    private final MutableLiveData<List<PhotoDTO>> photoDTOlist;
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -43,6 +45,7 @@ public class HomeViewModel extends AndroidViewModel {
         this.collectionWithRecipesRepository = new CollectionWithRecipesRepository(application);
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
+        this.photoDTOlist = new MutableLiveData<>();
         this.selectedCategory = new MutableLiveData<>((long) -2);
         this.categories = Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
         this.filteredCategoryRecipe = new MediatorLiveData<>();
@@ -90,6 +93,14 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void setRecipeId(int id) {
         recipeId.setValue(id);
+    }
+
+    public void setPhotoDTOlist(List<PhotoDTO> photoDTOlist) {
+        this.photoDTOlist.setValue(photoDTOlist);
+    }
+
+    public MutableLiveData<List<PhotoDTO>> getPhotoDTOlist() {
+        return this.photoDTOlist;
     }
 
     public void deleteRecipe(Recipe recipe) {

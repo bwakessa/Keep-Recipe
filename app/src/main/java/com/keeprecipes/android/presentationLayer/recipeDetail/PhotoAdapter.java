@@ -32,7 +32,7 @@ public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull PhotoAdapter.ViewHolder holder, int position) {
-        holder.bind(getItem(position), view -> photoClickListener.photoClicked(position));
+        holder.bind(getItem(position), view -> photoClickListener.photoClicked(view, position));
     }
 
     /**

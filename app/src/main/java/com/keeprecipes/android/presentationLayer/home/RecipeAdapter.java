@@ -65,6 +65,7 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecipeAdapter.ViewHolder>
             recipeTitle.setText(recipe.title);
             if (!Util.isEmpty(recipe.photos)) {
                 File file = new File(recipeImage.getContext().getFilesDir(), recipe.photos.get(0));
+//                Picasso.get().setLoggingEnabled(true);
                 Picasso.get()
                         .load(file)
                         .fit()

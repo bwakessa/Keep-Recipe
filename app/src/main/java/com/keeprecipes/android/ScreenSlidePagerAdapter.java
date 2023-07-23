@@ -6,14 +6,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.keeprecipes.android.presentationLayer.addRecipe.PhotoDTO;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
 
-    private ArrayList<Fragment> fragments = new ArrayList<>();
+//    private ArrayList<Fragment> fragments = new ArrayList<>();
+    private List<PhotoDTO> photoDTOList;
 
-    public ScreenSlidePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    public ScreenSlidePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, List<PhotoDTO> photoDTOList) {
         super(fragmentManager, lifecycle);
+        this.photoDTOList = photoDTOList;
     }
 
 //    public ScreenSlidePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -23,16 +28,11 @@ public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-//        return new ScreenSlidePagerAdapter();
-        return fragments.get(position);
-    }
-
-    public void addFragment(Fragment fragment) {
-        fragments.add(fragment);
+        return new PhotoDetailImageFragment().newInstance(photoDTOList.get(position).uri);
     }
 
     @Override
     public int getItemCount() {
-        return fragments.size();
+        return photoDTOList.size();
     }
 }
