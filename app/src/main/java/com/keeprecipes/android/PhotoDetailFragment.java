@@ -23,10 +23,8 @@ import com.keeprecipes.android.presentationLayer.home.HomeViewModel;
 
 
 public class PhotoDetailFragment extends Fragment {
-
     private FragmentPhotoDetailBinding binding;
     private ScreenSlidePagerAdapter pagerAdapter;
-
     private final String TAG = "PhotoDetailFragment";
 
     @Nullable
@@ -56,6 +54,7 @@ public class PhotoDetailFragment extends Fragment {
         homeViewModel.getPhotoDTOlist().observe(getViewLifecycleOwner(), photoDTOS -> {
                     pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle(), photoDTOS);
                     binding.imageViewpager.setAdapter(pagerAdapter);
+                    binding.imageViewpager.setCurrentItem(photoId, false);
                 }
         );
     }

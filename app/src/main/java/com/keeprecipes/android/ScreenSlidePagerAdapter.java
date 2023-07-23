@@ -12,18 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
-
-//    private ArrayList<Fragment> fragments = new ArrayList<>();
-    private List<PhotoDTO> photoDTOList;
+    private final List<PhotoDTO> photoDTOList;
 
     public ScreenSlidePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, List<PhotoDTO> photoDTOList) {
         super(fragmentManager, lifecycle);
         this.photoDTOList = photoDTOList;
     }
-
-//    public ScreenSlidePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-//        super(fragmentActivity);
-//    }
 
     @NonNull
     @Override
