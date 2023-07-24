@@ -4,7 +4,8 @@ Keep Recipes is an android app to manage recipes
 
 <a href='https://play.google.com/store/apps/details?id=com.keeprecipes.android&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-[//]: # (<img src="https://github.com/RoneyThomas/Run-Pace-Calculator/blob/master/docs/img/Simulator%20Screen%20Shot%20-%20iPhone%2012%20-%202020-12-15%20at%2011.49.24.png?raw=true" alt="app screenshot" width="225" height="487" />)
+<img src="https://github.com/bwakessa/Keep-Recipe/blob/main/docs/home.jpg?raw=true" alt="app screenshot" width="741" height="1,587.6" />
+<img src="https://github.com/bwakessa/Keep-Recipe/blob/main/docs/recipe_detail.jpg?raw=true" alt="app screenshot" width="741" height="1,587.6" />
 
 ## License
 This project is licensed under the terms of the The Unlicense
