@@ -3,6 +3,7 @@ package com.keeprecipes.android.dataLayer.dao;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Ignore;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
@@ -34,10 +35,10 @@ public interface RecipeDao {
     @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
     LiveData<List<String>> getAllCuisine();
 
-    // TODO add ignore unused fields collection, portion-size, photos, data_created
     @Transaction
+    @Ignore
     @Query(
-            "SELECT recipes.recipeId, recipes.title, recipes.instructions, recipes.ingredients FROM recipes "
+            "SELECT recipes.recipeId, recipes.title, recipes.instructions FROM recipes "
                     + "JOIN recipeFts ON (recipes.recipeId = recipeFts.docid) WHERE recipeFts MATCH :query")
     LiveData<List<Recipe>> searchRecipe(String query);
 

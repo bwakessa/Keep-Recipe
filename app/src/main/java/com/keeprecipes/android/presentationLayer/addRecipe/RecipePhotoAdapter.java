@@ -32,7 +32,7 @@ public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter
 
     @Override
     public void onBindViewHolder(@NonNull RecipePhotoAdapter.ViewHolder holder, int position) {
-        holder.bind(getItem(position), view -> recipePhoto.removeItem(holder.getAdapterPosition()));
+        holder.bind(getItem(position), view -> recipePhoto.removeItem(holder.getBindingAdapterPosition()));
     }
 
     public interface Photo {

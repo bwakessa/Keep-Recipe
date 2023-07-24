@@ -96,7 +96,6 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                 photoDTOList = new ArrayList<>();
                 if (recipe.photos != null) {
                     File appDir = getContext().getFilesDir();
-                    // TODO: Change to streams
                     for (int a = 0; a < recipe.photos.size(); a++) {
                         photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
                     }
@@ -107,7 +106,6 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                 binding.ingredientsListView.setAdapter(ingredientAdapter);
                 if (recipe.ingredients != null) {
                     List<IngredientDTO> ingredientDTOList = new ArrayList<>();
-                    // TODO: Change to streams
                     for (int a = 0; a < recipe.ingredients.size(); a++) {
                         ingredientDTOList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
                     }
