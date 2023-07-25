@@ -9,8 +9,8 @@ import androidx.lifecycle.Observer;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.keeprecipes.android.dataLayer.AppDatabase;
-import com.keeprecipes.android.dataLayer.dao.RecipeDao;
+import com.keeprecipes.android.data.AppDatabase;
+import com.keeprecipes.android.data.dao.RecipeDao;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

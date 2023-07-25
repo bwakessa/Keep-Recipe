@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    tools:context=".presentationLayer.searchResult.SearchFragment">
+    tools:context=".presentation.searchResult.SearchFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipe_list_view"

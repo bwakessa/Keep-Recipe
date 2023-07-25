@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.keeprecipes.android.presentationLayer.home.HomeFragment"
+        android:name="com.keeprecipes.android.presentation.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/addRecipeFragment"
-        android:name="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeFragment"
+        android:name="com.keeprecipes.android.presentation.addRecipe.AddRecipeFragment"
         android:label="@string/title_add_recipe"
         tools:layout="@layout/fragment_add_recipe">
         <argument
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.keeprecipes.android.presentationLayer.searchResult.SearchFragment"
+        android:name="com.keeprecipes.android.presentation.searchResult.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <argument
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
-        android:name="com.keeprecipes.android.presentationLayer.recipeDetail.RecipeDetailFragment"
+        android:name="com.keeprecipes.android.presentation.recipeDetail.RecipeDetailFragment"
         android:label=""
         tools:layout="@layout/fragment_recipe_detail">
         <argument
@@ -64,12 +64,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.keeprecipes.android.presentationLayer.settings.SettingsFragment"
+        android:name="com.keeprecipes.android.presentation.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/photoDetailFragment"
-        android:name="com.keeprecipes.android.PhotoDetailFragment"
+        android:name="com.keeprecipes.android.presentation.photoDetail.PhotoDetailFragment"
         android:label=""
         tools:layout="@layout/fragment_photo_detail">
         <argument

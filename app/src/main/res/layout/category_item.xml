@@ -5,7 +5,7 @@
 
         <variable
             name="category"
-            type="com.keeprecipes.android.presentationLayer.home.CategoriesDTO" />
+            type="com.keeprecipes.android.presentation.home.CategoriesDTO" />
     </data>
 
     <com.google.android.material.chip.Chip

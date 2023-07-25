@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.keeprecipes.android.presentationLayer.addRecipe.AddRecipeViewModel" />
+            type="com.keeprecipes.android.presentation.addRecipe.AddRecipeViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentationLayer.addRecipe.AddRecipeFragment">
+        tools:context=".presentation.addRecipe.AddRecipeFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
