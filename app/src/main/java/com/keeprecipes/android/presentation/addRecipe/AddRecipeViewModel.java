@@ -216,7 +216,11 @@ public class AddRecipeViewModel extends AndroidViewModel {
         recipeToSave.photos = photoFiles;
         List<Ingredient> ingredientList = new ArrayList<>();
         for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
-            ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
+            try {
+                ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
+            } catch (NumberFormatException e) {
+                Log.d(TAG, "saveRecipe: " + e);
+            }
         }
         recipeToSave.ingredients = ingredientList;
         long recipeId;
