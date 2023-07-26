@@ -19,13 +19,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
-import com.keeprecipes.android.presentation.photoDetail.PhotoClickListener;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.data.entities.Recipe;
+import com.keeprecipes.android.databinding.FragmentRecipeDetailBinding;
 import com.keeprecipes.android.presentation.addRecipe.IngredientDTO;
 import com.keeprecipes.android.presentation.addRecipe.PhotoDTO;
 import com.keeprecipes.android.presentation.home.HomeViewModel;
+import com.keeprecipes.android.presentation.photoDetail.PhotoClickListener;
 import com.keeprecipes.android.presentation.recipeDetail.RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment;
 
 import java.io.File;

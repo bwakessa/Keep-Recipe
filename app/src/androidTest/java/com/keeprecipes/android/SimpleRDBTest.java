@@ -33,8 +33,8 @@ public class SimpleRDBTest {
     @BeforeClass
     public static void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
-        db = AppDatabase.getDatabase(context);
-        recipeDao = db.recipeDao();
+//        db = AppDatabase.getDatabase(context);
+//        recipeDao = db.recipeDao();
     }
 
     @AfterClass

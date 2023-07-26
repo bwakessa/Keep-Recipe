@@ -40,6 +40,9 @@ public interface CollectionDao {
     @Query("SELECT EXISTS(SELECT * FROM Category WHERE name = :name)")
     Boolean isRowExist(String name);
 
+    @Query("DELETE FROM category")
+    void drop();
+
     @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'categories'")
     void clearPrimaryKey();
 

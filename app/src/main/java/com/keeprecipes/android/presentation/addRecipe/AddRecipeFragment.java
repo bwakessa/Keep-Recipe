@@ -63,7 +63,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AddRecipeViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(AddRecipeViewModel.class);
         assert getArguments() != null;
         int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
         if (recipeId != -1) {

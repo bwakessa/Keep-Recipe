@@ -1,14 +1,10 @@
 package com.keeprecipes.android.data.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 
 import com.keeprecipes.android.data.dao.CollectionWithRecipesDao;
 import com.keeprecipes.android.data.dao.RecipeWithCollectionsDao;
-import com.keeprecipes.android.data.AppDatabase;
 import com.keeprecipes.android.data.entities.CategoriesRecipeCrossRef;
-import com.keeprecipes.android.data.entities.CategoriesWithRecipes;
 import com.keeprecipes.android.data.entities.Recipe;
 import com.keeprecipes.android.data.entities.RecipeWithCategories;
 
@@ -16,16 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+
 public class CollectionWithRecipesRepository {
 
     CollectionWithRecipesDao collectionWithRecipesDao;
     RecipeWithCollectionsDao recipeWithCollectionsDao;
 
-    private LiveData<List<CategoriesWithRecipes>> collectionWithRecipesList;
-
-    public CollectionWithRecipesRepository(Application application) {
-        collectionWithRecipesDao = AppDatabase.getDatabase(application).collectionWithRecipesDao();
-        recipeWithCollectionsDao = AppDatabase.getDatabase(application).recipeWithCollectionsDao();
+    @Inject
+    public CollectionWithRecipesRepository(CollectionWithRecipesDao collectionWithRecipesDao, RecipeWithCollectionsDao recipeWithCollectionsDao) {
+        this.collectionWithRecipesDao = collectionWithRecipesDao;
+        this.recipeWithCollectionsDao = recipeWithCollectionsDao;
     }
 
     public LiveData<List<Recipe>> getCollectionWithRecipesById(long categoriesId) {
@@ -37,8 +34,7 @@ public class CollectionWithRecipesRepository {
     }
 
     public LiveData<List<RecipeWithCategories>> getRecipeWithCategories(long id) {
-        LiveData<List<RecipeWithCategories>> recipeWithCollections = recipeWithCollectionsDao.getRecipeWithCategories(id);
-        return recipeWithCollections;
+        return recipeWithCollectionsDao.getRecipeWithCategories(id);
     }
 
     public void insert(ArrayList<Long> collectionId, long recipeId) {
@@ -58,5 +54,9 @@ public class CollectionWithRecipesRepository {
     public void clearPrimaryKey() {
         Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(() ->
                 collectionWithRecipesDao.clearPrimaryKey()));
+    }
+
+    public void drop() {
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(collectionWithRecipesDao::drop));
     }
 }

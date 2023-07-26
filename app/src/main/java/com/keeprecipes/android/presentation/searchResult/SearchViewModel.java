@@ -1,22 +1,24 @@
 package com.keeprecipes.android.presentation.searchResult;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.keeprecipes.android.data.entities.Recipe;
 import com.keeprecipes.android.data.repository.RecipeRepository;
 
 import java.util.List;
 
-public class SearchViewModel extends AndroidViewModel {
-    private final RecipeRepository recipeRepository;
+import javax.inject.Inject;
 
-    public SearchViewModel(@NonNull Application application) {
-        super(application);
-        this.recipeRepository = new RecipeRepository(application);
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class SearchViewModel extends ViewModel {
+    RecipeRepository recipeRepository;
+
+    @Inject
+    public SearchViewModel(RecipeRepository recipeRepository) {
+        this.recipeRepository = recipeRepository;
     }
 
     public LiveData<List<Recipe>> searchRecipe(String query) {

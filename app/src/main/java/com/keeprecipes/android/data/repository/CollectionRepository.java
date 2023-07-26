@@ -1,11 +1,8 @@
 package com.keeprecipes.android.data.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 
 import com.keeprecipes.android.data.dao.CollectionDao;
-import com.keeprecipes.android.data.AppDatabase;
 import com.keeprecipes.android.data.entities.Category;
 
 import java.util.List;
@@ -15,6 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.inject.Inject;
+
 public class CollectionRepository {
 
     private final CollectionDao mCollectionDao;
@@ -22,9 +21,10 @@ public class CollectionRepository {
 
     private ExecutorService executorService;
 
-    public CollectionRepository(Application application) {
-        mCollectionDao = AppDatabase.getDatabase(application).recipeCollectionDao();
-        allCollections = mCollectionDao.getAll();
+    @Inject
+    public CollectionRepository(CollectionDao collectionDao) {
+        mCollectionDao = collectionDao;
+        allCollections = collectionDao.getAll();
     }
 
     public LiveData<List<Category>> getAllCollections() {
@@ -91,5 +91,9 @@ public class CollectionRepository {
 
     public void update(Category categories) {
         Executors.newSingleThreadExecutor().execute(() -> mCollectionDao.updateCollection(categories));
+    }
+
+    public void drop() {
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(mCollectionDao::drop));
     }
 }

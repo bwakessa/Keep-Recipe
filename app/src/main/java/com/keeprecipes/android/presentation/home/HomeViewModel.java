@@ -1,14 +1,12 @@
 package com.keeprecipes.android.presentation.home;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
 
 import com.keeprecipes.android.data.entities.Recipe;
 import com.keeprecipes.android.data.repository.CollectionRepository;
@@ -25,31 +23,36 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-public class HomeViewModel extends AndroidViewModel {
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class HomeViewModel extends ViewModel {
     public final LiveData<Recipe> selectedRecipe;
     final String TAG = "AndroidViewModel";
     private final LiveData<List<Recipe>> recipe;
     private final MutableLiveData<Integer> recipeId;
     private final MutableLiveData<Long> selectedCategory;
-    private final LiveData<List<CategoriesDTO>> categories;
     private final MediatorLiveData<List<CategoriesDTO>> filteredCategoryRecipe;
     private final MutableLiveData<List<PhotoDTO>> photoDTOlist;
-    private final CollectionRepository collectionRepository;
-    private final RecipeRepository recipeRepository;
-    private final CollectionWithRecipesRepository collectionWithRecipesRepository;
+    CollectionRepository collectionRepository;
+    RecipeRepository recipeRepository;
+    CollectionWithRecipesRepository collectionWithRecipesRepository;
 
-    public HomeViewModel(@NonNull Application application) {
-        super(application);
-        this.recipeRepository = new RecipeRepository(application);
-        this.collectionRepository = new CollectionRepository(application);
-        this.collectionWithRecipesRepository = new CollectionWithRecipesRepository(application);
+    @Inject
+    public HomeViewModel(CollectionRepository collectionRepository, RecipeRepository recipeRepository, CollectionWithRecipesRepository collectionWithRecipesRepository) {
+//        super(application);
+        this.collectionRepository = collectionRepository;
+        this.recipeRepository = recipeRepository;
+        this.collectionWithRecipesRepository = collectionWithRecipesRepository;
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
         this.photoDTOlist = new MutableLiveData<>();
         this.selectedCategory = new MutableLiveData<>((long) -2);
-        this.categories = Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
+        LiveData<List<CategoriesDTO>> categories = Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
         this.filteredCategoryRecipe = new MediatorLiveData<>();
-        this.filteredCategoryRecipe.addSource(this.categories, filteredCategoryRecipe::setValue);
+        this.filteredCategoryRecipe.addSource(categories, filteredCategoryRecipe::setValue);
         this.filteredCategoryRecipe.addSource(this.selectedCategory, selectedCategoryId -> {
             List<CategoriesDTO> c = filteredCategoryRecipe.getValue();
             if (c != null && selectedCategoryId != -2) {
@@ -120,8 +123,10 @@ public class HomeViewModel extends AndroidViewModel {
         recipeRepository.delete(recipe);
     }
 
-    public void deleteAllRecipes(Application application) {
-        recipeRepository.deleteAllRecipes(application);
+    public void deleteAllRecipes() {
+        recipeRepository.drop();
+        collectionRepository.drop();
+        collectionWithRecipesRepository.drop();
         recipeRepository.clearPrimaryKey();
         collectionRepository.clearPrimaryKey();
         collectionWithRecipesRepository.clearPrimaryKey();

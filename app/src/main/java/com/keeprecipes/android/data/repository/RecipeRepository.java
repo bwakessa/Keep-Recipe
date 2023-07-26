@@ -1,11 +1,8 @@
 package com.keeprecipes.android.data.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
-import com.keeprecipes.android.data.AppDatabase;
 import com.keeprecipes.android.data.dao.RecipeDao;
 import com.keeprecipes.android.data.entities.Recipe;
 
@@ -16,15 +13,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RecipeRepository {
+import javax.inject.Inject;
 
-    private static final String TAG = "RecipeRepository";
+public class RecipeRepository {
 
     private final RecipeDao mRecipeDao;
     private final LiveData<List<Recipe>> allRecipes;
 
-    public RecipeRepository(Application application) {
-        mRecipeDao = AppDatabase.getDatabase(application).recipeDao();
+    @Inject
+    public RecipeRepository(RecipeDao recipeDao) {
+        this.mRecipeDao = recipeDao;
         allRecipes = mRecipeDao.getAll();
     }
 
@@ -64,11 +62,6 @@ public class RecipeRepository {
         });
     }
 
-    public void deleteAllRecipes(Application application) {
-        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(() ->
-                AppDatabase.getDatabase(application).clearAllTables()));
-    }
-
     public void clearPrimaryKey() {
         Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(mRecipeDao::clearPrimaryKey));
     }
@@ -79,5 +72,9 @@ public class RecipeRepository {
 
     public LiveData<List<Recipe>> searchRecipe(String query) {
         return mRecipeDao.searchRecipe(query);
+    }
+
+    public void drop() {
+        Executors.newSingleThreadExecutor().execute(() -> Executors.newSingleThreadExecutor().execute(mRecipeDao::drop));
     }
 }

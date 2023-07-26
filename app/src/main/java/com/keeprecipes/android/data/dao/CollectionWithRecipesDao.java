@@ -42,6 +42,9 @@ public interface CollectionWithRecipesDao {
     @Query("DELETE FROM CategoriesRecipeCrossRef WHERE recipeId = :recipeId;")
     void deleteByRecipe(long recipeId);
 
+    @Query("DELETE FROM categoriesrecipecrossref")
+    void drop();
+
     @Query("UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'CategoriesRecipeCrossRef'")
     void clearPrimaryKey();
 }

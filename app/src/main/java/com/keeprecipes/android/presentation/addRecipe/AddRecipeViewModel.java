@@ -1,18 +1,17 @@
 package com.keeprecipes.android.presentation.addRecipe;
 
-import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
+import com.keeprecipes.android.KeepRecipeApplication;
 import com.keeprecipes.android.data.entities.Category;
 import com.keeprecipes.android.data.entities.Ingredient;
 import com.keeprecipes.android.data.entities.Recipe;
@@ -32,24 +31,29 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class AddRecipeViewModel extends AndroidViewModel {
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class AddRecipeViewModel extends ViewModel {
     public final MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
     public final MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
     private final String TAG = "AddRecipeViewModel";
-    private final CollectionRepository collectionRepository;
-    private final RecipeRepository recipeRepository;
-    private final CollectionWithRecipesRepository collectionWithRecipesRepository;
-    private final Application application;
+    CollectionRepository collectionRepository;
+    RecipeRepository recipeRepository;
+    CollectionWithRecipesRepository collectionWithRecipesRepository;
+    KeepRecipeApplication application;
 
-    public AddRecipeViewModel(@NonNull Application application) {
-        super(application);
+    @Inject
+    public AddRecipeViewModel(KeepRecipeApplication application, CollectionRepository collectionRepository, CollectionWithRecipesRepository collectionWithRecipesRepository, RecipeRepository recipeRepository) {
         this.application = application;
-        recipeRepository = new RecipeRepository(application);
-        collectionRepository = new CollectionRepository(application);
-        collectionWithRecipesRepository = new CollectionWithRecipesRepository(application);
+        this.recipeRepository = recipeRepository;
+        this.collectionRepository = collectionRepository;
+        this.collectionWithRecipesRepository = collectionWithRecipesRepository;
         Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
     }
 

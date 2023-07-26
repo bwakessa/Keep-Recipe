@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.keeprecipes.android.presentation.photoDetail.PhotoClickListener;
 import com.keeprecipes.android.databinding.RecipeDetailPhotoItemBinding;
 import com.keeprecipes.android.presentation.addRecipe.PhotoDTO;
+import com.keeprecipes.android.presentation.photoDetail.PhotoClickListener;
 import com.squareup.picasso.Picasso;
 
 public class PhotoAdapter extends ListAdapter<PhotoDTO, PhotoAdapter.ViewHolder> {
