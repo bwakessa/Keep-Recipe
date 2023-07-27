@@ -13,7 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,7 +28,6 @@ import com.keeprecipes.android.presentation.addRecipe.IngredientDTO;
 import com.keeprecipes.android.presentation.addRecipe.PhotoDTO;
 import com.keeprecipes.android.presentation.home.HomeViewModel;
 import com.keeprecipes.android.presentation.photoDetail.PhotoClickListener;
-import com.keeprecipes.android.presentation.recipeDetail.RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class RecipeDetailFragment extends Fragment implements PhotoClickListener {
 
     private static final String TAG = "RecipeDetailFragment";
@@ -55,9 +59,10 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomeViewModel homeViewModel = new ViewModelProvider(getActivity()).get(HomeViewModel.class);
-
         NavController navController = Navigation.findNavController(view);
+        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
+        HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
+
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -69,7 +74,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
         binding.toolbar.inflateMenu(R.menu.recipe_detail_menu);
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_edit) {// Navigate to settings screen
-                ActionRecipeDetailFragmentToAddRecipeFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToAddRecipeFragment();
+                RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToAddRecipeFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToAddRecipeFragment();
                 action.setRecipeId((int) mRecipe.recipeId);
                 Navigation.findNavController(view).navigate(action);
                 return true;

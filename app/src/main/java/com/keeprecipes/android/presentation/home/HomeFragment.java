@@ -11,7 +11,9 @@ import android.view.inputmethod.EditorInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -24,6 +26,9 @@ import com.keeprecipes.android.databinding.FragmentHomeBinding;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class HomeFragment extends Fragment implements ChipClickListener {
 
     final String TAG = "HomeFragment";
@@ -42,8 +47,9 @@ public class HomeFragment extends Fragment implements ChipClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        homeViewModel =
-                new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        NavController navController = Navigation.findNavController(view);
+        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
+        homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
 
         recipeAdapter = new RecipeAdapter();
         binding.recipeListView.setAdapter(recipeAdapter);
@@ -60,10 +66,7 @@ public class HomeFragment extends Fragment implements ChipClickListener {
 
 
         binding.searchBar.inflateMenu(R.menu.top_menu);
-        binding.searchBar.setOnMenuItemClickListener(item -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-            return NavigationUI.onNavDestinationSelected(item, navController);
-        });
+        binding.searchBar.setOnMenuItemClickListener(item -> NavigationUI.onNavDestinationSelected(item, navController));
 
         binding.searchView.getEditText().setOnEditorActionListener(
                 (v, actionId, event) -> {

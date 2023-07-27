@@ -42,7 +42,6 @@ public class HomeViewModel extends ViewModel {
 
     @Inject
     public HomeViewModel(CollectionRepository collectionRepository, RecipeRepository recipeRepository, CollectionWithRecipesRepository collectionWithRecipesRepository) {
-//        super(application);
         this.collectionRepository = collectionRepository;
         this.recipeRepository = recipeRepository;
         this.collectionWithRecipesRepository = collectionWithRecipesRepository;

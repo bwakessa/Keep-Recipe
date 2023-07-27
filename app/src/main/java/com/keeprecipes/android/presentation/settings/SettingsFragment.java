@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -53,8 +55,9 @@ public class SettingsFragment extends Fragment {
 
                 })
                 .setPositiveButton(R.string.positive_alert_dialog, (dialogInterface, i) -> {
-                    HomeViewModel viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-                    viewModel.deleteAllRecipes();
+                    NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
+                    HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
+                    homeViewModel.deleteAllRecipes();
                     try {
                         deleteFiles(getActivity().getFilesDir().getPath());
                     } catch (IOException | InterruptedException e) {

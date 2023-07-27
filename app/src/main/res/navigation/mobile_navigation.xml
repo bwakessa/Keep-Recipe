@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_addRecipeFragment"
-            app:destination="@id/addRecipeFragment" />
+            app:destination="@id/add_recipe_graph" />
         <action
             android:id="@+id/action_navigation_home_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment" />
@@ -27,16 +27,6 @@
             app:destination="@id/settingsFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/addRecipeFragment"
-        android:name="com.keeprecipes.android.presentation.addRecipe.AddRecipeFragment"
-        android:label="@string/title_add_recipe"
-        tools:layout="@layout/fragment_add_recipe">
-        <argument
-            android:name="recipeId"
-            android:defaultValue="-1"
-            app:argType="integer" />
-    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.keeprecipes.android.presentation.searchResult.SearchFragment"
@@ -57,7 +47,12 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_recipeDetailFragment_to_addRecipeFragment"
-            app:destination="@id/addRecipeFragment" />
+            app:destination="@id/add_recipe_graph">
+            <argument
+                android:name="recipeId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </action>
         <action
             android:id="@+id/action_recipeDetailFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
@@ -77,4 +72,18 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+    <navigation
+        android:id="@+id/add_recipe_graph"
+        app:startDestination="@id/addRecipeFragment">
+        <fragment
+            android:id="@+id/addRecipeFragment"
+            android:name="com.keeprecipes.android.presentation.addRecipe.AddRecipeFragment"
+            android:label="@string/title_add_recipe"
+            tools:layout="@layout/fragment_add_recipe">
+            <argument
+                android:name="recipeId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </fragment>
+    </navigation>
 </navigation>

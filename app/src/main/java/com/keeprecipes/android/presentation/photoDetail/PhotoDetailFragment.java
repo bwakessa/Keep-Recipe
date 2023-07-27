@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,7 +24,9 @@ import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentPhotoDetailBinding;
 import com.keeprecipes.android.presentation.home.HomeViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class PhotoDetailFragment extends Fragment {
     private final String TAG = "PhotoDetailFragment";
     private FragmentPhotoDetailBinding binding;
@@ -40,9 +44,9 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomeViewModel homeViewModel = new ViewModelProvider(getActivity()).get(HomeViewModel.class);
-
         NavController navController = Navigation.findNavController(view);
+        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
+        HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);

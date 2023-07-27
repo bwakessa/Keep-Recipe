@@ -22,7 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,6 +40,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Photo {
 
     final String TAG = "AddRecipeFragment";
@@ -63,7 +68,9 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(requireActivity()).get(AddRecipeViewModel.class);
+        NavController navController = Navigation.findNavController(view);
+        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.add_recipe_graph);
+        mViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(AddRecipeViewModel.class);
         assert getArguments() != null;
         int recipeId = AddRecipeFragmentArgs.fromBundle(getArguments()).getRecipeId();
         if (recipeId != -1) {
@@ -84,7 +91,6 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
             });
         }
 
-        NavController navController = Navigation.findNavController(view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);

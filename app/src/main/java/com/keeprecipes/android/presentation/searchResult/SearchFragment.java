@@ -9,11 +9,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.navigation.HiltViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentSearchBinding;
 import com.keeprecipes.android.presentation.home.RecipeAdapter;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SearchFragment extends Fragment {
 
     final String TAG = "SearchFragment";
@@ -38,8 +46,10 @@ public class SearchFragment extends Fragment {
             binding.recipeListView.setAdapter(recipeAdapter);
             String searchArg = SearchFragmentArgs.fromBundle(getArguments()).getSearchArg();
             Log.d(TAG, "onViewCreated: " + searchArg);
-            SearchViewModel searchViewModel =
-                    new ViewModelProvider(this).get(SearchViewModel.class);
+
+            NavController navController = Navigation.findNavController(view);
+            NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
+            SearchViewModel searchViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(SearchViewModel.class);
             searchViewModel.searchRecipe(searchArg).observe(getViewLifecycleOwner(), recipeAdapter::submitList);
         }
     }
