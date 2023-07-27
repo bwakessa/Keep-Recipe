@@ -37,11 +37,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class AddRecipeViewModel extends ViewModel {
-    public final MutableLiveData<RecipeDTO> recipe = new MutableLiveData<>(new RecipeDTO());
-    public final MutableLiveData<List<String>> collections = new MutableLiveData<>(new ArrayList<>());
-    public final MutableLiveData<List<IngredientDTO>> ingredients = new MutableLiveData<>(new ArrayList<>());
-    public final MutableLiveData<List<PhotoDTO>> photos = new MutableLiveData<>(new ArrayList<>());
-    public final MutableLiveData<Boolean> updateRecipe = new MutableLiveData<>(false);
+    public final MutableLiveData<RecipeDTO> recipe;
+    public final MutableLiveData<List<String>> collections;
+    public final MutableLiveData<List<IngredientDTO>> ingredients;
+    public final MutableLiveData<List<PhotoDTO>> photos;
+    public final MutableLiveData<Boolean> updateRecipe;
     private final String TAG = "AddRecipeViewModel";
     CollectionRepository collectionRepository;
     RecipeRepository recipeRepository;
@@ -54,6 +54,12 @@ public class AddRecipeViewModel extends ViewModel {
         this.recipeRepository = recipeRepository;
         this.collectionRepository = collectionRepository;
         this.collectionWithRecipesRepository = collectionWithRecipesRepository;
+
+        this.recipe = new MutableLiveData<>(new RecipeDTO());
+        this.collections = new MutableLiveData<>(new ArrayList<>());
+        this.ingredients = new MutableLiveData<>(new ArrayList<>());
+        this.photos = new MutableLiveData<>(new ArrayList<>());
+        this.updateRecipe = new MutableLiveData<>(false);
         Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
     }
 
