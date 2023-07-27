@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +35,7 @@ public class HomeFragment extends Fragment implements ChipClickListener {
     RecipeAdapter recipeAdapter;
     CategoriesAdapter categoriesAdapter;
     private FragmentHomeBinding binding;
+    private NavController navController;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment implements ChipClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
         NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
         homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
 
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements ChipClickListener {
 
         // Floating Action Button to create new recipe
         FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_addRecipeFragment));
+        fab.setOnClickListener(v -> navController.navigate(R.id.action_navigation_home_to_addRecipeFragment));
     }
 
     @Override

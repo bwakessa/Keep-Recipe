@@ -46,6 +46,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     Recipe mRecipe;
     private List<PhotoDTO> photoDTOList;
     private FragmentRecipeDetailBinding binding;
+    private NavController navController;
 
     @Nullable
     @Override
@@ -59,7 +60,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NavController navController = Navigation.findNavController(view);
+        this.navController = Navigation.findNavController(view);
         NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
         HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
 
@@ -68,8 +69,6 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(
                 toolbar, navController, appBarConfiguration);
-
-//        ActionRecipeDetailFragmentToPhotoDetailFragment action = new RecipeDetailFragmentDirections().actionRecipeDetailFragmentToPhotoDetailFragment();
 
         binding.toolbar.inflateMenu(R.menu.recipe_detail_menu);
         binding.toolbar.setOnMenuItemClickListener(item -> {
@@ -148,9 +147,8 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     @Override
     public void photoClicked(View view, int photoId) {
         Log.d(TAG, "photoClicked: " + photoDTOList.get(photoId).uri);
-//        NavHostFragment.findNavController(this).navigate(R.id.action_recipeDetailFragment_to_photoDetailFragment);
         RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToPhotoDetailFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToPhotoDetailFragment();
         action.setPhotoId(photoId);
-        Navigation.findNavController(view).navigate(action);
+        this.navController.navigate(action);
     }
 }
