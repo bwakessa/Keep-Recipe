@@ -22,7 +22,7 @@ import dagger.hilt.components.SingletonComponent;
 
 @Module
 @InstallIn(SingletonComponent.class)
-public class RoomModule {
+public class DiModule {
 
     @Provides
     @Singleton
