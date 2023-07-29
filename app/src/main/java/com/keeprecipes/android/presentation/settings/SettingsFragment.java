@@ -27,8 +27,6 @@ import com.keeprecipes.android.usecase.DeleteFilesUseCase;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

@@ -13,14 +13,9 @@ import com.keeprecipes.android.data.repository.CollectionRepository;
 import com.keeprecipes.android.data.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.data.repository.RecipeRepository;
 import com.keeprecipes.android.presentation.addRecipe.PhotoDTO;
+import com.keeprecipes.android.usecase.DeleteRecipeUseCase;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -40,11 +35,14 @@ public class HomeViewModel extends ViewModel {
     RecipeRepository recipeRepository;
     CollectionWithRecipesRepository collectionWithRecipesRepository;
 
+    DeleteRecipeUseCase deleteRecipeUseCase;
+
     @Inject
-    public HomeViewModel(CollectionRepository collectionRepository, RecipeRepository recipeRepository, CollectionWithRecipesRepository collectionWithRecipesRepository) {
+    public HomeViewModel(CollectionRepository collectionRepository, RecipeRepository recipeRepository, CollectionWithRecipesRepository collectionWithRecipesRepository, DeleteRecipeUseCase deleteRecipeUseCase) {
         this.collectionRepository = collectionRepository;
         this.recipeRepository = recipeRepository;
         this.collectionWithRecipesRepository = collectionWithRecipesRepository;
+        this.deleteRecipeUseCase = deleteRecipeUseCase;
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
         this.photoDTOList = new MutableLiveData<>();
@@ -106,29 +104,11 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void deleteRecipe(Recipe recipe) {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<List<Long>> uniqueCallable = () -> collectionWithRecipesRepository.getUniqueCategories(recipe.recipeId);
-        List<Long> uniqueCategories = new ArrayList<>();
-        Future<List<Long>> future = executorService.submit(uniqueCallable);
-        try {
-            uniqueCategories = future.get();
-        } catch (InterruptedException | ExecutionException e1) {
-            e1.printStackTrace();
-        }
-        executorService.shutdown();
-        Log.d(TAG, "deleteRecipe: " + uniqueCategories);
-        collectionWithRecipesRepository.deleteByRecipe(recipe.recipeId);
-        uniqueCategories.forEach(collectionRepository::deleteById);
-        recipeRepository.delete(recipe);
+        deleteRecipeUseCase.delete(recipe);
     }
 
     public void deleteAllRecipes() {
-        recipeRepository.drop();
-        collectionRepository.drop();
-        collectionWithRecipesRepository.drop();
-        recipeRepository.clearPrimaryKey();
-        collectionRepository.clearPrimaryKey();
-        collectionWithRecipesRepository.clearPrimaryKey();
+        this.deleteRecipeUseCase.deleteAll();
     }
 
     public LiveData<List<Recipe>> searchRecipe(String query) {

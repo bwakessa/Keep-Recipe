@@ -37,6 +37,7 @@ public class AddOrEditRecipeUseCase {
     CollectionWithRecipesRepository collectionWithRecipesRepository;
 
     DeleteFilesUseCase deleteFilesUseCase;
+
     @Inject
     public AddOrEditRecipeUseCase(CollectionRepository collectionRepository, RecipeRepository recipeRepository, CollectionWithRecipesRepository collectionWithRecipesRepository, DeleteFilesUseCase deleteFilesUseCase) {
         this.collectionRepository = collectionRepository;
