@@ -33,7 +33,6 @@ public interface RecipeDao {
     LiveData<List<Recipe>> getAll();
 
     @Transaction
-    @Ignore
     @Query(
             "SELECT recipes.recipeId, recipes.title, recipes.instructions FROM recipes "
                     + "JOIN recipeFts ON (recipes.recipeId = recipeFts.docid) WHERE recipeFts MATCH :query")

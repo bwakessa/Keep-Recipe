@@ -21,32 +21,6 @@ public class Converters {
         return date == null ? null : date.getEpochSecond();
     }
 
-//    @TypeConverter
-//    public static String instructionsToString(List<String> instructions) {
-//        if (instructions == null) {return null;}
-//        else {
-//            StringBuilder s = new StringBuilder(instructions.get(0));
-//            for (int i = 1; i < instructions.size(); i ++){
-//                s.append(String.format(",%s", instructions.get(i)));
-//            }
-//            return s.toString();
-//        }
-//    }
-//
-//    @TypeConverter
-//    public static ArrayList<String> stringToInstructions(String s) {
-//        // Assume that string is comma separated
-//        if (s == null) {return null;}
-//        else {
-//            String[] inst = s.split(",");
-//            List<String> instr = Arrays.asList(inst);
-//            return new ArrayList<String>(instr);
-//        }
-//    }
-//Need type converters for Collections: ArrayList<Recipe> to String (fields separated by commas, recipes separated by |)
-//Need type converter to convert from String (following above format) to ArrayList<Recipe>
-    //PROBLEM: how to instantiate new Recipe objects? (lack of constructor; create a getNewInstance method?)
-
     @TypeConverter
     public static String listToString(List<String> stringList) {
         if (stringList == null || stringList.isEmpty()) {
@@ -59,7 +33,7 @@ public class Converters {
     @TypeConverter
     public static List<String> stringToList(String s) {
         //precondition: <s> follows same format as specified in above function
-        if (s == null) {
+        if (s == null || s.isEmpty()) {
             return null;
         } else {
             List<String> recipeId = new ArrayList<>();
