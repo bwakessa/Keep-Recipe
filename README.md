@@ -11,7 +11,7 @@ The following android libraries are use to make the app.
 - **Picasso** for Image loading
     - Jetpack Libraries
         - **Room** for persistence
-        - **ViewModels and LiveData** for observable and lifecycle aware data
+        - **ViewModels** and **LiveData** for observable and lifecycle aware data
         - **Navigation** for managing fragment transactions and navigating between them
 
 

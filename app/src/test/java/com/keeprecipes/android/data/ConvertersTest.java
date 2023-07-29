@@ -2,6 +2,8 @@ package com.keeprecipes.android.data;
 
 import static org.junit.Assert.*;
 
+import com.keeprecipes.android.data.entities.Ingredient;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,13 +54,35 @@ public class ConvertersTest {
         stringList = new ArrayList<>();
         stringList.add("java");
         assertEquals(Converters.stringToList("java"), stringList);
+        assertNull(Converters.stringToList(""));
     }
 
     @Test
     public void ingredientsToString() {
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Turmeric", "24", "g"));
+        ingredients.add(new Ingredient("", "", ""));
+        ingredients.add(new Ingredient("Pepper", "", ""));
+        ingredients.add(new Ingredient("", "12", "mg"));
+        ingredients.add(new Ingredient("", "", "g"));
+        ingredients.add(new Ingredient("", "12", ""));
+        ingredients.add(new Ingredient("Pepper", "4", ""));
+        assertEquals(Converters.ingredientsToString(ingredients), "{\"quantity\":\"g\",\"size\":\"24\",\"name\":\"Turmeric\"}|{\"quantity\":\"\",\"size\":\"\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"\",\"name\":\"Pepper\"}|{\"quantity\":\"mg\",\"size\":\"12\",\"name\":\"\"}|{\"quantity\":\"g\",\"size\":\"\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"12\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"4\",\"name\":\"Pepper\"}");
+        ingredients = new ArrayList<>();
+        assertNull(Converters.ingredientsToString(ingredients));
     }
 
     @Test
     public void stringToIngredients() {
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Turmeric", "24", "g"));
+        ingredients.add(new Ingredient("", "", ""));
+        ingredients.add(new Ingredient("Pepper", "", ""));
+        ingredients.add(new Ingredient("", "12", "mg"));
+        ingredients.add(new Ingredient("", "", "g"));
+        ingredients.add(new Ingredient("", "12", ""));
+        ingredients.add(new Ingredient("Pepper", "4", ""));
+        assertEquals(Converters.stringToIngredients("{\"quantity\":\"g\",\"size\":\"24\",\"name\":\"Turmeric\"}|{\"quantity\":\"\",\"size\":\"\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"\",\"name\":\"Pepper\"}|{\"quantity\":\"mg\",\"size\":\"12\",\"name\":\"\"}|{\"quantity\":\"g\",\"size\":\"\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"12\",\"name\":\"\"}|{\"quantity\":\"\",\"size\":\"4\",\"name\":\"Pepper\"}"), ingredients);
+        assertNull(Converters.stringToIngredients(""));
     }
 }

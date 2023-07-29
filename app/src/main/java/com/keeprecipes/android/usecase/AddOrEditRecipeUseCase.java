@@ -127,7 +127,7 @@ public class AddOrEditRecipeUseCase {
             List<Ingredient> ingredientList = new ArrayList<>();
             for (IngredientDTO ingredientDTO : ingredientDTOList) {
                 try {
-                    ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
+                    ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, ingredientDTO.size, ingredientDTO.quantity));
                 } catch (NumberFormatException e) {
                     Log.d(TAG, "saveRecipe: " + e);
                 }

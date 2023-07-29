@@ -62,10 +62,10 @@ public class Converters {
                             serializedIngredient.put("size", ingredient.size());
                             serializedIngredient.put("quantity", ingredient.quantity());
                         } catch (JSONException e) {
-                            Log.d(TAG, "ingredientsToString: " + e);
+//                            Log.d(TAG, "ingredientsToString: " + e);
                             throw new RuntimeException(e);
                         }
-                        Log.d(TAG, "ingredientsToString: " + serializedIngredient.toString());
+//                        Log.d(TAG, "ingredientsToString: " + serializedIngredient.toString());
                         return serializedIngredient.toString();
                     })
                     .reduce((str, s) -> str + "|" + s)
@@ -76,7 +76,7 @@ public class Converters {
     @TypeConverter
     public static List<Ingredient> stringToIngredients(String s) {
         List<Ingredient> ingredients = new ArrayList<>();
-        if (s == null) {
+        if (s == null || s.isEmpty()) {
             return null;
         } else {
             String[] i = s.split("\\|");
