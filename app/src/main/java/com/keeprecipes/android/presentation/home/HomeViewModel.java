@@ -35,7 +35,7 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<Integer> recipeId;
     private final MutableLiveData<Long> selectedCategory;
     private final MediatorLiveData<List<CategoriesDTO>> filteredCategoryRecipe;
-    private final MutableLiveData<List<PhotoDTO>> photoDTOlist;
+    private final MutableLiveData<List<PhotoDTO>> photoDTOList;
     CollectionRepository collectionRepository;
     RecipeRepository recipeRepository;
     CollectionWithRecipesRepository collectionWithRecipesRepository;
@@ -47,7 +47,7 @@ public class HomeViewModel extends ViewModel {
         this.collectionWithRecipesRepository = collectionWithRecipesRepository;
         this.recipeId = new MutableLiveData<>();
         this.selectedRecipe = Transformations.switchMap(recipeId, (recipe) -> recipeRepository.fetchById(recipeId.getValue()));
-        this.photoDTOlist = new MutableLiveData<>();
+        this.photoDTOList = new MutableLiveData<>();
         this.selectedCategory = new MutableLiveData<>((long) -2);
         LiveData<List<CategoriesDTO>> categories = Transformations.map(collectionRepository.getAllCollections(), collections -> collections.stream().map(e -> new CategoriesDTO(e.categoriesId, e.name, false)).collect(Collectors.toList()));
         this.filteredCategoryRecipe = new MediatorLiveData<>();
@@ -97,12 +97,12 @@ public class HomeViewModel extends ViewModel {
         recipeId.setValue(id);
     }
 
-    public MutableLiveData<List<PhotoDTO>> getPhotoDTOlist() {
-        return this.photoDTOlist;
+    public MutableLiveData<List<PhotoDTO>> getPhotoDTOList() {
+        return this.photoDTOList;
     }
 
-    public void setPhotoDTOlist(List<PhotoDTO> photoDTOlist) {
-        this.photoDTOlist.setValue(photoDTOlist);
+    public void setPhotoDTOList(List<PhotoDTO> photoDTOList) {
+        this.photoDTOList.setValue(photoDTOList);
     }
 
     public void deleteRecipe(Recipe recipe) {

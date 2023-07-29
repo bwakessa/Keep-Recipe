@@ -34,7 +34,6 @@ import com.google.android.material.chip.ChipDrawable;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentAddRecipeBinding;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -97,9 +96,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
 
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
-        // AddRecipeFragment has it's toolbar,
-        // here we are setting title, back arrow and the menu for toolbar
-//        binding.toolbar.setTitle("Add Recipe");
+
         binding.toolbar.inflateMenu(R.menu.add_recipe_menu);
 
 
@@ -121,11 +118,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Log.d(TAG, "onViewCreated: ingredients - " + mViewModel.ingredients.getValue().size());
                 Log.d(TAG, "onViewCreated: photos - " + mViewModel.photos.getValue().size());
                 Log.d(TAG, "onViewCreated: categories - " + mViewModel.collections.getValue());
-                try {
-                    mViewModel.saveRecipe();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                mViewModel.saveRecipe();
                 Toast.makeText(getActivity(), "Recipe Saved", Toast.LENGTH_SHORT).show();
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
                 return true;

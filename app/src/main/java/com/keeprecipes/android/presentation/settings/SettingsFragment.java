@@ -23,10 +23,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.keeprecipes.android.R;
 import com.keeprecipes.android.databinding.FragmentSettingsBinding;
 import com.keeprecipes.android.presentation.home.HomeViewModel;
-import com.keeprecipes.android.usecase.DeletePhotosUseCase;
+import com.keeprecipes.android.usecase.DeleteFilesUseCase;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -62,8 +63,14 @@ public class SettingsFragment extends Fragment {
                     NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
                     HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
                     homeViewModel.deleteAllRecipes();
-                    DeletePhotosUseCase deletePhotosUsecase = new DeletePhotosUseCase();
-                    deletePhotosUsecase.deleteFiles(getActivity().getFilesDir().getPath());
+//                    DeletePhotosUseCase deletePhotosUsecase = new DeletePhotosUseCase();
+//                    deletePhotosUsecase.deleteFiles(getActivity().getFilesDir().getPath());
+                    try {
+                        DeleteFilesUseCase deleteFilesUseCase = new DeleteFilesUseCase();
+                        deleteFilesUseCase.delete(getActivity().getFilesDir().getPath());
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .show());
 

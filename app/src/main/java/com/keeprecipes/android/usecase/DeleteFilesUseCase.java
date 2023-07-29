@@ -3,8 +3,9 @@ package com.keeprecipes.android.usecase;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
-public class DeletePhotosUseCase {
-    public void deleteFiles(String appFilePath) {
+public class DeleteFilesUseCase {
+
+    public void delete(String appFilePath) throws IOException, InterruptedException {
         Executors.newSingleThreadExecutor().execute(() -> {
             String deleteCommand = "rm -rf " + appFilePath;
             Runtime runtime = Runtime.getRuntime();

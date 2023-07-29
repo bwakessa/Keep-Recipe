@@ -1,34 +1,23 @@
 package com.keeprecipes.android.presentation.addRecipe;
 
-import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.os.FileUtils;
 import android.util.Log;
 
-import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.keeprecipes.android.KeepRecipeApplication;
-import com.keeprecipes.android.data.entities.Category;
-import com.keeprecipes.android.data.entities.Ingredient;
 import com.keeprecipes.android.data.entities.Recipe;
 import com.keeprecipes.android.data.entities.RecipeWithCategories;
 import com.keeprecipes.android.data.repository.CollectionRepository;
 import com.keeprecipes.android.data.repository.CollectionWithRecipesRepository;
 import com.keeprecipes.android.data.repository.RecipeRepository;
+import com.keeprecipes.android.usecase.AddOrEditRecipeUseCase;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -48,8 +37,10 @@ public class AddRecipeViewModel extends ViewModel {
     CollectionWithRecipesRepository collectionWithRecipesRepository;
     KeepRecipeApplication application;
 
+    AddOrEditRecipeUseCase addOrEditRecipeUseCase;
+
     @Inject
-    public AddRecipeViewModel(KeepRecipeApplication application, CollectionRepository collectionRepository, CollectionWithRecipesRepository collectionWithRecipesRepository, RecipeRepository recipeRepository) {
+    public AddRecipeViewModel(KeepRecipeApplication application, CollectionRepository collectionRepository, CollectionWithRecipesRepository collectionWithRecipesRepository, RecipeRepository recipeRepository, AddOrEditRecipeUseCase addOrEditRecipeUseCase) {
         this.application = application;
         this.recipeRepository = recipeRepository;
         this.collectionRepository = collectionRepository;
@@ -60,6 +51,7 @@ public class AddRecipeViewModel extends ViewModel {
         this.ingredients = new MutableLiveData<>(new ArrayList<>());
         this.photos = new MutableLiveData<>(new ArrayList<>());
         this.updateRecipe = new MutableLiveData<>(false);
+        this.addOrEditRecipeUseCase = addOrEditRecipeUseCase;
         Log.d(TAG, "AddRecipeViewModel: recipe" + recipe.getValue().toString());
     }
 
@@ -91,16 +83,6 @@ public class AddRecipeViewModel extends ViewModel {
         ingredients.postValue(ingredientList);
     }
 
-    public void addIngredientList(List<Ingredient> ingredientList) {
-        if (ingredientList != null) {
-            List<IngredientDTO> ingredientDTOList = new ArrayList<>();
-            for (int i = 0; i < ingredientList.size(); i++) {
-                ingredientDTOList.add(new IngredientDTO(i, ingredientList.get(i).name, String.valueOf(ingredientList.get(i).size), ingredientList.get(i).quantity));
-            }
-            ingredients.postValue(ingredientDTOList);
-        }
-    }
-
     public void removeIngredient() {
         List<IngredientDTO> ingredientList = ingredients.getValue() == null ? new ArrayList<>() : new ArrayList<>(ingredients.getValue());
         if (ingredientList.size() > 0) {
@@ -124,14 +106,6 @@ public class AddRecipeViewModel extends ViewModel {
         }
     }
 
-
-    public void setCategoryList(List<Category> collectionsList) {
-        Log.d(TAG, "setCollectionList: " + collectionsList.toString());
-        // Ignore 'collect(toList())' can be replaced with 'toList()' suggestion as we need to compatibility
-        List<String> categoriesList = collectionsList.stream().distinct().map(c -> c.name).collect(Collectors.toList());
-        collections.postValue(categoriesList);
-    }
-
     public void setCollection(List<String> collectionsList) {
         Log.d(TAG, "setCollectionList: " + collectionsList.toString());
         List<String> categoriesList = collectionsList.stream().distinct().collect(Collectors.toList());
@@ -147,129 +121,12 @@ public class AddRecipeViewModel extends ViewModel {
         }
     }
 
-    public LiveData<List<String>> getAllCuisine() {
-        return recipeRepository.getAllCuisine();
-    }
-
-    public void saveRecipe() throws IOException {
-        Recipe recipeToSave = new Recipe();
-        recipeToSave.recipeId = Objects.requireNonNull(recipe.getValue()).id;
-        recipeToSave.title = Objects.requireNonNull(recipe.getValue()).title;
-        recipeToSave.instructions = recipe.getValue().instructions;
-        ArrayList<Long> collectionId = new ArrayList<>();
-        if (collections.getValue() != null) {
-            for (String c : collections.getValue()) {
-                Category category = new Category(c);
-                if (!collectionRepository.isRowExist(category)) {
-                    collectionId.add(collectionRepository.insert(category));
-                } else {
-                    long id = collectionRepository.fetchByName(category.name);
-                    if (id != -1L) {
-                        collectionId.add(id);
-                    } else {
-                        throw new RuntimeException("Couldn't find id");
-                    }
-                }
-            }
-        }
-        recipeToSave.portionSize = recipe.getValue().portionSize;
-        recipeToSave.dateCreated = Instant.now();
-        List<PhotoDTO> photoDTOList = photos.getValue();
-        List<String> photoFiles = new ArrayList<>();
-        for (PhotoDTO photo : photoDTOList) {
-            try (InputStream inputStream = application.getContentResolver().openInputStream(photo.uri)) {
-                // If we are adding a new image then the scheme will of type content
-                if (Objects.equals(photo.uri.getScheme(), "content")) {
-                    Log.d(TAG, "saveRecipe: " + photo.uri.getAuthority());
-                    String fileName;
-                    if (Objects.equals(photo.uri.getAuthority(), "media")) {
-                        fileName = photo.uri.getLastPathSegment() + "." + application.getContentResolver().getType(photo.uri).split("/")[1];
-                    } else {
-                        fileName = DocumentFile.fromSingleUri(this.application, photo.uri).getName();
-                    }
-                    Log.d(TAG, "saveRecipe: filename" + fileName);
-                    assert fileName != null;
-                    File photoFile = new File(application.getFilesDir(), fileName);
-                    int fileCount = 0;
-                    while (photoFile.exists()) {
-                        fileCount++;
-                        String[] nameSplits = fileName.split("-|\\.");
-                        String fileNameWithoutExtension = nameSplits[0];
-                        String extension = nameSplits[nameSplits.length - 1];
-                        fileName = fileNameWithoutExtension + "-" + fileCount + "." + extension;
-                        photoFile = new File(application.getFilesDir(), fileName);
-                    }
-                    try (FileOutputStream outputStream = application.openFileOutput(fileName, Context.MODE_PRIVATE)) {
-                        File file = new File(photo.uri.getPath());
-
-                        Log.d(TAG, "saveRecipe: app file path " + application.getFilesDir().getAbsolutePath());
-                        Log.d(TAG, "saveRecipe: filePath" + file.getAbsolutePath());
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            FileUtils.copy(inputStream, outputStream);
-                        } else {
-                            byte[] buffer = new byte[1024];
-                            int length;
-                            while ((length = inputStream.read(buffer)) > 0) {
-                                outputStream.write(buffer, 0, length);
-                            }
-                        }
-                        Log.d(TAG, "saveRecipe: fileName " + fileName);
-                        photoFiles.add(fileName);
-                    }
-                } else {
-                    // When scheme of Uri is file, that means the file has been already copied before,
-                    // in that case we only need to store the file name
-                    photoFiles.add(photo.uri.getLastPathSegment());
-                }
-            }
-        }
-        recipeToSave.photos = photoFiles;
-        List<Ingredient> ingredientList = new ArrayList<>();
-        for (IngredientDTO ingredientDTO : Objects.requireNonNull(ingredients.getValue())) {
-            try {
-                ingredientList.add(ingredientDTO.id, new Ingredient(ingredientDTO.name, Integer.parseInt(ingredientDTO.size), ingredientDTO.quantity));
-            } catch (NumberFormatException e) {
-                Log.d(TAG, "saveRecipe: " + e);
-            }
-        }
-        recipeToSave.ingredients = ingredientList;
-        long recipeId;
-        if (updateRecipe.getValue()) {
-            List<String> currentlySavedPhotos = recipe.getValue().photoURI;
-            if (currentlySavedPhotos != null) {
-                currentlySavedPhotos.removeAll(recipeToSave.photos);
-                currentlySavedPhotos.forEach(s -> {
-                    try {
-                        deleteFiles(s);
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-            recipeRepository.update(recipeToSave);
-            recipeId = recipeToSave.recipeId;
-        } else {
-            recipeId = recipeRepository.insert(recipeToSave);
-        }
-        collectionWithRecipesRepository.insert(collectionId, recipeId);
+    public void saveRecipe() {
+        addOrEditRecipeUseCase.save(application, recipe.getValue(), collections.getValue(), photos.getValue(), ingredients.getValue(), updateRecipe.getValue());
         this.updateRecipe.setValue(false);
     }
 
     public LiveData<List<RecipeWithCategories>> getRecipeCollections(int recipeId) {
         return collectionWithRecipesRepository.getRecipeWithCategories(recipeId);
-    }
-
-    void deleteFiles(String fileName) throws IOException, InterruptedException {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            String deleteCommand = "rm -rf " + application.getFilesDir() + "/" + fileName;
-            Runtime runtime = Runtime.getRuntime();
-            Process process;
-            try {
-                process = runtime.exec(deleteCommand);
-                process.waitFor();
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 }

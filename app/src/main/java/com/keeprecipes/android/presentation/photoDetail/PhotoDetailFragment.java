@@ -56,7 +56,7 @@ public class PhotoDetailFragment extends Fragment {
         int photoId = PhotoDetailFragmentArgs.fromBundle(getArguments()).getPhotoId();
         Log.d(TAG, "onViewCreated: " + photoId);
 
-        homeViewModel.getPhotoDTOlist().observe(getViewLifecycleOwner(), photoDTOS -> {
+        homeViewModel.getPhotoDTOList().observe(getViewLifecycleOwner(), photoDTOS -> {
                     pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle(), photoDTOS);
                     binding.imageViewpager.setAdapter(pagerAdapter);
                     binding.imageViewpager.setCurrentItem(photoId, false);

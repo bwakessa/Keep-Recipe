@@ -104,7 +104,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                         photoDTOList.add(new PhotoDTO(a, Uri.fromFile(new File(appDir, recipe.photos.get(a)))));
                     }
                     photoAdapter.submitList(photoDTOList);
-                    homeViewModel.setPhotoDTOlist(photoDTOList);
+                    homeViewModel.setPhotoDTOList(photoDTOList);
                 }
                 ingredientAdapter = new IngredientAdapter();
                 binding.ingredientsListView.setAdapter(ingredientAdapter);
