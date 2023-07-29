@@ -1,8 +1,13 @@
 package com.keeprecipes.android.data;
 
+import android.util.Log;
+
 import androidx.room.TypeConverter;
 
 import com.keeprecipes.android.data.entities.Ingredient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Converters {
+
+    private static final String TAG = "Converters";
 
     @TypeConverter
     public static Instant timeStampToDate(Long value) {
@@ -32,7 +39,6 @@ public class Converters {
 
     @TypeConverter
     public static List<String> stringToList(String s) {
-        //precondition: <s> follows same format as specified in above function
         if (s == null || s.isEmpty()) {
             return null;
         } else {
@@ -49,7 +55,19 @@ public class Converters {
             return null;
         } else {
             return ingredients.stream()
-                    .map(ingredient -> ingredient.name() + "`" + ingredient.size() + "`" + ingredient.quantity())
+                    .map(ingredient -> {
+                        JSONObject serializedIngredient = new JSONObject();
+                        try {
+                            serializedIngredient.put("name", ingredient.name());
+                            serializedIngredient.put("size", ingredient.size());
+                            serializedIngredient.put("quantity", ingredient.quantity());
+                        } catch (JSONException e) {
+                            Log.d(TAG, "ingredientsToString: " + e);
+                            throw new RuntimeException(e);
+                        }
+                        Log.d(TAG, "ingredientsToString: " + serializedIngredient.toString());
+                        return serializedIngredient.toString();
+                    })
                     .reduce((str, s) -> str + "|" + s)
                     .orElse("");
         }
@@ -63,9 +81,16 @@ public class Converters {
         } else {
             String[] i = s.split("\\|");
             for (String x : i) {
-                String[] y = x.split("`");
-                Ingredient ingredient = new Ingredient(y[0], Integer.parseInt(y[1]), y[2]);
-                ingredients.add(ingredient);
+                try {
+                    JSONObject serializedIngredient = new JSONObject(x);
+                    Ingredient ingredient = new Ingredient((String) serializedIngredient.get("name"),
+                            (String) serializedIngredient.get("size"),
+                            (String) serializedIngredient.get("quantity"));
+                    ingredients.add(ingredient);
+                } catch (JSONException e) {
+                    Log.d(TAG, "stringToIngredients: " + e);
+                    throw new RuntimeException(e);
+                }
             }
             return ingredients;
         }
