@@ -29,8 +29,6 @@ public class Recipe {
     public String title;
     @ColumnInfo(name = "instructions")
     public String instructions;
-    @ColumnInfo(name = "cuisine")
-    public String cuisine;
     @ColumnInfo(name = "portion-size")
     public String portionSize;
     @ColumnInfo(name = "ingredients")

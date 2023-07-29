@@ -16,13 +16,9 @@ public class RecipeFts {
     @ColumnInfo(name = "instructions")
     private String instructions;
 
-    @ColumnInfo(name = "cuisine")
-    private String cuisine;
-
-    public RecipeFts(@NonNull String title, String instructions, String cuisine) {
+    public RecipeFts(@NonNull String title, String instructions) {
         this.title = title;
         this.instructions = instructions;
-        this.cuisine = cuisine;
     }
 
     @NonNull
@@ -40,13 +36,5 @@ public class RecipeFts {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
-    }
-
-    public String getCuisine() {
-        return cuisine;
-    }
-
-    public void setCuisine(String cuisine) {
-        this.cuisine = cuisine;
     }
 }

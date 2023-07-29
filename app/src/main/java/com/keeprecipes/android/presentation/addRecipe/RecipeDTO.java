@@ -22,7 +22,6 @@ public class RecipeDTO {
         this.id = recipe.recipeId;
         this.title = recipe.title;
         this.instructions = recipe.instructions;
-        this.cuisine = recipe.cuisine;
         this.portionSize = recipe.portionSize;
         this.photoURI = recipe.photos;
     }
@@ -33,7 +32,6 @@ public class RecipeDTO {
         return "RecipeDTO{" +
                 "title='" + title + '\'' +
                 ", instructions=" + instructions +
-                ", cuisine='" + cuisine + '\'' +
                 ", categories='" + categories + '\'' +
                 ", portionSize=" + portionSize +
                 ", photoURI=" + photoURI +

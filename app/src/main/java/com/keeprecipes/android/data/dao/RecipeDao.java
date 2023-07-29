@@ -32,9 +32,6 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes ORDER BY recipeId DESC")
     LiveData<List<Recipe>> getAll();
 
-    @Query("SELECT DISTINCT cuisine FROM recipes WHERE cuisine IS NOT NULL")
-    LiveData<List<String>> getAllCuisine();
-
     @Transaction
     @Ignore
     @Query(

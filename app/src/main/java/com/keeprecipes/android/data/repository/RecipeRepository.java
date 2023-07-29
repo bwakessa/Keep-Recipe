@@ -38,10 +38,6 @@ public class RecipeRepository {
         return mRecipeDao.fetchById(id);
     }
 
-    public LiveData<List<String>> getAllCuisine() {
-        return mRecipeDao.getAllCuisine();
-    }
-
     public long insert(Recipe recipe) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Callable<Long> insertCallable = () -> mRecipeDao.insert(recipe);
