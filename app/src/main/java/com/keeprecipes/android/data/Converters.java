@@ -75,7 +75,7 @@ public class Converters {
             return null;
         } else {
             return ingredients.stream()
-                    .map(ingredient -> ingredient.name + "`" + ingredient.size + "`" + ingredient.quantity)
+                    .map(ingredient -> ingredient.name() + "`" + ingredient.size() + "`" + ingredient.quantity())
                     .reduce((str, s) -> str + "|" + s)
                     .orElse("");
         }

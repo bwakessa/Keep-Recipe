@@ -111,7 +111,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
                 if (recipe.ingredients != null) {
                     List<IngredientDTO> ingredientDTOList = new ArrayList<>();
                     for (int a = 0; a < recipe.ingredients.size(); a++) {
-                        ingredientDTOList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
+                        ingredientDTOList.add(new IngredientDTO(a, recipe.ingredients.get(a).name(), String.valueOf(recipe.ingredients.get(a).size()), recipe.ingredients.get(a).quantity()));
                     }
                     binding.ingredientsTitle.setVisibility(View.VISIBLE);
                     ingredientAdapter.submitList(ingredientDTOList);

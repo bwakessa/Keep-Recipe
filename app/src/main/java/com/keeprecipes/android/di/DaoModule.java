@@ -39,22 +39,4 @@ public class DaoModule {
     public CollectionWithRecipesDao provideCollectionWithRecipesDao(AppDatabase db) {
         return db.collectionWithRecipesDao();
     }
-
-//    @Provides
-//    @Inject
-//    public RecipeRepository provideRecipeRepository(RecipeDao recipeDao) {
-//        return new RecipeRepository(recipeDao);
-//    }
-//
-//    @Provides
-//    @Inject
-//    public CollectionRepository provideCollectionRepository(CollectionDao collectionDao) {
-//        return new CollectionRepository(collectionDao);
-//    }
-//
-//    @Provides
-//    @Inject
-//    public CollectionWithRecipesRepository provideCollectionWithRecipesRepository(CollectionWithRecipesDao collectionWithRecipesDao, RecipeWithCollectionsDao recipeWithCollectionsDao) {
-//        return new CollectionWithRecipesRepository(collectionWithRecipesDao, recipeWithCollectionsDao);
-//    }
 }

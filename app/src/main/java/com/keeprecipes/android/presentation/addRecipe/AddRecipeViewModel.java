@@ -62,7 +62,7 @@ public class AddRecipeViewModel extends ViewModel {
         if (recipe.ingredients != null) {
             List<IngredientDTO> ingredientList = new ArrayList<>();
             for (int a = 0; a < recipe.ingredients.size(); a++) {
-                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name, String.valueOf(recipe.ingredients.get(a).size), recipe.ingredients.get(a).quantity));
+                ingredientList.add(new IngredientDTO(a, recipe.ingredients.get(a).name(), String.valueOf(recipe.ingredients.get(a).size()), recipe.ingredients.get(a).quantity()));
             }
             this.ingredients.setValue(ingredientList);
         }
