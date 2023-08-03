@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import com.keeprecipes.android.data.entities.Ingredient;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Instant;

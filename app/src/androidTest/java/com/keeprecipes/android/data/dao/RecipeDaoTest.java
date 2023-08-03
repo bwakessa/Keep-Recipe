@@ -1,7 +1,6 @@
 package com.keeprecipes.android.data.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -48,7 +47,7 @@ public class RecipeDaoTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.clearAllTables();
         appDatabase.close();
     }
