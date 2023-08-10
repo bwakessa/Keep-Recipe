@@ -1,5 +1,7 @@
 # Keep Recipes
 
+![GitHub Actions Status](https://github.com/bwakessa/Keep-Recipe/actions/workflows/android.yml/badge.svg)
+
 Keep Recipes is an android app to save and manage recipes.
 
 The app is made with best practices of clean architecture adapted to realities of Android development. Along with Google's app architecture guidelines. The app follows single activity and multiple fragment pattern.
