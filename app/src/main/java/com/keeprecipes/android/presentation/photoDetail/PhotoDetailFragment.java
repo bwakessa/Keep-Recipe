@@ -36,7 +36,7 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPhotoDetailBinding.inflate(inflater, container, false);
-        getActivity().getWindow().setNavigationBarColor(Color.BLACK);
+        requireActivity().getWindow().setNavigationBarColor(Color.BLACK);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         return binding.getRoot();
     }

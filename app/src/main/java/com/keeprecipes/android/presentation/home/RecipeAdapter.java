@@ -35,13 +35,13 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        switch (viewType) {
-            case 0:
-                return new TextCardViewHolder(RecipeItemWithoutImageBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
-            case 1:
-                return new ImageCardViewHolder(RecipeItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
-        }
-        return null;
+        return switch (viewType) {
+            case 0 ->
+                    new TextCardViewHolder(RecipeItemWithoutImageBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+            case 1 ->
+                    new ImageCardViewHolder(RecipeItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+            default -> throw new IllegalStateException("Unexpected value: " + viewType);
+        };
     }
 
     @Override

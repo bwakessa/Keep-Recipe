@@ -36,6 +36,7 @@ public class PhotoDetailImageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = PhotoDetailImageSlideBinding.inflate(inflater, container, false);
+        assert getArguments() != null;
         this.photoUri = Uri.parse(getArguments().getString("Photo Uri"));
         Log.d(TAG, "onCreateView: " + getArguments().getString("Photo Uri"));
         return binding.getRoot();

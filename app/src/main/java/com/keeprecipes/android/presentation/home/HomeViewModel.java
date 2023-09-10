@@ -34,7 +34,6 @@ public class HomeViewModel extends ViewModel {
     CollectionRepository collectionRepository;
     RecipeRepository recipeRepository;
     CollectionWithRecipesRepository collectionWithRecipesRepository;
-
     DeleteRecipeUseCase deleteRecipeUseCase;
 
     @Inject

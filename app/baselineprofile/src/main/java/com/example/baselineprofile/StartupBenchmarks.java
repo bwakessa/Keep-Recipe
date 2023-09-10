@@ -8,13 +8,13 @@ import androidx.benchmark.macro.junit4.MacrobenchmarkRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
-import kotlin.Unit;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Collections;
+
+import kotlin.Unit;
 
 /**
  * This test class benchmarks the speed of app startup.
