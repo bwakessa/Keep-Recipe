@@ -61,8 +61,6 @@ public class SettingsFragment extends Fragment {
                     NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.mobile_navigation);
                     HomeViewModel homeViewModel = new ViewModelProvider(backStackEntry, HiltViewModelFactory.create(view.getContext(), backStackEntry)).get(HomeViewModel.class);
                     homeViewModel.deleteAllRecipes();
-//                    DeletePhotosUseCase deletePhotosUsecase = new DeletePhotosUseCase();
-//                    deletePhotosUsecase.deleteFiles(getActivity().getFilesDir().getPath());
                     try {
                         DeleteFilesUseCase deleteFilesUseCase = new DeleteFilesUseCase();
                         deleteFilesUseCase.delete(getActivity().getFilesDir().getPath());
