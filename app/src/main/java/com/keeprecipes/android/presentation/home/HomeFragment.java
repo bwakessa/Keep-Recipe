@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements ChipClickListener {
         });
 
         // Floating Action Button to create new recipe
-        FloatingActionButton fab = binding.fab;
+        FloatingActionButton fab = binding.addRecipeFab;
         fab.setOnClickListener(v -> navController.navigate(R.id.action_navigation_home_to_addRecipeFragment));
     }
 
