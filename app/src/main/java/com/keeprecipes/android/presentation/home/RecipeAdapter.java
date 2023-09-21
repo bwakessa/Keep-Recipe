@@ -2,6 +2,7 @@ package com.keeprecipes.android.presentation.home;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -35,13 +36,20 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        return switch (viewType) {
+        RecyclerView.ViewHolder viewHolder;
+        switch (viewType) {
             case 0 ->
-                    new TextCardViewHolder(RecipeItemWithoutImageBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+                    viewHolder = new TextCardViewHolder(RecipeItemWithoutImageBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
             case 1 ->
-                    new ImageCardViewHolder(RecipeItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+                    viewHolder = new ImageCardViewHolder(RecipeItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
             default -> throw new IllegalStateException("Unexpected value: " + viewType);
-        };
+        }
+        viewHolder.itemView.setOnClickListener(v -> {
+            ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
+            action.setRecipeId((int) getCurrentList().get(viewHolder.getAbsoluteAdapterPosition()).recipeId);
+            Navigation.findNavController(viewHolder.itemView).navigate(action);
+        });
+        return viewHolder;
     }
 
     @Override
@@ -76,14 +84,11 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecyclerView.ViewHolder> 
         private final TextView recipeTitle;
         private final AppCompatImageView recipeImage;
 
-        private final CardView cardView;
-
         public ImageCardViewHolder(RecipeItemBinding binding) {
             super(binding.getRoot());
             // Define click listener for the ViewHolder's View
             recipeTitle = binding.recipeTitle;
             recipeImage = binding.recipeImage;
-            cardView = binding.cardView;
         }
 
         public void bind(Recipe recipe) {
@@ -101,13 +106,6 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecyclerView.ViewHolder> 
                 recipeImage.getLayoutParams().height = LinearLayoutCompat.LayoutParams.WRAP_CONTENT;
                 recipeImage.requestLayout();
             }
-            // Rewrite for setOnClickListener
-            // https://www.digitalocean.com/community/tutorials/android-recyclerview-data-binding
-            cardView.setOnClickListener(view -> {
-                ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
-                action.setRecipeId((int) recipe.recipeId);
-                Navigation.findNavController(view).navigate(action);
-            });
         }
     }
 
@@ -115,26 +113,16 @@ public class RecipeAdapter extends ListAdapter<Recipe, RecyclerView.ViewHolder> 
         private final TextView recipeTitle;
         private final TextView recipeInstructions;
 
-        private final CardView cardView;
-
         public TextCardViewHolder(RecipeItemWithoutImageBinding binding) {
             super(binding.getRoot());
             // Define click listener for the ViewHolder's View
             recipeTitle = binding.recipeTitle;
             recipeInstructions = binding.recipeInstructionsAbbr;
-            cardView = binding.cardViewWithoutImage;
         }
 
         public void bind(Recipe recipe) {
             recipeTitle.setText(recipe.title);
             recipeInstructions.setText(recipe.instructions);
-            // Rewrite for setOnClickListener
-            // https://www.digitalocean.com/community/tutorials/android-recyclerview-data-binding
-            cardView.setOnClickListener(view -> {
-                ActionNavigationHomeToRecipeDetailFragment action = HomeFragmentDirections.actionNavigationHomeToRecipeDetailFragment();
-                action.setRecipeId((int) recipe.recipeId);
-                Navigation.findNavController(view).navigate(action);
-            });
         }
     }
 }

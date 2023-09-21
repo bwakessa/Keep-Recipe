@@ -1,5 +1,6 @@
 package com.keeprecipes.android.presentation.home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,23 +12,30 @@ import com.keeprecipes.android.databinding.CategoryItemBinding;
 
 public class CategoriesAdapter extends ListAdapter<CategoriesDTO, CategoriesAdapter.ViewHolder> {
 
-    private final ChipClickListener chipClickListener;
+    private final String TAG = "CategoriesAdapter";
+
+    private static ChipClickListener chipClickListener;
 
     public CategoriesAdapter(ChipClickListener chipClickListener) {
         super(CategoriesDTO.DIFF_CALLBACK);
-        this.chipClickListener = chipClickListener;
+        CategoriesAdapter.chipClickListener = chipClickListener;
     }
 
     @NonNull
     @Override
     public CategoriesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new CategoriesAdapter.ViewHolder(CategoryItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        ViewHolder viewHolder = new CategoriesAdapter.ViewHolder(CategoryItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        viewHolder.categoryItemBinding.chip.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: " + viewHolder.getBindingAdapterPosition());
+            chipClickListener.chipClicked(getCurrentList().get(viewHolder.getBindingAdapterPosition()).categoriesId);
+        });
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoriesAdapter.ViewHolder holder, int position) {
         CategoriesDTO categories = getItem(position);
-        holder.bind(categories, chipClickListener);
+        holder.bind(categories);
     }
 
     /**
@@ -43,14 +51,8 @@ public class CategoriesAdapter extends ListAdapter<CategoriesDTO, CategoriesAdap
             categoryItemBinding = binding;
         }
 
-        public void bind(CategoriesDTO category, ChipClickListener chipClickListener) {
+        public void bind(CategoriesDTO category) {
             categoryItemBinding.setCategory(category);
-//            categoryItemBinding.chip.setOnCheckedChangeListener((compoundButton, b) -> {
-//                chipClickListener.chipClicked(category.categoriesId);
-//                Log.d("das", "bind: "+b);
-//            });
-            categoryItemBinding.chip.setOnClickListener(view -> chipClickListener.chipClicked(category.categoriesId));
         }
-
     }
 }

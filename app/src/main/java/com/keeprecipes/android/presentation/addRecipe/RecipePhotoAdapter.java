@@ -27,12 +27,14 @@ public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter
     @Override
     public RecipePhotoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        return new RecipePhotoAdapter.ViewHolder(AddRecipePhotoItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        ViewHolder viewHolder = new RecipePhotoAdapter.ViewHolder(AddRecipePhotoItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        viewHolder.deletePhotoButton.setOnClickListener(view -> recipePhoto.removeItem(viewHolder.getBindingAdapterPosition()));
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecipePhotoAdapter.ViewHolder holder, int position) {
-        holder.bind(getItem(position), view -> recipePhoto.removeItem(holder.getBindingAdapterPosition()));
+        holder.bind(getItem(position));
     }
 
     public interface Photo {
@@ -55,11 +57,10 @@ public class RecipePhotoAdapter extends ListAdapter<PhotoDTO, RecipePhotoAdapter
             deletePhotoButton = binding.deletePhotoButton;
         }
 
-        public void bind(PhotoDTO photo, View.OnClickListener onClickListener) {
+        public void bind(PhotoDTO photo) {
             Picasso.get()
                     .load(photo.uri)
                     .into(recipeImageView);
-            deletePhotoButton.setOnClickListener(onClickListener);
         }
     }
 }

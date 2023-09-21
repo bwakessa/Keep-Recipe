@@ -145,7 +145,7 @@ public class RecipeDetailFragment extends Fragment implements PhotoClickListener
     }
 
     @Override
-    public void photoClicked(View view, int photoId) {
+    public void photoClicked(int photoId) {
         Log.d(TAG, "photoClicked: " + photoDTOList.get(photoId).uri);
         RecipeDetailFragmentDirections.ActionRecipeDetailFragmentToPhotoDetailFragment action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToPhotoDetailFragment();
         action.setPhotoId(photoId);
