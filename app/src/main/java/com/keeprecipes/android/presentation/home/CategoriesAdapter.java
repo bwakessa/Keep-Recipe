@@ -12,9 +12,8 @@ import com.keeprecipes.android.databinding.CategoryItemBinding;
 
 public class CategoriesAdapter extends ListAdapter<CategoriesDTO, CategoriesAdapter.ViewHolder> {
 
-    private final String TAG = "CategoriesAdapter";
-
     private static ChipClickListener chipClickListener;
+    private final String TAG = "CategoriesAdapter";
 
     public CategoriesAdapter(ChipClickListener chipClickListener) {
         super(CategoriesDTO.DIFF_CALLBACK);
