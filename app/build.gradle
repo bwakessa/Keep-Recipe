@@ -17,7 +17,7 @@ android {
     namespace 'com.keeprecipes.android'
     compileSdk 34
 //    Turn this on after 34 becomes stable
-//    compileSdkExtension 7
+//    compileSdkExtension 6
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity:1.8.0'
+    implementation 'androidx.activity:activity:1.8.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.profileinstaller:profileinstaller:1.3.1'
     baselineProfile project(':app:baselineprofile')
@@ -71,7 +71,7 @@ dependencies {
     testImplementation "androidx.paging:paging-common:$paging_version"
 
     // Keep at picasso 2.8
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.8'
 //    implementation project(':picasso')
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.7.0'
