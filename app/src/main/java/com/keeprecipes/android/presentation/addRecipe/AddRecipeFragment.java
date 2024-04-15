@@ -84,7 +84,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 binding.cusineAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
                 binding.cusineAutoCompleteTextView.setThreshold(2);
                 Log.d(TAG, "onViewCreated: #" + collectionNames);
-                if (collectionNames.size() > 0) {
+                if (!collectionNames.isEmpty()) {
                     setChip(collectionNames);
                 }
             });
@@ -172,7 +172,7 @@ public class AddRecipeFragment extends Fragment implements RecipePhotoAdapter.Ph
                 Log.d(TAG, "afterTextChanged: " + editable.toString());
                 List<String> collections = Arrays.asList(editable.toString().split("\\s+"));
                 Log.d(TAG, "afterTextChanged: " + collections.size());
-                if (collections.size() > 0) {
+                if (!collections.isEmpty()) {
                     mViewModel.setCollection(collections);
                 }
             }

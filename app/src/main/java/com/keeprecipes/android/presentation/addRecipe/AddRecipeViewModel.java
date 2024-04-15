@@ -115,7 +115,7 @@ public class AddRecipeViewModel extends ViewModel {
 
     public void removeCollection() {
         List<String> categoriesList = collections.getValue() == null ? new ArrayList<>() : new ArrayList<>(collections.getValue());
-        if (categoriesList.size() >= 1) {
+        if (!categoriesList.isEmpty()) {
             categoriesList.remove(categoriesList.size() - 1);
             collections.postValue(categoriesList);
         }

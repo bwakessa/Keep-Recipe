@@ -21,7 +21,8 @@ public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new PhotoDetailImageFragment().newInstance(photoDTOList.get(position).uri);
+        new PhotoDetailImageFragment();
+        return PhotoDetailImageFragment.newInstance(photoDTOList.get(position).uri);
     }
 
     @Override
