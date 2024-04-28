@@ -71,8 +71,9 @@ public class HomeFragment extends Fragment implements ChipClickListener {
         binding.searchView.getEditText().setOnEditorActionListener(
                 (v, actionId, event) -> {
                     Log.d(TAG, "onViewCreated: actionId " + actionId);
-                    if (actionId == EditorInfo.IME_NULL
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH
                             && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        Log.d(TAG, "onViewCreated: searchText " + binding.searchView.getText());
                         binding.searchBar.setText(binding.searchView.getText());
                         binding.recipeCategoryListView.setVisibility(View.GONE);
                         homeViewModel.getRecipes().removeObserver(recipeAdapter::submitList);
