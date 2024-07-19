@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.example.baselineprofile'
-    compileSdk 34
+    compileSdk 35
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         minSdk 28
-        targetSdk 34
+        targetSdk 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // Added so base profile benchmarks can be run on emulator
@@ -28,7 +28,7 @@ android {
     testOptions.managedDevices.devices {
         pixel6Api34(ManagedVirtualDevice) {
             device = "Pixel 6"
-            apiLevel = 34
+            apiLevel = 35
             systemImageSource = "google"
         }
     }
@@ -42,8 +42,8 @@ baselineProfile {
 }
 
 dependencies {
-    implementation 'androidx.test.ext:junit:1.1.5'
-    implementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'androidx.test.ext:junit:1.2.1'
+    implementation 'androidx.test.espresso:espresso-core:3.6.1'
     implementation 'androidx.test.uiautomator:uiautomator:2.3.0'
     implementation 'androidx.benchmark:benchmark-macro-junit4:1.2.4'
 }
