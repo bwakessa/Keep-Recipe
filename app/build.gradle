@@ -48,21 +48,21 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity:1.9.0'
+    implementation 'androidx.activity:activity:1.9.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.profileinstaller:profileinstaller:1.3.1'
     baselineProfile project(':app:baselineprofile')
     def room_version = '2.6.1'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.3'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3'
-    implementation 'androidx.navigation:navigation-fragment:2.7.7'
-    implementation 'androidx.navigation:navigation-ui:2.7.7'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.5'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5'
+    implementation 'androidx.navigation:navigation-fragment:2.8.0'
+    implementation 'androidx.navigation:navigation-ui:2.8.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'com.google.android.material:material:1.12.0'
 
-    def paging_version = '3.3.0'
+    def paging_version = '3.3.2'
 
     implementation "androidx.paging:paging-runtime:$paging_version"
 
@@ -73,31 +73,31 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
 //    implementation project(':picasso')
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-core:5.13.0'
     testImplementation 'org.json:json:20240303'
     // Keep at test:core at 1.4.0 for dagger hilt
-    androidTestImplementation 'androidx.test:core:1.4.0'
-    androidTestImplementation 'androidx.test:runner:1.6.1'
+    androidTestImplementation 'androidx.test:core:1.6.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test:rules:1.6.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.51.1'
+    implementation 'com.google.dagger:hilt-android:2.52'
     implementation 'androidx.hilt:hilt-navigation-fragment:1.2.0'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.51.1'
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.52'
 
     // For instrumentation tests
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.51.1'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.51.1'
-    debugImplementation 'androidx.fragment:fragment-testing:1.8.1'
-    androidTestImplementation 'androidx.navigation:navigation-testing:2.7.7'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.52'
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.52'
+    debugImplementation 'androidx.fragment:fragment-testing:1.8.3'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.8.0'
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.51.1'
-    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.51.1'
-    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.51.1'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.52'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.52'
+    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.52'
 
     baselineProfile ':baselineprofile'
 }
