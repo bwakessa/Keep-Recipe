@@ -75,10 +75,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
 //    implementation project(':picasso')
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.13.0'
-    testImplementation 'org.json:json:20240303'
+    testImplementation 'org.mockito:mockito-core:5.15.2'
+    testImplementation 'org.json:json:20250107'
     // Keep at test:core at 1.4.0 for dagger hilt
-    androidTestImplementation 'androidx.test:core:1.6.1'
+    androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test:rules:1.6.1'
@@ -91,13 +91,13 @@ dependencies {
     annotationProcessor 'com.google.dagger:hilt-compiler:2.55'
 
     // For instrumentation tests
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.52'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.55'
     androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
     debugImplementation 'androidx.fragment:fragment-testing:1.8.5'
     androidTestImplementation 'androidx.navigation:navigation-testing:2.8.5'
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.52'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.55'
     testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
     testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.55'
 
