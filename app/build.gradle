@@ -16,11 +16,13 @@ allprojects {
 android {
     namespace 'com.keeprecipes.android'
     compileSdk 35
+//    compileSdkPreview = "Baklava"
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
         minSdk 26
         targetSdk 35
+//        targetSdkPreview = "Baklava"
         versionCode 7
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -48,21 +50,21 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity:1.9.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.profileinstaller:profileinstaller:1.3.1'
+    implementation 'androidx.activity:activity:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.profileinstaller:profileinstaller:1.4.1'
     baselineProfile project(':app:baselineprofile')
     def room_version = '2.6.1'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.5'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5'
-    implementation 'androidx.navigation:navigation-fragment:2.8.0'
-    implementation 'androidx.navigation:navigation-ui:2.8.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.navigation:navigation-fragment:2.8.5'
+    implementation 'androidx.navigation:navigation-ui:2.8.5'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'com.google.android.material:material:1.12.0'
 
-    def paging_version = '3.3.2'
+    def paging_version = '3.3.5'
 
     implementation "androidx.paging:paging-runtime:$paging_version"
 
@@ -84,20 +86,20 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.52'
+    implementation 'com.google.dagger:hilt-android:2.55'
     implementation 'androidx.hilt:hilt-navigation-fragment:1.2.0'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.52'
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.55'
 
     // For instrumentation tests
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.52'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.52'
-    debugImplementation 'androidx.fragment:fragment-testing:1.8.3'
-    androidTestImplementation 'androidx.navigation:navigation-testing:2.8.0'
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
+    debugImplementation 'androidx.fragment:fragment-testing:1.8.5'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.8.5'
 
     // For local unit tests
     testImplementation 'com.google.dagger:hilt-android-testing:2.52'
-    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.52'
-    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.52'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
+    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.55'
 
     baselineProfile ':baselineprofile'
 }
