@@ -23,7 +23,7 @@ android {
         minSdk 26
         targetSdk 35
 //        targetSdkPreview = "Baklava"
-        versionCode 7
+        versionCode 8
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "com.keeprecipes.android.TestRunner"
