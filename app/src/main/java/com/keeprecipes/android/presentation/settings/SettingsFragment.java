@@ -1,6 +1,7 @@
 package com.keeprecipes.android.presentation.settings;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -49,7 +50,15 @@ public class SettingsFragment extends Fragment {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
-
+//        val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+//        version = pInfo.versionName.toString()
+        String packageVersion = "1.0.0";
+        try {
+            packageVersion = view.getContext().getPackageManager().getPackageInfo(view.getContext().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        binding.versionTextView.setText(packageVersion);
         binding.deleteTextView.setOnClickListener(view1 -> new MaterialAlertDialogBuilder(view1.getContext())
                 // Use String resources
                 .setTitle(R.string.title_alert_dialog)

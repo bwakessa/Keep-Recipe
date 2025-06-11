@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:paddingBottom="16dp"
-        android:text="V 1.0"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <com.google.android.material.divider.MaterialDivider
