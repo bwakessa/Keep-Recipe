@@ -15,13 +15,13 @@ allprojects {
 
 android {
     namespace 'com.keeprecipes.android'
-    compileSdk 35
+    compileSdk 36
 //    compileSdkPreview = "Baklava"
 
     defaultConfig {
         applicationId "com.keeprecipes.android"
         minSdk 26
-        targetSdk 35
+        targetSdk 36
 //        targetSdkPreview = "Baklava"
         versionCode 8
         versionName "1.0"
@@ -50,21 +50,21 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity:1.10.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.activity:activity:1.10.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.profileinstaller:profileinstaller:1.4.1'
     baselineProfile project(':app:baselineprofile')
-    def room_version = '2.6.1'
+    def room_version = '2.7.1'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
-    implementation 'androidx.navigation:navigation-fragment:2.8.5'
-    implementation 'androidx.navigation:navigation-ui:2.8.5'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
+    implementation 'androidx.navigation:navigation-fragment:2.9.0'
+    implementation 'androidx.navigation:navigation-ui:2.9.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'com.google.android.material:material:1.12.0'
 
-    def paging_version = '3.3.5'
+    def paging_version = '3.3.6'
 
     implementation "androidx.paging:paging-runtime:$paging_version"
 
@@ -75,10 +75,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
 //    implementation project(':picasso')
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.15.2'
-    testImplementation 'org.json:json:20250107'
+    testImplementation 'org.mockito:mockito-core:5.18.0'
+    testImplementation 'org.json:json:20250517'
     // Keep at test:core at 1.4.0 for dagger hilt
-    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test:core:1.5.0'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test:rules:1.6.1'
@@ -86,20 +86,20 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.55'
+    implementation 'com.google.dagger:hilt-android:2.56.2'
     implementation 'androidx.hilt:hilt-navigation-fragment:1.2.0'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.55'
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.56.2'
 
     // For instrumentation tests
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.55'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
-    debugImplementation 'androidx.fragment:fragment-testing:1.8.5'
-    androidTestImplementation 'androidx.navigation:navigation-testing:2.8.5'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.56.2'
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.56.2'
+    debugImplementation 'androidx.fragment:fragment-testing:1.8.8'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.9.0'
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.55'
-    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.55'
-    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.55'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.56.2'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.56.2'
+    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.56.2'
 
     baselineProfile ':baselineprofile'
 }
